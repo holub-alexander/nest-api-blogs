@@ -5,6 +5,18 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PaginationAndSortQueryParams, Paginator, SortDirections } from '../../@types';
 import { Injectable } from '@nestjs/common';
+import { PostViewModel } from '../@types';
+
+type PostViewFields = Pick<PostViewModel, 'blogName'>;
+
+const getFieldToSort = (field: string): string => {
+  const fields: PostViewFields = {
+    blogName: 'blog.name',
+  };
+
+  // @ts-ignore
+  return fields[field] ? fields[field] : field;
+};
 
 @Injectable()
 export class PostsQueryRepository {
@@ -16,7 +28,7 @@ export class PostsQueryRepository {
     sortDirection = SortDirections.DESC,
     sortBy = '',
   }): Promise<Paginator<PostDocument[]>> {
-    const sorting = getObjectToSort({ sortBy, sortDirection });
+    const sorting = getObjectToSort({ sortBy, sortDirection, field: getFieldToSort(sortBy) });
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
 
     const totalCount = await this.PostModel.countDocuments({});

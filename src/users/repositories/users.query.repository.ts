@@ -4,6 +4,24 @@ import { getObjectToSort } from '../../utils/get-object-to-sort';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from '../../schemas/user.schema';
+import { PostViewModel } from '../../posts/@types';
+import { UserViewModel } from '../@types';
+
+type UserViewFields = {
+  [key in keyof UserViewModel]: string;
+};
+
+const getFieldToSort = (field: string): string => {
+  const fields: UserViewFields = {
+    id: '_id',
+    login: 'accountData.login',
+    email: 'accountData.email',
+    createdAt: 'accountData.createdAt',
+  };
+
+  // @ts-ignore
+  return fields[field] ? fields[field] : field;
+};
 
 @Injectable()
 export class UsersQueryRepository {
@@ -17,7 +35,7 @@ export class UsersQueryRepository {
     searchLoginTerm = '',
     searchEmailTerm = '',
   }): Promise<Paginator<UserDocument[]>> {
-    const sorting = getObjectToSort({ sortBy, sortDirection });
+    const sorting = getObjectToSort({ sortBy, sortDirection, field: getFieldToSort(sortBy) });
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
     const filter = {
       $or: [

@@ -24,6 +24,8 @@ export class BlogsService {
     pageSize = 10,
     pageNumber = 1,
   }: BlogsQueryParams): Promise<Paginator<BlogViewModel[]>> {
+    console.log(sortBy, sortDirection);
+
     const res = await this.blogsQueryRepository.findAll({
       sortBy,
       sortDirection,

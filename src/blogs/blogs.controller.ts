@@ -66,6 +66,8 @@ export class BlogsController {
     return this.blogsService.createBlog(body);
   }
 
+  @Post('/:id/posts')
+  @HttpCode(201)
   public async createPostForCurrentBlog(@Param('id') id: string, @Body() body: BlogPostInputModel) {
     const findBlog = await this.blogsService.findOne(id);
 
