@@ -35,7 +35,7 @@ export class UsersQueryRepository {
     searchLoginTerm = '',
     searchEmailTerm = '',
   }): Promise<Paginator<UserDocument[]>> {
-    const sorting = getObjectToSort({ sortBy, sortDirection, field: getFieldToSort(sortBy ?? 'createdAt') });
+    const sorting = getObjectToSort({ sortBy, sortDirection, field: getFieldToSort(sortBy), getField: getFieldToSort });
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
     const filter = {
       $or: [

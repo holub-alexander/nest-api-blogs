@@ -18,6 +18,7 @@ export type SortQueryParams = {
   sortBy: string;
   sortDirection: SortDirections;
   field?: string;
+  getField?: (field: string) => string;
 };
 
 export type PaginationAndSortQueryParams = Partial<PaginationQueryParams & SortQueryParams>;
