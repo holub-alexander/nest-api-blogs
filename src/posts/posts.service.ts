@@ -83,6 +83,10 @@ export class PostsService {
           id: new ObjectId(findBlog._id),
           name: findBlog.name,
         },
+        likesInfo: {
+          likesCount: 0,
+          dislikesCount: 0,
+        },
       });
 
       await this.postsWriteRepository.save(doc);

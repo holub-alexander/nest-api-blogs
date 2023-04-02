@@ -3,6 +3,12 @@ export enum SortDirections {
   DESC = 'desc',
 }
 
+export enum LikeStatuses {
+  NONE = 'None',
+  LIKE = 'Like',
+  DISLIKE = 'Dislike',
+}
+
 export type PaginationQueryParams = {
   pageNumber: number;
   pageSize: number;

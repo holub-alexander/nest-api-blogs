@@ -1,5 +1,6 @@
 import { PostDocument } from '../schemas/post.schema';
 import { PostViewModel } from '../posts/@types';
+import { LikeStatuses } from '../@types';
 
 export class PostsMapper {
   public static mapPostsViewModel(data: PostDocument[]): PostViewModel[] {
@@ -12,6 +13,12 @@ export class PostsMapper {
         blogId: post.blog.id.toString(),
         blogName: post.blog.name,
         createdAt: post.createdAt,
+        extendedLikesInfo: {
+          dislikesCount: 0,
+          likesCount: 0,
+          myStatus: LikeStatuses.NONE,
+          newestLikes: [],
+        },
       }),
     );
   }
@@ -25,6 +32,12 @@ export class PostsMapper {
       blogId: post.blog.id.toString(),
       blogName: post.blog.name,
       createdAt: post.createdAt,
+      extendedLikesInfo: {
+        dislikesCount: 0,
+        likesCount: 0,
+        myStatus: LikeStatuses.NONE,
+        newestLikes: [],
+      },
     };
   }
 }
