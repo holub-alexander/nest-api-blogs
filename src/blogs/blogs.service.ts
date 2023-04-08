@@ -1,13 +1,13 @@
-import { BlogsQueryRepository } from './repositories/blogs.query.repository';
-import { BlogsWriteRepository } from './repositories/blogs.write.repository';
 import { Paginator, SortDirections } from '../@types';
-import { BlogsQueryParams } from './blogs.controller';
 import { BlogInputModel, BlogViewModel } from './@types';
-import { BlogsMapper } from '../mappers/blogs.mapper';
-import { Blog, BlogDocument } from '../schemas/blog.schema';
+import { BlogsMapper } from '@/common/mappers/blogs.mapper';
+import { Blog, BlogDocument } from '@/entity/blog.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { BlogsQueryRepository } from '@/blogs/repositories/blogs.query.repository';
+import { BlogsWriteRepository } from '@/blogs/repositories/blogs.write.repository';
+import { BlogsQueryParams } from '@/blogs/blogs.controller';
 
 @Injectable()
 export class BlogsService {

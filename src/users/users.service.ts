@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Paginator, SortDirections } from '../@types';
-
-import { UsersWriteRepository } from './repositories/users.write.repository';
 import { UserInputModel, UserViewModel } from './@types';
-import { UsersMapper } from '../mappers/users.mapper';
-import { UsersQueryRepository } from './repositories/users.query.repository';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from '../schemas/user.schema';
 import { Model } from 'mongoose';
+import { User, UserDocument } from '@/entity/user.entity';
+import { UsersQueryRepository } from '@/users/repositories/users.query.repository';
+import { UsersWriteRepository } from '@/users/repositories/users.write.repository';
+import { UsersMapper } from '@/common/mappers/users.mapper';
 
 @Injectable()
 export class UsersService {

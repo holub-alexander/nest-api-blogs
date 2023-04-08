@@ -1,6 +1,6 @@
-import { PostDocument } from '../schemas/post.schema';
-import { PostViewModel } from '../posts/@types';
-import { LikeStatuses } from '../@types';
+import { LikeStatuses } from '../../@types';
+import { PostDocument } from '@/entity/post.entity';
+import { PostViewModel } from '@/posts/@types';
 
 export class PostsMapper {
   public static mapPostsViewModel(data: PostDocument[]): PostViewModel[] {

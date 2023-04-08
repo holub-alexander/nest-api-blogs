@@ -1,11 +1,11 @@
 import { ObjectId } from 'mongodb';
-import { BlogsQueryRepository } from '../../blogs/repositories/blogs.query.repository';
-import { BlogsService } from '../../blogs/blogs.service';
 import { InjectModel } from '@nestjs/mongoose';
-import { Post, PostDocument } from '../../schemas/post.schema';
 import { Model } from 'mongoose';
 import { PostInputModel } from '../@types';
 import { Injectable } from '@nestjs/common';
+import { Post, PostDocument } from '@/entity/post.entity';
+import { BlogsQueryRepository } from '@/blogs/repositories/blogs.query.repository';
+import { BlogsService } from '@/blogs/blogs.service';
 
 @Injectable()
 export class PostsWriteRepository {

@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
-import { getObjectToSort } from '../../utils/get-object-to-sort';
-import { Post, PostDocument } from '../../schemas/post.schema';
+import { getObjectToSort } from '@/common/utils/get-object-to-sort';
+import { Post, PostDocument } from '@/entity/post.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PaginationAndSortQueryParams, Paginator, SortDirections } from '../../@types';

@@ -1,8 +1,8 @@
-import { PostsService } from './posts.service';
-import { PostsWriteRepository } from './repositories/posts.write.repository';
 import { PaginationAndSortQueryParams, Paginator, SortDirections } from '../@types';
 import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
 import { PostInputModel, PostViewModel } from './@types';
+import { PostsWriteRepository } from '@/posts/repositories/posts.write.repository';
+import { PostsService } from '@/posts/posts.service';
 
 @Controller('posts')
 export class PostsController {

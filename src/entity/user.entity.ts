@@ -25,4 +25,4 @@ export class User {
   accountData: AccountData;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const UserEntity = SchemaFactory.createForClass(User);

@@ -53,4 +53,4 @@ export class Post {
   createdAt: Date;
 }
 
-export const PostSchema = SchemaFactory.createForClass(Post);
+export const PostEntity = SchemaFactory.createForClass(Post);

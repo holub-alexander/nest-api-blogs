@@ -1,5 +1,5 @@
-import { BlogDocument } from '../schemas/blog.schema';
-import { BlogViewModel } from '../blogs/@types';
+import { BlogDocument } from '@/entity/blog.entity';
+import { BlogViewModel } from '@/blogs/@types';
 
 export class BlogsMapper {
   public static mapBlogsViewModel(data: BlogDocument[]): BlogViewModel[] {

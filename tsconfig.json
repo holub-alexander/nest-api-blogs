@@ -9,13 +9,23 @@
     "target": "esnext",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
+    "baseUrl": "./src",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@/common/*": ["common/*"],
+      "@/entity/*": ["entity/*"],
+
+      "@/auth/*": ["auth/*"],
+      "@/posts/*": ["posts/*"],
+      "@/testing*": ["testing/*"],
+      "@/blogs/*": ["blogs/*"],
+      "@/users/*": ["users/*"]
+    }
   }
 }

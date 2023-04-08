@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
-import { WEBSITE_URL } from '../utils/regexp';
+import { WEBSITE_URL } from '@/common/constants/regexp';
 
 export type BlogDocument = HydratedDocument<Blog>;
 
@@ -40,4 +40,4 @@ export class Blog {
   isMembership: boolean;
 }
 
-export const BlogSchema = SchemaFactory.createForClass(Blog);
+export const BlogEntity = SchemaFactory.createForClass(Blog);

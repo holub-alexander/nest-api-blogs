@@ -1,11 +1,11 @@
 import { ObjectId } from 'mongodb';
 import { Paginator, SortDirections } from '../../@types';
-import { BlogsQueryParams } from '../blogs.controller';
-import { getObjectToSort } from '../../utils/get-object-to-sort';
+import { getObjectToSort } from '@/common/utils/get-object-to-sort';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { Blog, BlogDocument } from '../../schemas/blog.schema';
+import { Blog, BlogDocument } from '@/entity/blog.entity';
+import { BlogsQueryParams } from '@/blogs/blogs.controller';
 
 @Injectable()
 export class BlogsQueryRepository {

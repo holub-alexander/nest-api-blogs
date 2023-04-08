@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
 import { PaginationAndSortQueryParams, SortDirections } from '../@types';
-import { BlogsService } from './blogs.service';
-import { BlogsWriteRepository } from './repositories/blogs.write.repository';
 import { BlogInputModel, BlogPostInputModel } from './@types';
-import { PostsService } from '../posts/posts.service';
+import { PostsService } from '@/posts/posts.service';
+import { BlogsWriteRepository } from '@/blogs/repositories/blogs.write.repository';
+import { BlogsService } from '@/blogs/blogs.service';
 
 export type BlogsQueryParams = PaginationAndSortQueryParams & { searchNameTerm?: string };
 

@@ -1,5 +1,5 @@
-import { UserViewModel } from '../users/@types';
-import { UserDocument } from '../schemas/user.schema';
+import { UserViewModel } from '../../users/@types';
+import { UserDocument } from '../../entity/user.entity';
 
 export class UsersMapper {
   public static mapUsersViewModel(data: UserDocument[]): UserViewModel[] {
