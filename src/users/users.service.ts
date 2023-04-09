@@ -1,45 +1,33 @@
 import { Injectable } from '@nestjs/common';
-import { Paginator, SortDirections } from '../@types';
-import { UserInputModel, UserViewModel } from './@types';
+import { UserViewModel } from './interfaces';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from '@/entity/user.entity';
 import { UsersQueryRepository } from '@/users/repositories/users.query.repository';
 import { UsersWriteRepository } from '@/users/repositories/users.write.repository';
 import { UsersMapper } from '@/common/mappers/users.mapper';
+import { Paginator } from '@/common/interfaces';
+import { PaginationUsersDto } from '@/users/dto/pagination-users.dto';
+import { CreateUserDto } from '@/users/dto/create.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel(User.name) private UserModel: Model<UserDocument>,
-    private usersQueryRepository: UsersQueryRepository,
-    private usersWriteRepository: UsersWriteRepository,
+    @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
+    private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly usersWriteRepository: UsersWriteRepository,
   ) {}
 
-  async findAll({
-    pageSize = 10,
-    pageNumber = 1,
-    sortDirection = SortDirections.DESC,
-    sortBy = '',
-    searchEmailTerm = '',
-    searchLoginTerm = '',
-  }): Promise<Paginator<UserViewModel[]>> {
-    const res = await this.usersQueryRepository.findAll({
-      pageSize,
-      pageNumber,
-      sortBy,
-      sortDirection,
-      searchLoginTerm,
-      searchEmailTerm,
-    });
+  async findAll(queryParams: PaginationUsersDto): Promise<Paginator<UserViewModel[]>> {
+    const { meta, items } = await this.usersQueryRepository.findAll(queryParams);
 
     return {
-      ...res,
-      items: UsersMapper.mapUsersViewModel(res.items),
+      ...meta,
+      items: UsersMapper.mapUsersViewModel(items),
     };
   }
 
-  async create({ email, password, login }: UserInputModel) {
+  async create({ email, password, login }: CreateUserDto) {
     const createUserData = new this.UserModel({
       accountData: { email, login, password, createdAt: new Date().toISOString() },
     });

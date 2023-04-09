@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { Paginator, SortDirections } from '../../@types';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UserViewModel } from '../@types';
 import { User, UserDocument } from '@/entity/user.entity';
 import { getObjectToSort } from '@/common/utils/get-object-to-sort';
+import { SortDirections } from '@/common/interfaces';
+import { PaginationMetaDto } from '@/common/dto/pagination-meta.dto';
+import { PaginationDto } from '@/common/dto/pagination.dto';
+import { UserViewModel } from '@/users/interfaces';
 
 type UserViewFields = {
   [key in keyof UserViewModel]: string;
@@ -33,7 +35,7 @@ export class UsersQueryRepository {
     sortBy = '',
     searchLoginTerm = '',
     searchEmailTerm = '',
-  }): Promise<Paginator<UserDocument[]>> {
+  }): Promise<PaginationDto<UserDocument>> {
     const sorting = getObjectToSort({ sortBy, sortDirection, field: getFieldToSort(sortBy), getField: getFieldToSort });
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
     const filter = {
@@ -44,17 +46,16 @@ export class UsersQueryRepository {
     };
 
     const totalCount = await this.UserModel.countDocuments(filter);
-    const res = await this.UserModel.find<UserDocument>(filter)
+    const items = await this.UserModel.find<UserDocument>(filter)
       .skip((+pageNumber - 1) * +pageSizeValue)
       .limit(+pageSizeValue)
       .sort(sorting);
 
-    return {
-      pagesCount: Math.ceil(totalCount / pageSize),
-      page: +pageNumber,
-      pageSize: +pageSize,
+    const paginationMetaDto = new PaginationMetaDto({
+      paginationOptionsDto: { pageSize, pageNumber, sortBy, sortDirection },
       totalCount,
-      items: res,
-    };
+    });
+
+    return new PaginationDto(items, paginationMetaDto);
   }
 }

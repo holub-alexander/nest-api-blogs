@@ -1,5 +1,4 @@
-import { PaginationAndSortQueryParams, Paginator, SortDirections } from '../@types';
-import { PostInputModel, PostViewModel } from './@types';
+import { PostViewModel } from './interfaces';
 import { ObjectId } from 'mongodb';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -9,54 +8,38 @@ import { PostsQueryRepository } from '@/posts/repositories/posts.query.repositor
 import { PostsWriteRepository } from '@/posts/repositories/posts.write.repository';
 import { BlogsQueryRepository } from '@/blogs/repositories/blogs.query.repository';
 import { PostsMapper } from '@/common/mappers/posts.mapper';
+import { Paginator } from '@/common/interfaces';
+import { PaginationOptionsDto } from '@/common/dto/pagination-options.dto';
+import { CreatePostDto } from '@/posts/dto/create.dto';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectModel(Post.name) private PostModel: Model<PostDocument>,
-    private postsQueryRepository: PostsQueryRepository,
-    private postsWriteRepository: PostsWriteRepository,
-    private blogsQueryRepository: BlogsQueryRepository,
+    private readonly postsQueryRepository: PostsQueryRepository,
+    private readonly postsWriteRepository: PostsWriteRepository,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
   ) {}
 
-  public async findAll({
-    pageSize = 10,
-    pageNumber = 1,
-    sortDirection = SortDirections.DESC,
-    sortBy = '',
-  }): Promise<Paginator<PostViewModel[]>> {
-    const res = await this.postsQueryRepository.findAll({
-      pageSize,
-      pageNumber,
-      sortBy,
-      sortDirection,
-    });
+  public async findAll(paginationQueryParams: PaginationOptionsDto): Promise<Paginator<PostViewModel[]>> {
+    const { meta, items } = await this.postsQueryRepository.findAll(paginationQueryParams);
 
     return {
-      ...res,
-      items: PostsMapper.mapPostsViewModel(res.items),
+      ...meta,
+      items: PostsMapper.mapPostsViewModel(items),
     };
   }
 
-  public async findAllByBlogId({
-    pageSize = 10,
-    pageNumber = 1,
-    sortDirection = SortDirections.DESC,
-    sortBy = '',
-    id,
-  }: PaginationAndSortQueryParams & { id: string }): Promise<Paginator<PostViewModel[]>> {
+  public async findAllByBlogId(
+    paginationOptions: PaginationOptionsDto,
+    id: string,
+  ): Promise<Paginator<PostViewModel[]>> {
     const formatId = new ObjectId(id);
-    const res = await this.postsQueryRepository.findAllByBlogId({
-      pageSize,
-      pageNumber,
-      sortBy,
-      sortDirection,
-      id: formatId,
-    });
+    const { meta, items } = await this.postsQueryRepository.findAllByBlogId(paginationOptions, formatId);
 
     return {
-      ...res,
-      items: PostsMapper.mapPostsViewModel(res.items),
+      ...meta,
+      items: PostsMapper.mapPostsViewModel(items),
     };
   }
 
@@ -70,7 +53,7 @@ export class PostsService {
     return PostsMapper.mapPostViewModel(post);
   }
 
-  public async create(body: PostInputModel): Promise<PostViewModel | null> {
+  public async create(body: CreatePostDto): Promise<PostViewModel | null> {
     const findBlog = await this.blogsQueryRepository.findOne(body.blogId);
 
     if (findBlog) {

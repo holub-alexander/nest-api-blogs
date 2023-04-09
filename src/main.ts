@@ -1,13 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
-import { HttpExceptionFilter } from '@/common/filters/exaption.filter';
+import { HttpExceptionFilter } from '@/common/filters/exception.filter';
+import { useContainer } from 'class-validator';
 
 // const PORT = process.env.PORT || 5000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.enableCors();
   app.useGlobalPipes(
     new ValidationPipe({

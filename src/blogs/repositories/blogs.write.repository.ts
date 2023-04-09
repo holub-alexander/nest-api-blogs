@@ -3,15 +3,14 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { Blog, BlogDocument } from '@/entity/blog.entity';
 import { InjectModel } from '@nestjs/mongoose';
-import { BlogInputModel } from '../@types';
+import { UpdateBlogDto } from '@/blogs/dto/update.dto';
 
 @Injectable()
 export class BlogsWriteRepository {
-  constructor(@InjectModel(Blog.name) private BlogModel: Model<BlogDocument>) {}
+  constructor(@InjectModel(Blog.name) private readonly BlogModel: Model<BlogDocument>) {}
 
-  public async save(doc: BlogDocument): Promise<boolean> {
-    const data = await doc.save();
-    return Boolean(data);
+  public async save(doc: BlogDocument): Promise<BlogDocument> {
+    return doc.save();
   }
 
   public async deleteOne(blogId: string): Promise<boolean> {
@@ -25,7 +24,7 @@ export class BlogsWriteRepository {
     return false;
   }
 
-  public async updateOne(blogId: string, data: BlogInputModel): Promise<boolean> {
+  public async updateOne(blogId: string, data: UpdateBlogDto): Promise<boolean> {
     const isValidId = ObjectId.isValid(blogId);
 
     if (isValidId) {

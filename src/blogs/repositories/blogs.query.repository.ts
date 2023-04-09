@@ -1,15 +1,17 @@
 import { ObjectId } from 'mongodb';
-import { Paginator, SortDirections } from '../../@types';
 import { getObjectToSort } from '@/common/utils/get-object-to-sort';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { Blog, BlogDocument } from '@/entity/blog.entity';
-import { BlogsQueryParams } from '@/blogs/blogs.controller';
+import { SortDirections } from '@/common/interfaces';
+import { PaginationBlogDto } from '@/blogs/dto/pagination-blog.dto';
+import { PaginationMetaDto } from '@/common/dto/pagination-meta.dto';
+import { PaginationDto } from '@/common/dto/pagination.dto';
 
 @Injectable()
 export class BlogsQueryRepository {
-  constructor(@InjectModel(Blog.name) private BlogModel: Model<BlogDocument>) {}
+  constructor(@InjectModel(Blog.name) private readonly BlogModel: Model<BlogDocument>) {}
 
   public async findAll({
     sortBy = 'createdAt',
@@ -17,24 +19,23 @@ export class BlogsQueryRepository {
     searchNameTerm = '',
     pageSize = 10,
     pageNumber = 1,
-  }: BlogsQueryParams): Promise<Paginator<BlogDocument[]>> {
+  }: PaginationBlogDto): Promise<PaginationDto<BlogDocument>> {
     const sorting = getObjectToSort({ sortBy, sortDirection });
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
     const filter = { name: { $regex: searchNameTerm, $options: 'i' } };
 
     const totalCount = await this.BlogModel.countDocuments(filter);
-    const res = await this.BlogModel.find<BlogDocument>(filter)
+    const items = await this.BlogModel.find<BlogDocument>(filter)
       .skip((+pageNumber - 1) * +pageSizeValue)
       .limit(+pageSizeValue)
       .sort(sorting);
 
-    return {
-      pagesCount: Math.ceil(totalCount / pageSize),
-      page: +pageNumber,
-      pageSize: +pageSize,
+    const paginationMetaDto = new PaginationMetaDto({
+      paginationOptionsDto: { pageSize, pageNumber, sortBy, sortDirection },
       totalCount,
-      items: res,
-    };
+    });
+
+    return new PaginationDto(items, paginationMetaDto);
   }
 
   public async findOne(blogId: string): Promise<BlogDocument | null> {

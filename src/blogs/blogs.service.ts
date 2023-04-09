@@ -1,5 +1,4 @@
-import { Paginator, SortDirections } from '../@types';
-import { BlogInputModel, BlogViewModel } from './@types';
+import { BlogViewModel } from './interfaces';
 import { BlogsMapper } from '@/common/mappers/blogs.mapper';
 import { Blog, BlogDocument } from '@/entity/blog.entity';
 import { Injectable } from '@nestjs/common';
@@ -7,35 +6,23 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BlogsQueryRepository } from '@/blogs/repositories/blogs.query.repository';
 import { BlogsWriteRepository } from '@/blogs/repositories/blogs.write.repository';
-import { BlogsQueryParams } from '@/blogs/blogs.controller';
+import { Paginator } from '@/common/interfaces';
+import { PaginationBlogDto } from '@/blogs/dto/pagination-blog.dto';
+import { CreateBlogDto } from '@/blogs/dto/create.dto';
 
 @Injectable()
 export class BlogsService {
   constructor(
-    @InjectModel(Blog.name) private BlogModel: Model<BlogDocument>,
-    protected blogsQueryRepository: BlogsQueryRepository,
-    protected blogsWriteRepository: BlogsWriteRepository,
+    @InjectModel(Blog.name) private readonly BlogModel: Model<BlogDocument>,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly blogsWriteRepository: BlogsWriteRepository,
   ) {}
 
-  public async findAll({
-    sortBy = 'createdAt',
-    sortDirection = SortDirections.DESC,
-    searchNameTerm = '',
-    pageSize = 10,
-    pageNumber = 1,
-  }: BlogsQueryParams): Promise<Paginator<BlogViewModel[]>> {
-    console.log(sortBy, sortDirection);
-
-    const res = await this.blogsQueryRepository.findAll({
-      sortBy,
-      sortDirection,
-      pageNumber,
-      pageSize,
-      searchNameTerm,
-    });
+  public async findAll(paginationSortBlogDto: PaginationBlogDto): Promise<Paginator<BlogViewModel[]>> {
+    const res = await this.blogsQueryRepository.findAll(paginationSortBlogDto);
 
     return {
-      ...res,
+      ...res.meta,
       items: BlogsMapper.mapBlogsViewModel(res.items),
     };
   }
@@ -46,7 +33,7 @@ export class BlogsService {
     return blog ? BlogsMapper.mapBlogViewModel(blog) : null;
   }
 
-  public async createBlog(body: BlogInputModel): Promise<BlogViewModel | null> {
+  public async create(body: CreateBlogDto): Promise<BlogViewModel | null> {
     const doc: BlogDocument = new this.BlogModel({
       ...body,
       createdAt: new Date().toISOString(),

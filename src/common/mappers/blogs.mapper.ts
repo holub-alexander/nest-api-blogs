@@ -1,5 +1,5 @@
 import { BlogDocument } from '@/entity/blog.entity';
-import { BlogViewModel } from '@/blogs/@types';
+import { BlogViewModel } from '@/blogs/interfaces';
 
 export class BlogsMapper {
   public static mapBlogsViewModel(data: BlogDocument[]): BlogViewModel[] {

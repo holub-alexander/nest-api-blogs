@@ -19,6 +19,7 @@ import { UsersService } from '@/users/users.service';
 import { UsersQueryRepository } from '@/users/repositories/users.query.repository';
 import { UsersWriteRepository } from '@/users/repositories/users.write.repository';
 import { AppService } from './app.service';
+import { IsBlogFound } from '@/posts/dto/create.dto';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { AppService } from './app.service';
   ],
   controllers: [BlogsController, PostsController, UsersController, TestingController, AppController],
   providers: [
+    IsBlogFound,
     BlogsService,
     BlogsQueryRepository,
     BlogsWriteRepository,

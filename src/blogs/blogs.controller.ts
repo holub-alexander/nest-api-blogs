@@ -1,29 +1,25 @@
 import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
-import { PaginationAndSortQueryParams, SortDirections } from '../@types';
-import { BlogInputModel, BlogPostInputModel } from './@types';
+import { BlogViewModel } from './interfaces';
 import { PostsService } from '@/posts/posts.service';
 import { BlogsWriteRepository } from '@/blogs/repositories/blogs.write.repository';
 import { BlogsService } from '@/blogs/blogs.service';
-
-export type BlogsQueryParams = PaginationAndSortQueryParams & { searchNameTerm?: string };
+import { CreateBlogDto } from '@/blogs/dto/create.dto';
+import { PaginationBlogDto } from '@/blogs/dto/pagination-blog.dto';
+import { UpdateBlogDto } from '@/blogs/dto/update.dto';
+import { Paginator } from '@/common/interfaces';
+import { CreatePostFromBlog } from '@/posts/dto/create.dto';
 
 @Controller('blogs')
 export class BlogsController {
   constructor(
-    private blogsWriteRepository: BlogsWriteRepository,
-    private blogsService: BlogsService,
-    private postsService: PostsService,
+    private readonly blogsWriteRepository: BlogsWriteRepository,
+    private readonly blogsService: BlogsService,
+    private readonly postsService: PostsService,
   ) {}
 
   @Get()
-  public async findAll(
-    @Query('sortBy') sortBy: BlogsQueryParams['sortBy'],
-    @Query('sortDirection') sortDirection: SortDirections,
-    @Query('pageNumber') pageNumber: BlogsQueryParams['pageNumber'],
-    @Query('pageSize') pageSize: BlogsQueryParams['pageSize'],
-    @Query('searchNameTerm') searchNameTerm?: BlogsQueryParams['searchNameTerm'],
-  ) {
-    return this.blogsService.findAll({ sortBy, sortDirection, pageNumber, pageSize, searchNameTerm });
+  public async findAll(@Query() queryParams: PaginationBlogDto): Promise<Paginator<BlogViewModel[]>> {
+    return this.blogsService.findAll(queryParams);
   }
 
   @Get('/:id')
@@ -38,37 +34,25 @@ export class BlogsController {
   }
 
   @Get('/:id/posts')
-  public async findAllPosts(
-    @Param('id') id: string,
-    @Query('sortBy') sortBy: PaginationAndSortQueryParams['sortBy'],
-    @Query('sortDirection') sortDirection: SortDirections,
-    @Query('pageNumber') pageNumber: PaginationAndSortQueryParams['pageNumber'],
-    @Query('pageSize') pageSize: PaginationAndSortQueryParams['pageSize'],
-  ) {
+  public async findAllPosts(@Param('id') id: string, @Query() queryParams: PaginationBlogDto) {
     const findBlog = await this.blogsService.findOne(id);
 
     if (!findBlog) {
       throw new NotFoundException({});
     }
 
-    return this.postsService.findAllByBlogId({
-      sortBy,
-      sortDirection,
-      pageNumber,
-      pageSize,
-      id,
-    });
+    return this.postsService.findAllByBlogId(queryParams, id);
   }
 
   @Post()
   @HttpCode(201)
-  public async create(@Body() body: BlogInputModel) {
-    return this.blogsService.createBlog(body);
+  public async create(@Body() body: CreateBlogDto) {
+    return this.blogsService.create(body);
   }
 
   @Post('/:id/posts')
   @HttpCode(201)
-  public async createPostForCurrentBlog(@Param('id') id: string, @Body() body: BlogPostInputModel) {
+  public async createPostForCurrentBlog(@Param('id') id: string, @Body() body: CreatePostFromBlog) {
     const findBlog = await this.blogsService.findOne(id);
 
     if (!findBlog) {
@@ -80,7 +64,7 @@ export class BlogsController {
 
   @Put('/:id')
   @HttpCode(204)
-  public async updateOne(@Param('id') id: string, @Body() body: BlogInputModel) {
+  public async updateOne(@Param('id') id: string, @Body() body: UpdateBlogDto) {
     const isUpdated = await this.blogsWriteRepository.updateOne(id, body);
 
     if (!isUpdated) {

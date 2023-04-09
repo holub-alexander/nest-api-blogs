@@ -1,4 +1,4 @@
-import { UserViewModel } from '../../users/@types';
+import { UserViewModel } from '../../users/interfaces';
 import { UserDocument } from '../../entity/user.entity';
 
 export class UsersMapper {

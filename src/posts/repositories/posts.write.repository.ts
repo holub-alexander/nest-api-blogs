@@ -1,23 +1,22 @@
 import { ObjectId } from 'mongodb';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { PostInputModel } from '../@types';
 import { Injectable } from '@nestjs/common';
 import { Post, PostDocument } from '@/entity/post.entity';
 import { BlogsQueryRepository } from '@/blogs/repositories/blogs.query.repository';
 import { BlogsService } from '@/blogs/blogs.service';
+import { UpdatePostDto } from '@/posts/dto/update.dto';
 
 @Injectable()
 export class PostsWriteRepository {
   constructor(
-    @InjectModel(Post.name) private PostModel: Model<PostDocument>,
-    private blogsQueryRepository: BlogsQueryRepository,
-    private blogsService: BlogsService,
+    @InjectModel(Post.name) private readonly PostModel: Model<PostDocument>,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly blogsService: BlogsService,
   ) {}
 
-  public async save(doc: PostDocument): Promise<boolean> {
-    const data = await doc.save();
-    return Boolean(data);
+  public async save(doc: PostDocument): Promise<PostDocument> {
+    return doc.save();
   }
 
   public async create(doc: PostDocument) {
@@ -35,7 +34,7 @@ export class PostsWriteRepository {
     return false;
   }
 
-  public async updateOne(postId: string, data: PostInputModel): Promise<boolean> {
+  public async updateOne(postId: string, data: UpdatePostDto): Promise<boolean> {
     const isValidId = ObjectId.isValid(postId);
     const findBlog = await this.blogsService.findOne(data.blogId);
 

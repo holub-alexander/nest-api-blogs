@@ -1,13 +1,4 @@
-export enum SortDirections {
-  ASC = 'asc',
-  DESC = 'desc',
-}
-
-export enum LikeStatuses {
-  NONE = 'None',
-  LIKE = 'Like',
-  DISLIKE = 'Dislike',
-}
+import { SortDirections } from '@/common/interfaces';
 
 export type PaginationQueryParams = {
   pageNumber: number;
@@ -22,11 +13,3 @@ export type SortQueryParams = {
 };
 
 export type PaginationAndSortQueryParams = Partial<PaginationQueryParams & SortQueryParams>;
-
-export type Paginator<T> = {
-  pagesCount: number;
-  page: number;
-  pageSize: number;
-  totalCount: number;
-  items: T;
-};

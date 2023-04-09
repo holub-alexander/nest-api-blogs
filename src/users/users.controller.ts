@@ -9,43 +9,28 @@ import {
   Param,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
-import { PaginationAndSortQueryParams, SortDirections } from '../@types';
-import { UserInputModel } from './@types';
-import { AuthGuard } from '@/common/guards/auth.guard';
+
 import { UsersService } from '@/users/users.service';
 import { UsersWriteRepository } from '@/users/repositories/users.write.repository';
+import { PaginationUsersDto } from '@/users/dto/pagination-users.dto';
+import { CreateUserDto } from '@/users/dto/create.dto';
 
-export type UsersQueryParams = PaginationAndSortQueryParams & { searchLoginTerm?: string; searchEmailTerm?: string };
-
-@UseGuards(AuthGuard)
 @Controller('users')
 export class UsersController {
-  constructor(private usersWriteRepository: UsersWriteRepository, private usersService: UsersService) {}
+  constructor(
+    private readonly usersWriteRepository: UsersWriteRepository,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Get()
-  findAll(
-    @Query('sortBy') sortBy: UsersQueryParams['sortBy'],
-    @Query('sortDirection') sortDirection: SortDirections,
-    @Query('pageNumber') pageNumber: UsersQueryParams['pageNumber'],
-    @Query('pageSize') pageSize: UsersQueryParams['pageSize'],
-    @Query('searchLoginTerm') searchLoginTerm?: UsersQueryParams['searchLoginTerm'],
-    @Query('searchEmailTerm') searchEmailTerm?: UsersQueryParams['searchEmailTerm'],
-  ) {
-    return this.usersService.findAll({
-      sortBy,
-      sortDirection,
-      pageNumber,
-      pageSize,
-      searchLoginTerm,
-      searchEmailTerm,
-    });
+  findAll(@Query() queryParams: PaginationUsersDto) {
+    return this.usersService.findAll(queryParams);
   }
 
   @Post()
   @HttpCode(201)
-  createUser(@Body() body: UserInputModel) {
+  createUser(@Body() body: CreateUserDto) {
     if (body.login) {
       throw new BadRequestException([{ message: 'Bad blogger', field: 'bloggerId' }]);
     }
