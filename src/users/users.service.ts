@@ -30,6 +30,15 @@ export class UsersService {
   async create({ email, password, login }: CreateUserDto) {
     const createUserData = new this.UserModel({
       accountData: { email, login, password, createdAt: new Date().toISOString() },
+      emailConfirmation: {
+        confirmationCode: null,
+        expirationDate: null,
+        isConfirmed: true,
+      },
+      passwordRecovery: {
+        recoveryCode: null,
+      },
+      refreshTokensMeta: [],
     });
     const newUser = await this.usersWriteRepository.create(createUserData);
 

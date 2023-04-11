@@ -41,4 +41,48 @@ export class UsersWriteRepository {
     const res = await this.UserModel.deleteMany({});
     return res.deletedCount > 0;
   }
+
+  public async confirmRegistration(_id: ObjectId): Promise<boolean> {
+    const res = await this.UserModel.updateOne({ _id }, { $set: { 'emailConfirmation.isConfirmed': true } });
+    return res.modifiedCount === 1;
+  }
+
+  public async updateConfirmationCode(
+    _id: ObjectId,
+    { confirmationCode, expirationDate }: { confirmationCode: string; expirationDate: Date },
+  ): Promise<boolean> {
+    const res = await this.UserModel.updateOne(
+      { _id },
+      {
+        $set: {
+          'emailConfirmation.confirmationCode': confirmationCode,
+          'emailConfirmation.expirationDate': expirationDate,
+        },
+      },
+    );
+
+    return res.modifiedCount === 1;
+  }
+
+  async passwordRecovery(userId: ObjectId, recoveryCode: string): Promise<boolean> {
+    const res = await this.UserModel.updateOne(
+      { _id: userId },
+      {
+        $set: {
+          'passwordRecovery.recoveryCode': recoveryCode,
+        },
+      },
+    );
+
+    return res.modifiedCount === 1;
+  }
+
+  public async confirmPasswordRecovery({ recoveryCode, passwordHash }: { passwordHash: string; recoveryCode: string }) {
+    const res = await this.UserModel.updateOne(
+      { 'passwordRecovery.recoveryCode': recoveryCode },
+      { $set: { 'passwordRecovery.recoveryCode': null, 'accountData.password': passwordHash } },
+    );
+
+    return res.modifiedCount === 1;
+  }
 }

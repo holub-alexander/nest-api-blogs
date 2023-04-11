@@ -7,6 +7,7 @@ import { SortDirections } from '@/common/interfaces';
 import { PaginationMetaDto } from '@/common/dto/pagination-meta.dto';
 import { PaginationDto } from '@/common/dto/pagination.dto';
 import { UserViewModel } from '@/users/interfaces';
+import { ObjectId } from 'mongodb';
 
 type UserViewFields = {
   [key in keyof UserViewModel]: string;
@@ -57,5 +58,46 @@ export class UsersQueryRepository {
     });
 
     return new PaginationDto(items, paginationMetaDto);
+  }
+
+  public async getUserById(userId: string): Promise<UserDocument | null> {
+    const isValidId = ObjectId.isValid(userId);
+
+    if (isValidId) {
+      const findUser = await this.UserModel.findOne({ _id: new ObjectId(userId) });
+
+      if (findUser) {
+        return findUser;
+      }
+    }
+
+    return null;
+  }
+
+  public async findByLoginOrEmail(loginOrEmail: string): Promise<UserDocument | null> {
+    const filter = {
+      $or: [{ 'accountData.login': { $regex: loginOrEmail } }, { 'accountData.email': { $regex: loginOrEmail } }],
+    };
+
+    return this.UserModel.findOne(filter);
+  }
+
+  public async findByLogin(login: string): Promise<UserDocument | null> {
+    return this.UserModel.findOne({ 'accountData.login': login });
+  }
+
+  public async findByEmail(email: string): Promise<UserDocument | null> {
+    return this.UserModel.findOne({ 'accountData.email': email });
+  }
+
+  public async findByConfirmationCode(code: string): Promise<UserDocument | null> {
+    return this.UserModel.findOne({ 'emailConfirmation.confirmationCode': code });
+  }
+
+  public async findByDeviceId(login: string, deviceId: string): Promise<UserDocument | null> {
+    return this.UserModel.findOne({
+      'accountData.login': login,
+      'refreshTokensMeta.deviceId': deviceId,
+    });
   }
 }

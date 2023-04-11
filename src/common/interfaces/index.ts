@@ -23,3 +23,10 @@ export type Paginator<T> = {
   totalCount: number;
   items: T;
 };
+
+export interface SortQueryParams {
+  sortBy: string;
+  sortDirection: SortDirections;
+  field?: string;
+  getField?: (field: string) => string;
+}
