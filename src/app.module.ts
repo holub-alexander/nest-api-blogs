@@ -30,7 +30,7 @@ import { SecurityDevicesQueryRepository } from '@/security-devices/repositories/
 import { AuthController } from '@/auth/auth.controller';
 import { MailService } from './mail/mail.service';
 import { JwtModule } from '@nestjs/jwt';
-import * as cookieParser from 'cookie-parser';
+// import * as cookieParser from 'cookie-parser';
 
 @Module({
   imports: [
@@ -97,7 +97,7 @@ import * as cookieParser from 'cookie-parser';
   ],
 })
 export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(cookieParser()).forRoutes('*');
-  }
+  // configure(consumer: MiddlewareConsumer) {
+  //   consumer.apply(cookieParser()).forRoutes('*');
+  // }
 }
