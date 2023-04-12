@@ -6,13 +6,14 @@ import { add } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
-/* TODO: Edit this module */
+import { JwtService } from '@nestjs/jwt';
+import { UserRefreshTokenPayload } from '@/auth/interfaces';
 
 @Injectable()
 export class SecurityDevicesService {
   constructor(
     private readonly securityWriteRepository: SecurityDevicesWriteRepository,
+    private readonly jwtService: JwtService,
     @InjectModel(RefreshTokensMeta.name) private readonly refreshTokensMetaModel: Model<RefreshTokensMetaDocument>,
   ) {}
 
@@ -40,42 +41,39 @@ export class SecurityDevicesService {
     return res ? { deviceId: data.deviceId, issuedAt: data.issuedAt } : null;
   }
 
-  // public async updateDeviceRefreshToken({
-  //   login,
-  //   deviceId,
-  //   iat,
-  // }: {
-  //   login: string;
-  //   deviceId: string;
-  //   iat: number;
-  // }): Promise<string | null> {
-  //   const newIssuedAtWithoutMs = new Date(new Date().setMilliseconds(0));
-  //
-  //   const data = {
-  //     deviceId,
-  //     expirationDate: add(new Date(), {
-  //       seconds: 20,
-  //     }),
-  //     issuedAt: new Date(iat * 1000),
-  //     newIssuedAt: newIssuedAtWithoutMs,
-  //   };
-  //
-  //   const isUpdated = await this.securityWriteRepository.updateDeviceRefreshToken(data);
-  //
-  //   if (isUpdated) {
-  //     // @ts-ignore
-  //     return await jwtToken(
-  //       {
-  //         login,
-  //         deviceId,
-  //         iat: newIssuedAtWithoutMs.valueOf() / 1000,
-  //         // @ts-ignore
-  //       } as UserRefreshTokenPayload,
-  //       process.env.REFRESH_TOKEN_PRIVATE_KEY as string,
-  //       '2h',
-  //     );
-  //   }
-  //
-  //   return null;
-  // }
+  public async updateDeviceRefreshToken({
+    login,
+    deviceId,
+    iat,
+  }: {
+    login: string;
+    deviceId: string;
+    iat: number;
+  }): Promise<string | null> {
+    const newIssuedAtWithoutMs = new Date(new Date().setMilliseconds(0));
+
+    const data = {
+      deviceId,
+      expirationDate: add(new Date(), {
+        seconds: 20,
+      }),
+      issuedAt: new Date(iat * 1000),
+      newIssuedAt: newIssuedAtWithoutMs,
+    };
+
+    const isUpdated = await this.securityWriteRepository.updateDeviceRefreshToken(data);
+
+    if (isUpdated) {
+      return this.jwtService.sign(
+        {
+          login,
+          deviceId,
+          iat: newIssuedAtWithoutMs.valueOf() / 1000,
+        } as UserRefreshTokenPayload,
+        { secret: process.env.REFRESH_TOKEN_PRIVATE_KEY as string, expiresIn: '2h' },
+      );
+    }
+
+    return null;
+  }
 }

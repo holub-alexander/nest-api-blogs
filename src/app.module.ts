@@ -30,6 +30,7 @@ import { SecurityDevicesQueryRepository } from '@/security-devices/repositories/
 import { AuthController } from '@/auth/auth.controller';
 import { MailService } from './mail/mail.service';
 import { JwtModule } from '@nestjs/jwt';
+import { RefreshTokenGuard } from '@/auth/guards/refresh-token.guard';
 
 @Module({
   imports: [
@@ -89,6 +90,7 @@ import { JwtModule } from '@nestjs/jwt';
     UsersWriteRepository,
     SecurityDevicesService,
     SecurityDevicesWriteRepository,
+    SecurityDevicesQueryRepository,
     AuthService,
     MailService,
     AppService,

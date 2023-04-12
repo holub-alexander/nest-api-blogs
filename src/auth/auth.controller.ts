@@ -23,7 +23,8 @@ import {
 } from '@/auth/dto/create.dto';
 import { Response, Request } from 'express';
 import config from '@/config/config';
-import { AuthGuard } from '@/auth/guards/auth.guard';
+import { JwtTokenGuard } from '@/auth/guards/jwt-token.guard';
+import { RefreshTokenGuard } from '@/auth/guards/refresh-token.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -87,7 +88,7 @@ export class AuthController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtTokenGuard)
   @Get('/me')
   public async me(@Req() req: Request) {
     const userMe = await this.authService.me(req.user.loginOrEmail);
@@ -98,36 +99,38 @@ export class AuthController {
 
     return userMe;
   }
-  //
-  // async refreshToken(req: Request, res: Response) {
-  //   if (!req.cookies.refreshToken) {
-  //     return res.sendStatus(401);
-  //   }
-  //
-  //   const newTokens = await this.authService.updateTokens(req.userRefreshTokenPayload);
-  //
-  //   if (!newTokens) {
-  //     return res.sendStatus(401);
-  //   }
-  //
-  //   /* TODO: test */
-  //   res.cookie('refreshToken', newTokens.refreshToken, {
-  //     httpOnly: config.enableSecureCookie,
-  //     secure: config.enableSecureCookie,
-  //   });
-  //
-  //   return res.status(constants.HTTP_STATUS_OK).send({ accessToken: newTokens.accessToken });
-  // }
-  //
-  // async logout(req: Request, res: Response) {
-  //   if (!req.cookies.refreshToken) {
-  //     return res.sendStatus(401);
-  //   }
-  //
-  //   const response = await this.authService.logout(req.userRefreshTokenPayload);
-  //
-  //   return res.sendStatus(response ? constants.HTTP_STATUS_NO_CONTENT : 401);
-  // }
+
+  @UseGuards(RefreshTokenGuard)
+  @Post('/refresh-token')
+  public async refreshToken(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    if (!req.cookies.refreshToken) {
+      throw new UnauthorizedException();
+    }
+
+    const newTokens = await this.authService.updateTokens(req.userRefreshTokenPayload);
+
+    if (!newTokens) {
+      throw new UnauthorizedException();
+    }
+
+    res.cookie('refreshToken', newTokens.refreshToken, {
+      httpOnly: config.enableSecureCookie,
+      secure: config.enableSecureCookie,
+    });
+
+    return { accessToken: newTokens.accessToken };
+  }
+
+  @UseGuards(RefreshTokenGuard)
+  @Post('/logout')
+  @HttpCode(204)
+  public async logout(@Req() req: Request) {
+    if (!req.cookies.refreshToken) {
+      throw new UnauthorizedException();
+    }
+
+    return this.authService.logout(req.userRefreshTokenPayload);
+  }
 
   @Post('/password-recovery')
   @HttpCode(204)

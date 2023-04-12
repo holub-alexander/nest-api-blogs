@@ -1,7 +1,5 @@
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
-
-import { ObjectId } from 'mongodb';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersQueryRepository } from '@/users/repositories/users.query.repository';
 import { UsersWriteRepository } from '@/users/repositories/users.write.repository';
@@ -23,6 +21,7 @@ import {
 import { SecurityDevicesWriteRepository } from '@/security-devices/repositories/security-devices.write.repository';
 import { SecurityDevicesService } from '@/security-devices/security-devices.service';
 import { AuthMapper } from '@/common/mappers/auth.mapper';
+import { UserRefreshTokenPayload } from '@/auth/interfaces';
 
 @Injectable()
 export class AuthService {
@@ -143,8 +142,6 @@ export class AuthService {
   public async confirmRegistration(body: ConfirmRegistrationInputDto): Promise<boolean> {
     const findUser = await this.usersQueryRepository.findByConfirmationCode(body.code);
 
-    console.log(findUser);
-
     if (!findUser) return false;
     if (findUser.emailConfirmation.isConfirmed) return false;
     if (findUser.emailConfirmation.confirmationCode !== body.code) return false;
@@ -156,8 +153,6 @@ export class AuthService {
 
   public async registrationEmailResending(body: RegistrationEmailResendingInputDto) {
     const user = await this.usersQueryRepository.findByLoginOrEmail(body.email);
-
-    console.log(user);
 
     if (!user || user.emailConfirmation.isConfirmed) {
       return false;
@@ -182,44 +177,42 @@ export class AuthService {
     }
   }
 
-  // public async updateTokens(
-  //   refreshTokenPayload: UserRefreshTokenPayload,
-  // ): Promise<null | { accessToken: string; refreshToken: string }> {
-  //   const user = await this.usersQueryRepository.getUserByDeviceIdAndLogin(
-  //     refreshTokenPayload.login,
-  //     refreshTokenPayload.deviceId,
-  //   );
-  //
-  //   if (!user) {
-  //     return null;
-  //   }
-  //
-  //   const newRefreshToken = await this.securityService.updateDeviceRefreshToken({
-  //     login: user.accountData.login,
-  //     iat: refreshTokenPayload.iat,
-  //     deviceId: refreshTokenPayload.deviceId,
-  //   });
-  //
-  //   if (!newRefreshToken) {
-  //     return null;
-  //   }
-  //
-  //   /* TODO: test */
-  //   const accessToken = await jwtToken(
-  //     { login: user.accountData.login },
-  //     process.env.ACCESS_TOKEN_PRIVATE_KEY as string,
-  //     '10m',
-  //   );
-  //
-  //   return { accessToken, refreshToken: newRefreshToken };
-  // }
-  //
-  // public async logout(refreshTokenPayload: UserRefreshTokenPayload): Promise<boolean> {
-  //   return this.securityWriteRepository.deleteDeviceSessionById(
-  //     refreshTokenPayload.login,
-  //     refreshTokenPayload.deviceId,
-  //   );
-  // }
+  public async updateTokens(
+    refreshTokenPayload: UserRefreshTokenPayload,
+  ): Promise<null | { accessToken: string; refreshToken: string }> {
+    const user = await this.usersQueryRepository.findByDeviceId(
+      refreshTokenPayload.login,
+      refreshTokenPayload.deviceId,
+    );
+
+    if (!user) {
+      return null;
+    }
+
+    const newRefreshToken = await this.securityDevicesService.updateDeviceRefreshToken({
+      login: user.accountData.login,
+      iat: refreshTokenPayload.iat,
+      deviceId: refreshTokenPayload.deviceId,
+    });
+
+    if (!newRefreshToken) {
+      return null;
+    }
+
+    const accessToken = this.jwtService.sign(
+      { login: user.accountData.login },
+      { secret: process.env.ACCESS_TOKEN_PRIVATE_KEY as string, expiresIn: '10m' },
+    );
+
+    return { accessToken, refreshToken: newRefreshToken };
+  }
+
+  public async logout(refreshTokenPayload: UserRefreshTokenPayload): Promise<boolean> {
+    return this.securityDevicesWriteRepository.deleteDeviceSessionById(
+      refreshTokenPayload.login,
+      refreshTokenPayload.deviceId,
+    );
+  }
 
   public async verifyPasswordRecoveryJwtToken(recoveryCode: string) {
     if (!recoveryCode) {

@@ -7,7 +7,7 @@ import { Injectable } from '@nestjs/common';
 export class SecurityDevicesQueryRepository {
   constructor(@InjectModel(User.name) private readonly UserModel: Model<UserDocument>) {}
 
-  public async getUserByDeviceId(deviceId: string) {
+  public async findUserByDeviceId(deviceId: string) {
     return this.UserModel.findOne<UserDocument>({ 'refreshTokensMeta.deviceId': deviceId });
   }
 }

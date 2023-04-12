@@ -1,13 +1,20 @@
 import { Request, Response } from 'express';
 import { constants } from 'http2';
-import { Controller, Delete, Get, UnauthorizedException } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  ForbiddenException,
+  Get,
+  HttpCode,
+  NotFoundException,
+  Req,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersQueryRepository } from '@/users/repositories/users.query.repository';
 import { SecurityDevicesQueryRepository } from '@/security-devices/repositories/security-devices.query.repository';
 import { SecurityDevicesWriteRepository } from '@/security-devices/repositories/security-devices.write.repository';
 import { SecurityMapper } from '@/common/mappers/security-devices.mapper';
 import { DeviceViewModel } from '@/security-devices/interfaces';
-
-/* TODO: Edit this module */
 
 @Controller('security/devices')
 export class SecurityDevicesController {
@@ -18,24 +25,22 @@ export class SecurityDevicesController {
   ) {}
 
   @Get()
-  public async findAllSessions(): Promise<DeviceViewModel[]> {
-    // @ts-ignore
-    const user = await this.usersQueryRepository.getUserByLogin(req.userRefreshTokenPayload.login);
+  public async findAllSessions(@Req() req: Request): Promise<DeviceViewModel[]> {
+    const user = await this.usersQueryRepository.findByLogin(req.userRefreshTokenPayload.login);
 
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    // @ts-ignore
     return SecurityMapper.getAllDevicesForUser(user.refreshTokensMeta);
   }
 
   @Delete()
-  public async deleteAllSessions() {
+  @HttpCode(204)
+  public async deleteAllSessions(@Req() req: Request) {
     const user = await this.usersQueryRepository.findByDeviceId(
-      // @ts-ignore
       req.userRefreshTokenPayload.login,
-      // @ts-ignore
+
       req.userRefreshTokenPayload.deviceId,
     );
 
@@ -43,31 +48,23 @@ export class SecurityDevicesController {
       throw new UnauthorizedException();
     }
 
-    const data = await this.securityWriteRepository.deleteAllDeviceSessions(
-      user._id,
-      // @ts-ignore
-      req.userRefreshTokenPayload.deviceId,
-    );
-
-    console.log(data);
-    // @ts-ignore
-    res.sendStatus(constants.HTTP_STATUS_NO_CONTENT);
+    await this.securityWriteRepository.deleteAllDeviceSessions(user._id, req.userRefreshTokenPayload.deviceId);
   }
 
   @Delete('/:deviceId')
-  public async deleteSessionById(req: Request<{ deviceId: string }>, res: Response) {
-    const findUser = await this.securityQueryRepository.getUserByDeviceId(req.params.deviceId);
+  @HttpCode(204)
+  public async deleteSessionById(@Req() req: Request<{ deviceId: string }>) {
+    const findUser = await this.securityQueryRepository.findUserByDeviceId(req.params.deviceId);
 
     if (!findUser) {
-      return res.sendStatus(constants.HTTP_STATUS_NOT_FOUND);
+      throw new NotFoundException();
     }
-    // @ts-ignore
+
     if (findUser && findUser.accountData.login !== req.userRefreshTokenPayload.login) {
-      return res.sendStatus(constants.HTTP_STATUS_FORBIDDEN);
+      throw new ForbiddenException();
     }
 
     const response = await this.securityWriteRepository.deleteDeviceSessionById(
-      // @ts-ignore
       req.userRefreshTokenPayload.login,
       req.params.deviceId,
     );
@@ -75,7 +72,5 @@ export class SecurityDevicesController {
     if (!response) {
       throw new UnauthorizedException();
     }
-
-    res.sendStatus(constants.HTTP_STATUS_NO_CONTENT);
   }
 }
