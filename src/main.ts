@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from '@/common/filters/exception.filter';
 import { useContainer } from 'class-validator';
-// import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 
 // const PORT = process.env.PORT || 5000;
 
@@ -13,7 +13,7 @@ async function bootstrap() {
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   app.enableCors();
-  // app.use(cookieParser());
+  app.use(cookieParser());
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "esModuleInterop": true,
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
@@ -17,10 +18,7 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "typeRoots": [
-      "./global",
-      "./node_modules/@types"
-    ],
+    "typeRoots": ["./global", "./node_modules/@types"],
     "paths": {
       "@/common/*": ["common/*"],
       "@/entity/*": ["entity/*"],

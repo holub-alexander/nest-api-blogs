@@ -1,4 +1,4 @@
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 import { generateHash } from '@/common/utils/generate-hash';
 
 export const getPasswordHash = async (password: string): Promise<string> => {
