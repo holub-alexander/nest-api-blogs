@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Blog, BlogEntity } from '@/entity/blog.entity';
@@ -30,7 +30,7 @@ import { SecurityDevicesQueryRepository } from '@/security-devices/repositories/
 import { AuthController } from '@/auth/auth.controller';
 import { MailService } from './mail/mail.service';
 import { JwtModule } from '@nestjs/jwt';
-import { RefreshTokenGuard } from '@/auth/guards/refresh-token.guard';
+import * as cookieParser from 'cookie-parser';
 
 @Module({
   imports: [
@@ -96,4 +96,8 @@ import { RefreshTokenGuard } from '@/auth/guards/refresh-token.guard';
     AppService,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(cookieParser()).forRoutes('*');
+  }
+}
