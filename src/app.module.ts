@@ -7,7 +7,7 @@ import { RefreshTokenEntity, RefreshTokensMeta, User, UserEntity } from '@/entit
 import { BlogsController } from '@/blogs/blogs.controller';
 import { PostsController } from '@/posts/posts.controller';
 import { UsersController } from '@/users/users.controller';
-import { TestingController } from '@/testingtesting.controller';
+import { TestingController } from '@/testing/testing.controller';
 import { AppController } from './app.controller';
 import { BlogsService } from '@/blogs/blogs.service';
 import { BlogsQueryRepository } from '@/blogs/repositories/blogs.query.repository';

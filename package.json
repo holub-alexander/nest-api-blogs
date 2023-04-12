@@ -33,12 +33,25 @@
     "cookie-parser": "^1.4.6",
     "date-fns": "^2.29.3",
     "handlebars": "^4.7.7",
+    "module-alias": "^2.2.2",
     "mongoose": "^7.0.3",
     "nodemailer": "^6.9.1",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "uuid": "^9.0.0"
+  },
+  "_moduleAliases": {
+    "@/common": "dist/src/common",
+    "@/entity": "dist/src/entity",
+    "@/config": "dist/src/config",
+
+    "@/auth": "dist/src/auth",
+    "@/posts": "dist/src/posts",
+    "@/testing": "dist/src/testing",
+    "@/blogs": "dist/src/blogs",
+    "@/users":  "dist/src/users",
+    "@/security-devices": "dist/src/security-devices"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
