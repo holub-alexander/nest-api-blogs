@@ -42,15 +42,15 @@
     "uuid": "^9.0.0"
   },
   "_moduleAliases": {
-    "@/common": "dist/common",
-    "@/entity": "dist/entity",
-    "@/config": "dist/config",
-    "@/auth": "dist/auth",
-    "@/posts": "dist/posts",
-    "@/testing": "dist/testing",
-    "@/blogs": "dist/blogs",
-    "@/users":  "dist/users",
-    "@/security-devices": "dist/security-devices"
+    "@/common": "src/common",
+    "@/entity": "src/entity",
+    "@/config": "src/config",
+    "@/auth": "src/auth",
+    "@/posts": "src/posts",
+    "@/testing": "src/testing",
+    "@/blogs": "src/blogs",
+    "@/users":  "src/users",
+    "@/security-devices": "src/security-devices"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
