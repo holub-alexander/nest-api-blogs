@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "./dist",
+    "baseUrl": "./src",
     "paths": {
       "@/common/*": ["./common/*"],
       "@/entity/*": ["./entity/*"],
