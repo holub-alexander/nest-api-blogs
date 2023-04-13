@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./dist",
+    "paths": {
+      "@/common/*": ["./common/*"],
+      "@/entity/*": ["./entity/*"],
+      "@/config/*": ["./config/*"],
+
+      "@/auth/*": ["./auth/*"],
+      "@/posts/*": ["./posts/*"],
+      "@/testing/*": ["./testing/*"],
+      "@/blogs/*": ["./blogs/*"],
+      "@/users/*": ["./users/*"],
+      "@/security-devices/*": ["./security-devices/*"]
+    }
+  }
+}

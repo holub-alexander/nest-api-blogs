@@ -2,7 +2,7 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "module": "commonjs",
-    "declaration": false,
+    "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -20,16 +20,16 @@
     "noFallthroughCasesInSwitch": false,
     "typeRoots": ["./global", "./node_modules/@types"],
     "paths": {
-      "@/common/*": ["common/*"],
-      "@/entity/*": ["entity/*"],
-      "@/config/*": ["config/*"],
+      "@/common/*": ["./common/*"],
+      "@/entity/*": ["./entity/*"],
+      "@/config/*": ["./config/*"],
 
-      "@/auth/*": ["auth/*"],
-      "@/posts/*": ["posts/*"],
-      "@/testing/*": ["testing/*"],
-      "@/blogs/*": ["blogs/*"],
-      "@/users/*": ["users/*"],
-      "@/security-devices/*": ["security-devices/*"]
+      "@/auth/*": ["./auth/*"],
+      "@/posts/*": ["./posts/*"],
+      "@/testing/*": ["./testing/*"],
+      "@/blogs/*": ["./blogs/*"],
+      "@/users/*": ["./users/*"],
+      "@/security-devices/*": ["./security-devices/*"]
     }
   }
 }
