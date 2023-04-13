@@ -10,7 +10,7 @@
     "target": "esnext",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
@@ -20,16 +20,16 @@
     "noFallthroughCasesInSwitch": false,
     "typeRoots": ["./global", "./node_modules/@types"],
     "paths": {
-      "@/common/*": ["common/*"],
-      "@/entity/*": ["entity/*"],
-      "@/config/*": ["config/*"],
+      "@/common/*": ["./src/common/*"],
+      "@/entity/*": ["./src/entity/*"],
+      "@/config/*": ["./src/config/*"],
 
-      "@/auth/*": ["auth/*"],
-      "@/posts/*": ["posts/*"],
-      "@/testing/*": ["testing/*"],
-      "@/blogs/*": ["blogs/*"],
-      "@/users/*": ["users/*"],
-      "@/security-devices/*": ["security-devices/*"]
+      "@/auth/*": ["./src/auth/*"],
+      "@/posts/*": ["./src/posts/*"],
+      "@/testing/*": ["./src/testing/*"],
+      "@/blogs/*": ["./src/blogs/*"],
+      "@/users/*": ["./src/users/*"],
+      "@/security-devices/*": ["./src/security-devices/*"]
     }
   }
 }

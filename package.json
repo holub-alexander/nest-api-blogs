@@ -69,17 +69,6 @@
     "tsconfig-paths": "4.2.0",
     "typescript": "^4.7.4"
   },
-  "_moduleAliases": {
-    "@/common": "./src/common",
-    "@/entity": "./src/entity",
-    "@/config": "./src/config",
-    "@/auth": "./src/auth",
-    "@/posts": "./src/posts",
-    "@/testing": "./src/testing",
-    "@/blogs": "./src/blogs",
-    "@/users": "./src/users",
-    "@/security-devices": "./src/security-devices"
-  },
   "jest": {
     "moduleFileExtensions": [
       "js",
