@@ -41,17 +41,6 @@
     "rxjs": "^7.2.0",
     "uuid": "^9.0.0"
   },
-  "_moduleAliases": {
-    "@/common": "dist/common",
-    "@/entity": "dist/entity",
-    "@/config": "dist/config",
-    "@/auth": "dist/auth",
-    "@/posts": "dist/posts",
-    "@/testing": "dist/testing",
-    "@/blogs": "dist/blogs",
-    "@/users":  "dist/users",
-    "@/security-devices": "dist/security-devices"
-  },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
