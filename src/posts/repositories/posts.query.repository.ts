@@ -4,20 +4,19 @@ import { Post, PostDocument } from '@/entity/post.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { PostViewModel } from '../interfaces';
 import { SortDirections } from '@/common/interfaces';
 import { PaginationOptionsDto } from '@/common/dto/pagination-options.dto';
 import { PaginationMetaDto } from '@/common/dto/pagination-meta.dto';
 import { PaginationDto } from '@/common/dto/pagination.dto';
+import { PostViewModel } from '@/posts/interfaces';
 
-type PostViewFields = Pick<PostViewModel, 'blogName'>;
+type PostViewFields = Pick<PostViewModel, 'blogName'> & { [key: string]: string };
 
 const getFieldToSort = (field: string): string => {
   const fields: PostViewFields = {
     blogName: 'blog.name',
   };
 
-  // @ts-ignore
   return fields[field] ? fields[field] : field;
 };
 
