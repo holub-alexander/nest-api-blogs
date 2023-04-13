@@ -34,9 +34,9 @@ export class BlogsService {
   }
 
   public async create(body: CreateBlogDto): Promise<BlogViewModel | null> {
-    const doc: BlogDocument = new this.BlogModel<Blog>({
+    const doc: BlogDocument = new this.BlogModel({
       ...body,
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
       isMembership: false,
     });
 

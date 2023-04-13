@@ -6,6 +6,8 @@ export type BlogDocument = HydratedDocument<Blog>;
 
 @Schema()
 export class Blog {
+  _id: Types.ObjectId;
+
   @Prop({
     required: true,
     type: String,
