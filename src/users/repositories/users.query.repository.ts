@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User, UserDocument } from '@/entity/user.entity';
-import { getObjectToSort } from '@/common/utils/get-object-to-sort';
-import { SortDirections } from '@/common/interfaces';
-import { PaginationMetaDto } from '@/common/dto/pagination-meta.dto';
-import { PaginationDto } from '@/common/dto/pagination.dto';
-import { UserViewModel } from '@/users/interfaces';
 import { ObjectId } from 'mongodb';
+import { UserViewModel } from '../interfaces';
+import { User, UserDocument } from '../../entity/user.entity';
+import { SortDirections } from '../../common/interfaces';
+import { PaginationDto } from '../../common/dto/pagination.dto';
+import { getObjectToSort } from '../../common/utils/get-object-to-sort';
+import { PaginationMetaDto } from '../../common/dto/pagination-meta.dto';
 
 type UserViewFields = {
   [key in keyof UserViewModel]: string;

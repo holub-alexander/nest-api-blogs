@@ -1,7 +1,7 @@
-import { PaginationOptionsDto } from '@/common/dto/pagination-options.dto';
 import { IsOptional, Length, Matches } from 'class-validator';
 import { Transform, TransformFnParams } from 'class-transformer';
-import { LOGIN_REGEX } from '@/common/constants/regexp';
+import { PaginationOptionsDto } from '../../common/dto/pagination-options.dto';
+import { LOGIN_REGEX } from '../../common/constants/regexp';
 
 export class PaginationUsersDto extends PaginationOptionsDto {
   constructor() {

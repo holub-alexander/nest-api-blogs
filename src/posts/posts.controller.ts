@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
 import { PostViewModel } from './interfaces';
-import { PostsWriteRepository } from '@/posts/repositories/posts.write.repository';
-import { PostsService } from '@/posts/posts.service';
-import { Paginator } from '@/common/interfaces';
-import { PaginationOptionsDto } from '@/common/dto/pagination-options.dto';
-import { CreatePostDto } from '@/posts/dto/create.dto';
-import { UpdatePostDto } from '@/posts/dto/update.dto';
+import { PostsService } from './posts.service';
+import { UpdatePostDto } from './dto/update.dto';
+import { CreatePostDto } from './dto/create.dto';
+import { PostsWriteRepository } from './repositories/posts.write.repository';
+import { PaginationOptionsDto } from '../common/dto/pagination-options.dto';
+import { Paginator } from '../common/interfaces';
 
 @Controller('posts')
 export class PostsController {

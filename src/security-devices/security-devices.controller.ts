@@ -1,5 +1,4 @@
-import { Request, Response } from 'express';
-import { constants } from 'http2';
+import { Request } from 'express';
 import {
   Controller,
   Delete,
@@ -10,11 +9,11 @@ import {
   Req,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UsersQueryRepository } from '@/users/repositories/users.query.repository';
-import { SecurityDevicesQueryRepository } from '@/security-devices/repositories/security-devices.query.repository';
-import { SecurityDevicesWriteRepository } from '@/security-devices/repositories/security-devices.write.repository';
-import { SecurityMapper } from '@/common/mappers/security-devices.mapper';
-import { DeviceViewModel } from '@/security-devices/interfaces';
+import { SecurityDevicesQueryRepository } from './repositories/security-devices.query.repository';
+import { SecurityDevicesWriteRepository } from './repositories/security-devices.write.repository';
+import { UsersQueryRepository } from '../users/repositories/users.query.repository';
+import { DeviceViewModel } from './interfaces';
+import { SecurityMapper } from '../common/mappers/security-devices.mapper';
 
 @Controller('security/devices')
 export class SecurityDevicesController {

@@ -1,13 +1,13 @@
 import { ObjectId } from 'mongodb';
 import { Injectable } from '@nestjs/common';
-import { SecurityDevicesWriteRepository } from '@/security-devices/repositories/security-devices.write.repository';
-import { RefreshTokensMeta, RefreshTokensMetaDocument } from '@/entity/user.entity';
 import { add } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
-import { UserRefreshTokenPayload } from '@/auth/interfaces';
+import { SecurityDevicesWriteRepository } from './repositories/security-devices.write.repository';
+import { RefreshTokensMeta, RefreshTokensMetaDocument } from '../entity/user.entity';
+import { UserRefreshTokenPayload } from '../auth/interfaces';
 
 @Injectable()
 export class SecurityDevicesService {

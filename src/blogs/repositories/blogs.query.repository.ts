@@ -1,13 +1,13 @@
 import { ObjectId } from 'mongodb';
-import { getObjectToSort } from '@/common/utils/get-object-to-sort';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { Blog, BlogDocument } from '@/entity/blog.entity';
-import { SortDirections } from '@/common/interfaces';
-import { PaginationBlogDto } from '@/blogs/dto/pagination-blog.dto';
-import { PaginationMetaDto } from '@/common/dto/pagination-meta.dto';
-import { PaginationDto } from '@/common/dto/pagination.dto';
+import { Blog, BlogDocument } from '../../entity/blog.entity';
+import { SortDirections } from '../../common/interfaces';
+import { PaginationBlogDto } from '../dto/pagination-blog.dto';
+import { PaginationDto } from '../../common/dto/pagination.dto';
+import { PaginationMetaDto } from '../../common/dto/pagination-meta.dto';
+import { getObjectToSort } from '../../common/utils/get-object-to-sort';
 
 @Injectable()
 export class BlogsQueryRepository {

@@ -1,5 +1,5 @@
-import { LikeStatuses } from '@/common/interfaces';
-import { CreatePostDto } from '@/posts/dto/create.dto';
+import { CreatePostDto } from '../dto/create.dto';
+import { LikeStatuses } from '../../common/interfaces';
 
 export interface LikesInfoViewModel {
   likesCount: number;

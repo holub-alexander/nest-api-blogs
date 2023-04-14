@@ -1,4 +1,3 @@
-import { Post } from '@/entity/post.entity';
 import {
   IsNotEmpty,
   Length,
@@ -9,7 +8,8 @@ import {
 } from 'class-validator';
 import { Transform, TransformFnParams } from 'class-transformer';
 import { Injectable } from '@nestjs/common';
-import { BlogsService } from '@/blogs/blogs.service';
+import { BlogsService } from '../../blogs/blogs.service';
+import { Post } from '../../entity/post.entity';
 
 @ValidatorConstraint({ name: 'customText', async: true })
 @Injectable()

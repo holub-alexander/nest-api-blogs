@@ -1,5 +1,5 @@
 import { IsArray } from 'class-validator';
-import { PaginationMetaDto } from '@/common/dto/pagination-meta.dto';
+import { PaginationMetaDto } from './pagination-meta.dto';
 
 export class PaginationDto<T> {
   @IsArray()

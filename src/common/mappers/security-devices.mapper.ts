@@ -1,5 +1,5 @@
-import { RefreshTokensMeta } from '@/entity/user.entity';
-import { DeviceViewModel } from '@/security-devices/interfaces';
+import { RefreshTokensMeta } from '../../entity/user.entity';
+import { DeviceViewModel } from '../../security-devices/interfaces';
 
 export class SecurityMapper {
   public static getAllDevicesForUser(data: RefreshTokensMeta[]): DeviceViewModel[] {

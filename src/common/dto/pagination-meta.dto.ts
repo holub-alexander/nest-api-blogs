@@ -1,4 +1,4 @@
-import { PageMetaDtoParameters } from '@/common/interfaces';
+import { PageMetaDtoParameters } from '../interfaces';
 
 export class PaginationMetaDto {
   public readonly pagesCount: number;

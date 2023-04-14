@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
-import { UsersQueryRepository } from '@/users/repositories/users.query.repository';
-import { User, UserDocument } from '@/entity/user.entity';
+import { User, UserDocument } from '../../entity/user.entity';
+import { UsersQueryRepository } from './users.query.repository';
 
 @Injectable()
 export class UsersWriteRepository {

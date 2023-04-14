@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { UserViewModel } from './interfaces';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User, UserDocument } from '@/entity/user.entity';
-import { UsersQueryRepository } from '@/users/repositories/users.query.repository';
-import { UsersWriteRepository } from '@/users/repositories/users.write.repository';
-import { UsersMapper } from '@/common/mappers/users.mapper';
-import { Paginator } from '@/common/interfaces';
-import { PaginationUsersDto } from '@/users/dto/pagination-users.dto';
-import { CreateUserDto } from '@/users/dto/create.dto';
+import { UsersQueryRepository } from './repositories/users.query.repository';
+import { User, UserDocument } from '../entity/user.entity';
+import { UsersWriteRepository } from './repositories/users.write.repository';
+import { PaginationUsersDto } from './dto/pagination-users.dto';
+import { CreateUserDto } from './dto/create.dto';
+import { UsersMapper } from '../common/mappers/users.mapper';
+import { Paginator } from '../common/interfaces';
 
 @Injectable()
 export class UsersService {

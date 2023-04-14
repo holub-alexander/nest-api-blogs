@@ -1,3 +1,3 @@
-import { CreateBlogDto } from '@/blogs/dto/create.dto';
+import { CreateBlogDto } from './create.dto';
 
 export class UpdateBlogDto extends CreateBlogDto {}

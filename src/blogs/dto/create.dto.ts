@@ -1,7 +1,7 @@
-import { Blog } from '@/entity/blog.entity';
 import { IsNotEmpty, Length, Matches } from 'class-validator';
-import { WEBSITE_URL } from '@/common/constants/regexp';
 import { Transform, TransformFnParams } from 'class-transformer';
+import { Blog } from '../../entity/blog.entity';
+import { WEBSITE_URL } from '../../common/constants/regexp';
 
 export class CreateBlogDto implements Omit<Blog, '_id' | 'isMembership' | 'createdAt'> {
   @IsNotEmpty()

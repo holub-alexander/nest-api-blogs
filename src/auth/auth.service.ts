@@ -1,27 +1,27 @@
 import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { UsersQueryRepository } from '@/users/repositories/users.query.repository';
-import { UsersWriteRepository } from '@/users/repositories/users.write.repository';
-import { getPasswordHash } from '@/common/utils/get-password-hash';
-import { CreateUserDto } from '@/users/dto/create.dto';
-import { User, UserDocument } from '@/entity/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { MailService } from '../mail/mail.service';
 import { add } from 'date-fns';
+import { UsersQueryRepository } from '../users/repositories/users.query.repository';
+import { User, UserDocument } from '../entity/user.entity';
+import { AuthMapper } from '../common/mappers/auth.mapper';
+import { UsersWriteRepository } from '../users/repositories/users.write.repository';
+import { getPasswordHash } from '../common/utils/get-password-hash';
+import { UserRefreshTokenPayload } from './interfaces';
 import {
   ConfirmRegistrationInputDto,
   LoginInputDto,
   NewPasswordRecoveryInputDto,
   PasswordRecoveryInputDto,
   RegistrationEmailResendingInputDto,
-} from '@/auth/dto/create.dto';
-import { SecurityDevicesWriteRepository } from '@/security-devices/repositories/security-devices.write.repository';
-import { SecurityDevicesService } from '@/security-devices/security-devices.service';
-import { AuthMapper } from '@/common/mappers/auth.mapper';
-import { UserRefreshTokenPayload } from '@/auth/interfaces';
+} from './dto/create.dto';
+import { SecurityDevicesService } from '../security-devices/security-devices.service';
+import { CreateUserDto } from '../users/dto/create.dto';
+import { SecurityDevicesWriteRepository } from '../security-devices/repositories/security-devices.write.repository';
 
 @Injectable()
 export class AuthService {

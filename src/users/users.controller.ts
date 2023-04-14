@@ -10,11 +10,10 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-
-import { UsersService } from '@/users/users.service';
-import { UsersWriteRepository } from '@/users/repositories/users.write.repository';
-import { PaginationUsersDto } from '@/users/dto/pagination-users.dto';
-import { CreateUserDto } from '@/users/dto/create.dto';
+import { UsersWriteRepository } from './repositories/users.write.repository';
+import { UsersService } from './users.service';
+import { PaginationUsersDto } from './dto/pagination-users.dto';
+import { CreateUserDto } from './dto/create.dto';
 
 @Controller('users')
 export class UsersController {

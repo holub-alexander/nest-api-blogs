@@ -3,14 +3,14 @@ import { ObjectId } from 'mongodb';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { Post, PostDocument } from '@/entity/post.entity';
-import { PostsQueryRepository } from '@/posts/repositories/posts.query.repository';
-import { PostsWriteRepository } from '@/posts/repositories/posts.write.repository';
-import { BlogsQueryRepository } from '@/blogs/repositories/blogs.query.repository';
-import { PostsMapper } from '@/common/mappers/posts.mapper';
-import { Paginator } from '@/common/interfaces';
-import { PaginationOptionsDto } from '@/common/dto/pagination-options.dto';
-import { CreatePostDto } from '@/posts/dto/create.dto';
+import { BlogsQueryRepository } from '../blogs/repositories/blogs.query.repository';
+import { PostsMapper } from '../common/mappers/posts.mapper';
+import { CreatePostDto } from './dto/create.dto';
+import { PostsWriteRepository } from './repositories/posts.write.repository';
+import { PostsQueryRepository } from './repositories/posts.query.repository';
+import { PaginationOptionsDto } from '../common/dto/pagination-options.dto';
+import { Paginator } from '../common/interfaces';
+import { Post, PostDocument } from '../entity/post.entity';
 
 @Injectable()
 export class PostsService {

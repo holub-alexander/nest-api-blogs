@@ -1,3 +1,3 @@
-import { CreatePostDto } from '@/posts/dto/create.dto';
+import { CreatePostDto } from './create.dto';
 
 export class UpdatePostDto extends CreatePostDto {}

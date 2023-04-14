@@ -1,7 +1,7 @@
 import { Controller, Delete, HttpCode } from '@nestjs/common';
-import { BlogsWriteRepository } from '@/blogs/repositories/blogs.write.repository';
-import { UsersWriteRepository } from '@/users/repositories/users.write.repository';
-import { PostsWriteRepository } from '@/posts/repositories/posts.write.repository';
+import { BlogsWriteRepository } from '../blogs/repositories/blogs.write.repository';
+import { PostsWriteRepository } from '../posts/repositories/posts.write.repository';
+import { UsersWriteRepository } from '../users/repositories/users.write.repository';
 
 @Controller('testing')
 export class TestingController {

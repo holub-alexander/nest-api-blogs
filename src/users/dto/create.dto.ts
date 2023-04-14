@@ -1,7 +1,7 @@
-import { AccountData } from '@/entity/user.entity';
 import { IsNotEmpty, Length, Matches } from 'class-validator';
 import { Transform, TransformFnParams } from 'class-transformer';
-import { EMAIL_REGEX, LOGIN_REGEX } from '@/common/constants/regexp';
+import { AccountData } from '../../entity/user.entity';
+import { EMAIL_REGEX, LOGIN_REGEX } from '../../common/constants/regexp';
 
 export class CreateUserDto implements Omit<AccountData, 'createdAt'> {
   @IsNotEmpty()

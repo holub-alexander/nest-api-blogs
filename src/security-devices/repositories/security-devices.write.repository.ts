@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongodb';
 import { InjectModel } from '@nestjs/mongoose';
-import { RefreshTokensMeta, User, UserDocument } from '@/entity/user.entity';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
+import { RefreshTokensMeta, User, UserDocument } from '../../entity/user.entity';
 
 @Injectable()
 export class SecurityDevicesWriteRepository {

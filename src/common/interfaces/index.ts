@@ -1,4 +1,4 @@
-import { PaginationOptionsDto } from '@/common/dto/pagination-options.dto';
+import { PaginationOptionsDto } from '../dto/pagination-options.dto';
 
 export enum SortDirections {
   ASC = 'asc',

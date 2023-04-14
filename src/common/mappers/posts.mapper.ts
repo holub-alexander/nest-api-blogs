@@ -1,6 +1,6 @@
-import { PostDocument } from '@/entity/post.entity';
-import { PostViewModel } from '@/posts/interfaces';
-import { LikeStatuses } from '@/common/interfaces';
+import { PostViewModel } from '../../posts/interfaces';
+import { PostDocument } from '../../entity/post.entity';
+import { LikeStatuses } from '../interfaces';
 
 export class PostsMapper {
   public static mapPostsViewModel(data: PostDocument[]): PostViewModel[] {

@@ -12,19 +12,19 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { AuthService } from '@/auth/auth.service';
-import { CreateUserDto } from '@/users/dto/create.dto';
+import { Request, Response } from 'express';
+import { JwtTokenGuard } from './guards/jwt-token.guard';
+import { AuthService } from './auth.service';
 import {
   ConfirmRegistrationInputDto,
   LoginInputDto,
   NewPasswordRecoveryInputDto,
   PasswordRecoveryInputDto,
   RegistrationEmailResendingInputDto,
-} from '@/auth/dto/create.dto';
-import { Response, Request } from 'express';
-import config from '@/config/config';
-import { JwtTokenGuard } from '@/auth/guards/jwt-token.guard';
-import { RefreshTokenGuard } from '@/auth/guards/refresh-token.guard';
+} from './dto/create.dto';
+import { CreateUserDto } from '../users/dto/create.dto';
+import { RefreshTokenGuard } from './guards/refresh-token.guard';
+import config from '../config/config';
 
 @Controller('auth')
 export class AuthController {

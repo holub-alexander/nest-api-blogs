@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { generateHash } from '@/common/utils/generate-hash';
+import { generateHash } from './generate-hash';
 
 export const getPasswordHash = async (password: string): Promise<string> => {
   const passwordSalt = await bcrypt.genSalt(10);

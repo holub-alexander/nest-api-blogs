@@ -1,6 +1,6 @@
-import { PaginationOptionsDto } from '@/common/dto/pagination-options.dto';
 import { IsOptional, Length } from 'class-validator';
 import { Transform, TransformFnParams } from 'class-transformer';
+import { PaginationOptionsDto } from '../../common/dto/pagination-options.dto';
 
 export class PaginationBlogDto extends PaginationOptionsDto {
   constructor() {

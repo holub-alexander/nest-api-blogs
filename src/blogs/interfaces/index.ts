@@ -1,4 +1,4 @@
-import { CreateBlogDto } from '@/blogs/dto/create.dto';
+import { CreateBlogDto } from '../dto/create.dto';
 
 export interface BlogViewModel extends CreateBlogDto {
   id: string;

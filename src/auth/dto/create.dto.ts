@@ -1,11 +1,4 @@
 import {
-  LoginInputModel,
-  NewPasswordRecoveryInputModel,
-  PasswordRecoveryInputModel,
-  RegistrationConfirmationCodeModel,
-  RegistrationEmailResending,
-} from '@/auth/interfaces';
-import {
   IsNotEmpty,
   Length,
   Matches,
@@ -15,8 +8,15 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 import { Transform, TransformFnParams } from 'class-transformer';
-import { validateValueLength } from '@/common/utils/custom-validations';
-import { EMAIL_REGEX } from '@/common/constants/regexp';
+import { validateValueLength } from '../../common/utils/custom-validations';
+import { EMAIL_REGEX } from '../../common/constants/regexp';
+import {
+  LoginInputModel,
+  NewPasswordRecoveryInputModel,
+  PasswordRecoveryInputModel,
+  RegistrationConfirmationCodeModel,
+  RegistrationEmailResending,
+} from '../interfaces';
 
 const createErrorMessage = (isValidValue: boolean, errorMessage: string, errors: string[]): void => {
   if (!isValidValue) {

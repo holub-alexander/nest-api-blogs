@@ -1,7 +1,7 @@
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserRefreshTokenPayload } from '@/auth/interfaces';
-import { SecurityDevicesQueryRepository } from '@/security-devices/repositories/security-devices.query.repository';
+import { SecurityDevicesQueryRepository } from '../../security-devices/repositories/security-devices.query.repository';
+import { UserRefreshTokenPayload } from '../interfaces';
 
 @Injectable()
 export class RefreshTokenGuard implements CanActivate {

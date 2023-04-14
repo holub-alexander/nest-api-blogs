@@ -1,8 +1,7 @@
-require('module-alias/register');
+import { HttpExceptionFilter } from './common/filters/exception.filter';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
-import { HttpExceptionFilter } from '@/common/filters/exception.filter';
 import { useContainer } from 'class-validator';
 import cookieParser from 'cookie-parser';
 

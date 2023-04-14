@@ -1,13 +1,13 @@
 import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
 import { BlogViewModel } from './interfaces';
-import { PostsService } from '@/posts/posts.service';
-import { BlogsWriteRepository } from '@/blogs/repositories/blogs.write.repository';
-import { BlogsService } from '@/blogs/blogs.service';
-import { CreateBlogDto } from '@/blogs/dto/create.dto';
-import { PaginationBlogDto } from '@/blogs/dto/pagination-blog.dto';
-import { UpdateBlogDto } from '@/blogs/dto/update.dto';
-import { Paginator } from '@/common/interfaces';
-import { CreatePostFromBlog } from '@/posts/dto/create.dto';
+import { CreateBlogDto } from './dto/create.dto';
+import { PostsService } from '../posts/posts.service';
+import { PaginationBlogDto } from './dto/pagination-blog.dto';
+import { BlogsWriteRepository } from './repositories/blogs.write.repository';
+import { BlogsService } from './blogs.service';
+import { UpdateBlogDto } from './dto/update.dto';
+import { CreatePostFromBlog } from '../posts/dto/create.dto';
+import { Paginator } from '../common/interfaces';
 
 @Controller('blogs')
 export class BlogsController {

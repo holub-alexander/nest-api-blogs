@@ -2,10 +2,10 @@ import { ObjectId } from 'mongodb';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { Post, PostDocument } from '@/entity/post.entity';
-import { BlogsQueryRepository } from '@/blogs/repositories/blogs.query.repository';
-import { BlogsService } from '@/blogs/blogs.service';
-import { UpdatePostDto } from '@/posts/dto/update.dto';
+import { BlogsQueryRepository } from '../../blogs/repositories/blogs.query.repository';
+import { UpdatePostDto } from '../dto/update.dto';
+import { BlogsService } from '../../blogs/blogs.service';
+import { Post, PostDocument } from '../../entity/post.entity';
 
 @Injectable()
 export class PostsWriteRepository {

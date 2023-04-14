@@ -1,6 +1,6 @@
 import { IsEnum, IsInt, IsOptional, Length, Min } from 'class-validator';
-import { SortDirections } from '@/common/interfaces';
 import { Transform, TransformFnParams, Type } from 'class-transformer';
+import { SortDirections } from '../interfaces';
 
 export class PaginationOptionsDto {
   @Type(() => Number)

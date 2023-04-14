@@ -1,14 +1,14 @@
 import { BlogViewModel } from './interfaces';
-import { BlogsMapper } from '@/common/mappers/blogs.mapper';
-import { Blog, BlogDocument } from '@/entity/blog.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BlogsQueryRepository } from '@/blogs/repositories/blogs.query.repository';
-import { BlogsWriteRepository } from '@/blogs/repositories/blogs.write.repository';
-import { Paginator } from '@/common/interfaces';
-import { PaginationBlogDto } from '@/blogs/dto/pagination-blog.dto';
-import { CreateBlogDto } from '@/blogs/dto/create.dto';
+import { CreateBlogDto } from './dto/create.dto';
+import { Blog, BlogDocument } from '../entity/blog.entity';
+import { BlogsQueryRepository } from './repositories/blogs.query.repository';
+import { PaginationBlogDto } from './dto/pagination-blog.dto';
+import { BlogsMapper } from '../common/mappers/blogs.mapper';
+import { BlogsWriteRepository } from './repositories/blogs.write.repository';
+import { Paginator } from '../common/interfaces';
 
 @Injectable()
 export class BlogsService {
