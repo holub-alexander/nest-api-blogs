@@ -30,10 +30,6 @@ export class UsersController {
   @Post()
   @HttpCode(201)
   createUser(@Body() body: CreateUserDto) {
-    if (body.login) {
-      throw new BadRequestException([{ message: 'Bad blogger', field: 'bloggerId' }]);
-    }
-
     return this.usersService.create(body);
   }
 
