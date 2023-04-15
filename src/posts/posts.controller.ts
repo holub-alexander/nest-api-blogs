@@ -25,6 +25,7 @@ import { CreateCommentForPostDto } from '../comments/dto/create.dto';
 import { JwtTokenGuard } from '../auth/guards/jwt-token.guard';
 import { JwtTokenOptionalGuard } from '../auth/guards/jwt-token-optional.guard';
 import { MakeLikeUnlikeDto } from '../comments/dto/reaction.dto';
+import { BasicAuthGuard } from '../auth/guards/basic-auth.guard';
 
 @SkipThrottle()
 @Controller('posts')
@@ -56,6 +57,7 @@ export class PostsController {
   }
 
   @Post()
+  @UseGuards(BasicAuthGuard)
   public async create(@Body() body: CreatePostDto) {
     const data = await this.postsService.create(body);
 
@@ -67,6 +69,7 @@ export class PostsController {
   }
 
   @Put('/:id')
+  @UseGuards(BasicAuthGuard)
   @HttpCode(204)
   public async updateOne(@Param('id') id: string, @Body() body: UpdatePostDto) {
     const isUpdated = await this.postsWriteRepository.updateOne(id, body);
@@ -79,6 +82,7 @@ export class PostsController {
   }
 
   @Delete('/:id')
+  @UseGuards(BasicAuthGuard)
   @HttpCode(204)
   public async deleteOne(@Param('id') id: string) {
     const isDeleted = await this.postsWriteRepository.deleteOne(id);

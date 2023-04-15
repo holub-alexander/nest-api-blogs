@@ -24,6 +24,7 @@ import { Paginator } from '../common/interfaces';
 import { SkipThrottle } from '@nestjs/throttler';
 import { Request } from 'express';
 import { JwtTokenOptionalGuard } from '../auth/guards/jwt-token-optional.guard';
+import { BasicAuthGuard } from '../auth/guards/basic-auth.guard';
 
 @SkipThrottle()
 @Controller('blogs')
@@ -63,12 +64,14 @@ export class BlogsController {
   }
 
   @Post()
+  @UseGuards(BasicAuthGuard)
   @HttpCode(201)
   public async create(@Body() body: CreateBlogDto) {
     return this.blogsService.create(body);
   }
 
   @Post('/:id/posts')
+  @UseGuards(BasicAuthGuard)
   @HttpCode(201)
   public async createPostForCurrentBlog(@Param('id') id: string, @Body() body: CreatePostFromBlog) {
     const findBlog = await this.blogsService.findOne(id);
@@ -81,6 +84,7 @@ export class BlogsController {
   }
 
   @Put('/:id')
+  @UseGuards(BasicAuthGuard)
   @HttpCode(204)
   public async updateOne(@Param('id') id: string, @Body() body: UpdateBlogDto) {
     const isUpdated = await this.blogsWriteRepository.updateOne(id, body);
@@ -93,6 +97,7 @@ export class BlogsController {
   }
 
   @Delete('/:id')
+  @UseGuards(BasicAuthGuard)
   @HttpCode(204)
   public async deleteOne(@Param('id') id: string) {
     const isDeleted = await this.blogsWriteRepository.deleteOne(id);
