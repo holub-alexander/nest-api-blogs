@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserViewModel } from './interfaces';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -9,6 +9,8 @@ import { PaginationUsersDto } from './dto/pagination-users.dto';
 import { CreateUserDto } from './dto/create.dto';
 import { UsersMapper } from '../common/mappers/users.mapper';
 import { Paginator } from '../common/interfaces';
+import bcrypt from 'bcrypt';
+import { generateHash } from '../common/utils/generate-hash';
 
 @Injectable()
 export class UsersService {
@@ -27,9 +29,18 @@ export class UsersService {
     };
   }
 
-  async create({ email, password, login }: CreateUserDto) {
+  async create({ email, password, login }: CreateUserDto): Promise<UserViewModel | null | never> {
+    const foundUser = await this.usersQueryRepository.findByEmail(email);
+
+    if (foundUser) {
+      throw new BadRequestException([{ field: 'email', message: 'User with this email or login already exists' }]);
+    }
+
+    const passwordSalt = await bcrypt.genSalt(10);
+    const passwordHash = await generateHash(password, passwordSalt);
+
     const createUserData = new this.UserModel({
-      accountData: { email, login, password, createdAt: new Date().toISOString() },
+      accountData: { email, login, password: passwordHash, createdAt: new Date().toISOString() },
       emailConfirmation: {
         confirmationCode: null,
         expirationDate: null,

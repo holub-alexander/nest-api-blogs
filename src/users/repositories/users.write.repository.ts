@@ -22,8 +22,8 @@ export class UsersWriteRepository {
     return null;
   }
 
-  public async save(user: UserDocument) {
-    await user.save();
+  public async save(user: UserDocument): Promise<UserDocument> {
+    return user.save();
   }
 
   public async deleteOne(userId: string): Promise<boolean> {

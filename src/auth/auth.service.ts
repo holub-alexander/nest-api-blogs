@@ -38,6 +38,8 @@ export class AuthService {
   public async checkCredentials(body: LoginInputDto): Promise<boolean> {
     const user = await this.usersQueryRepository.findByLoginOrEmail(body.loginOrEmail);
 
+    console.log('checkCredentials user', user);
+
     if (!user) return false;
 
     return bcrypt.compare(body.password, user.accountData.password);
