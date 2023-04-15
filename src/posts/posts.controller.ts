@@ -6,7 +6,9 @@ import { CreatePostDto } from './dto/create.dto';
 import { PostsWriteRepository } from './repositories/posts.write.repository';
 import { PaginationOptionsDto } from '../common/dto/pagination-options.dto';
 import { Paginator } from '../common/interfaces';
+import { SkipThrottle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @Controller('posts')
 export class PostsController {
   constructor(

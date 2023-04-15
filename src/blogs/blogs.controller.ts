@@ -8,7 +8,9 @@ import { BlogsService } from './blogs.service';
 import { UpdateBlogDto } from './dto/update.dto';
 import { CreatePostFromBlog } from '../posts/dto/create.dto';
 import { Paginator } from '../common/interfaces';
+import { SkipThrottle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @Controller('blogs')
 export class BlogsController {
   constructor(

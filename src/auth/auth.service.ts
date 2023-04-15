@@ -38,8 +38,6 @@ export class AuthService {
   public async checkCredentials(body: LoginInputDto): Promise<boolean> {
     const user = await this.usersQueryRepository.findByLoginOrEmail(body.loginOrEmail);
 
-    console.log('checkCredentials user', user);
-
     if (!user) return false;
 
     return bcrypt.compare(body.password, user.accountData.password);
@@ -61,9 +59,6 @@ export class AuthService {
     const user = await this.usersQueryRepository.findByLoginOrEmail(body.loginOrEmail);
     const isCorrectCredentials = await this.checkCredentials(body);
 
-    console.log('USER', user);
-    console.log('isCorrectCredentials', isCorrectCredentials);
-
     if (!isCorrectCredentials || !user) {
       return null;
     }
@@ -74,19 +69,15 @@ export class AuthService {
       ip,
     });
 
-    console.log('addedSecurityDevice', addedSecurityDevice);
-
     if (!addedSecurityDevice) {
       return null;
     }
 
-    /* TODO: test */
     const accessToken = this.jwtService.sign(
       { login: user.accountData.login },
       { secret: process.env.ACCESS_TOKEN_PRIVATE_KEY as string, expiresIn: '10m' },
     );
 
-    /* TODO: test */
     const refreshToken = this.jwtService.sign(
       {
         login: user.accountData.login,
@@ -95,8 +86,6 @@ export class AuthService {
       },
       { secret: process.env.REFRESH_TOKEN_PRIVATE_KEY as string, expiresIn: '2h' },
     );
-
-    console.log('accessToken', accessToken);
 
     return { refreshToken, accessToken };
   }

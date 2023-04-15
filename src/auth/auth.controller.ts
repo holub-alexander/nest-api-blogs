@@ -25,6 +25,7 @@ import {
 import { CreateUserDto } from '../users/dto/create.dto';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
 import config from '../config/config';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
@@ -43,8 +44,6 @@ export class AuthController {
     if (!tokens) {
       throw new UnauthorizedException();
     }
-
-    console.log('COOKIE?');
 
     res.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: config.enableSecureCookie,
@@ -90,6 +89,7 @@ export class AuthController {
     }
   }
 
+  @SkipThrottle()
   @UseGuards(JwtTokenGuard)
   @Get('/me')
   public async me(@Req() req: Request) {
@@ -102,6 +102,7 @@ export class AuthController {
     return userMe;
   }
 
+  @SkipThrottle()
   @UseGuards(RefreshTokenGuard)
   @Post('/refresh-token')
   public async refreshToken(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
@@ -123,6 +124,7 @@ export class AuthController {
     return { accessToken: newTokens.accessToken };
   }
 
+  @SkipThrottle()
   @UseGuards(RefreshTokenGuard)
   @Post('/logout')
   @HttpCode(204)

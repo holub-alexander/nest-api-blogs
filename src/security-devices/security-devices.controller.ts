@@ -14,7 +14,9 @@ import { SecurityDevicesWriteRepository } from './repositories/security-devices.
 import { UsersQueryRepository } from '../users/repositories/users.query.repository';
 import { DeviceViewModel } from './interfaces';
 import { SecurityMapper } from '../common/mappers/security-devices.mapper';
+import { SkipThrottle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @Controller('security/devices')
 export class SecurityDevicesController {
   constructor(

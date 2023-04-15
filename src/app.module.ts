@@ -30,10 +30,17 @@ import { SecurityDevicesQueryRepository } from './security-devices/repositories/
 import { AuthController } from './auth/auth.controller';
 import { MailService } from './mail/mail.service';
 import { JwtModule } from '@nestjs/jwt';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: 'env/.env', isGlobal: true }),
+
+    ThrottlerModule.forRoot({
+      ttl: 10,
+      limit: 5,
+    }),
 
     MailerModule.forRootAsync({
       imports: [ConfigModule],
@@ -77,6 +84,10 @@ import { JwtModule } from '@nestjs/jwt';
   ],
   controllers: [BlogsController, PostsController, UsersController, AuthController, TestingController, AppController],
   providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
     IsBlogFound,
     BlogsService,
     BlogsQueryRepository,

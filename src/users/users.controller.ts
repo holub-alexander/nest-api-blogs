@@ -5,7 +5,9 @@ import { PaginationUsersDto } from './dto/pagination-users.dto';
 import { CreateUserDto } from './dto/create.dto';
 import { BasicAuthGuard } from '../auth/guards/basic-auth.guard';
 import { UseGuards } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @Controller('users')
 export class UsersController {
   constructor(
