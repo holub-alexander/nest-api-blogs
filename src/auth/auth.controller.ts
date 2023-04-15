@@ -130,6 +130,8 @@ export class AuthController {
   @Post('/logout')
   @HttpCode(204)
   public async logout(@Req() req: Request) {
+    console.log('req', req.cookies.refreshToken);
+
     if (!req.cookies.refreshToken) {
       throw new UnauthorizedException();
     }

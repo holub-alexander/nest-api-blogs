@@ -22,10 +22,21 @@ export class RefreshTokenGuard implements CanActivate {
       const refreshTokenPayload: UserRefreshTokenPayload = await this.jwtService.verifyAsync(tokenFromCookie, {
         secret: process.env.REFRESH_TOKEN_PRIVATE_KEY as string,
       });
-
       const findUser = await this.securityDevicesQueryRepository.findUserByDeviceId(refreshTokenPayload.deviceId);
 
+      console.log('user');
+
       if (!findUser) {
+        throw new UnauthorizedException();
+      }
+
+      const checkIssuedAt = findUser.refreshTokensMeta.findIndex(
+        (device) => new Date(device.issuedAt).valueOf() === refreshTokenPayload.iat * 1000,
+      );
+
+      console.log('checkIssuedAt', findUser, 'date', new Date(checkIssuedAt).valueOf(), refreshTokenPayload.iat * 1000);
+
+      if (checkIssuedAt === -1) {
         throw new UnauthorizedException();
       }
 

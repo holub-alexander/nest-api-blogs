@@ -7,7 +7,7 @@ import { User, UserDocument } from '../../entity/user.entity';
 export class SecurityDevicesQueryRepository {
   constructor(@InjectModel(User.name) private readonly UserModel: Model<UserDocument>) {}
 
-  public async findUserByDeviceId(deviceId: string) {
-    return this.UserModel.findOne<UserDocument>({ 'refreshTokensMeta.deviceId': deviceId });
+  public async findUserByDeviceId(deviceId: string): Promise<User | null> {
+    return this.UserModel.findOne<User>({ 'refreshTokensMeta.deviceId': deviceId });
   }
 }
