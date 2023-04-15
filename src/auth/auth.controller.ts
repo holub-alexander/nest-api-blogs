@@ -44,6 +44,8 @@ export class AuthController {
       throw new UnauthorizedException();
     }
 
+    console.log('COOKIE?');
+
     res.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: config.enableSecureCookie,
       secure: config.enableSecureCookie,

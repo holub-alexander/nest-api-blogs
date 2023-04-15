@@ -40,7 +40,7 @@ export class AuthService {
 
     if (!user) return false;
 
-    return await bcrypt.compare(body.password, user.accountData.password);
+    return bcrypt.compare(body.password, user.accountData.password);
   }
 
   public async me(loginOrEmail = '') {
@@ -59,6 +59,9 @@ export class AuthService {
     const user = await this.usersQueryRepository.findByLoginOrEmail(body.loginOrEmail);
     const isCorrectCredentials = await this.checkCredentials(body);
 
+    console.log('USER', user);
+    console.log('isCorrectCredentials', isCorrectCredentials);
+
     if (!isCorrectCredentials || !user) {
       return null;
     }
@@ -68,6 +71,8 @@ export class AuthService {
       userAgent,
       ip,
     });
+
+    console.log('addedSecurityDevice', addedSecurityDevice);
 
     if (!addedSecurityDevice) {
       return null;
@@ -88,6 +93,8 @@ export class AuthService {
       },
       { secret: process.env.REFRESH_TOKEN_PRIVATE_KEY as string, expiresIn: '2h' },
     );
+
+    console.log('accessToken', accessToken);
 
     return { refreshToken, accessToken };
   }
