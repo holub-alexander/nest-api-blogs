@@ -22,6 +22,7 @@ import {
 import { SecurityDevicesService } from '../security-devices/security-devices.service';
 import { CreateUserDto } from '../users/dto/create.dto';
 import { SecurityDevicesWriteRepository } from '../security-devices/repositories/security-devices.write.repository';
+import config from '../config/config';
 
 @Injectable()
 export class AuthService {
@@ -75,7 +76,7 @@ export class AuthService {
 
     const accessToken = this.jwtService.sign(
       { login: user.accountData.login },
-      { secret: process.env.ACCESS_TOKEN_PRIVATE_KEY as string, expiresIn: '10m' },
+      { secret: process.env.ACCESS_TOKEN_PRIVATE_KEY as string, expiresIn: config.accessTokenExpiration },
     );
 
     const refreshToken = this.jwtService.sign(
@@ -84,7 +85,7 @@ export class AuthService {
         deviceId: addedSecurityDevice.deviceId,
         iat: Math.round(addedSecurityDevice.issuedAt.valueOf() / 1000),
       },
-      { secret: process.env.REFRESH_TOKEN_PRIVATE_KEY as string, expiresIn: '2h' },
+      { secret: process.env.REFRESH_TOKEN_PRIVATE_KEY as string, expiresIn: config.refreshTokenExpiration },
     );
 
     return { refreshToken, accessToken };
@@ -199,7 +200,7 @@ export class AuthService {
 
     const accessToken = this.jwtService.sign(
       { login: user.accountData.login },
-      { secret: process.env.ACCESS_TOKEN_PRIVATE_KEY as string, expiresIn: '10m' },
+      { secret: process.env.ACCESS_TOKEN_PRIVATE_KEY as string, expiresIn: config.accessTokenExpiration },
     );
 
     return { accessToken, refreshToken: newRefreshToken };

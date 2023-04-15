@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { SecurityDevicesWriteRepository } from './repositories/security-devices.write.repository';
 import { RefreshTokensMeta, RefreshTokensMetaDocument } from '../entity/user.entity';
 import { UserRefreshTokenPayload } from '../auth/interfaces';
+import config from '../config/config';
 
 @Injectable()
 export class SecurityDevicesService {
@@ -70,7 +71,7 @@ export class SecurityDevicesService {
           deviceId,
           iat: newIssuedAtWithoutMs.valueOf() / 1000,
         } as UserRefreshTokenPayload,
-        { secret: process.env.REFRESH_TOKEN_PRIVATE_KEY as string, expiresIn: '2h' },
+        { secret: process.env.REFRESH_TOKEN_PRIVATE_KEY as string, expiresIn: config.refreshTokenExpiration },
       );
     }
 
