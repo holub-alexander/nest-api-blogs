@@ -1,4 +1,17 @@
-import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { BlogViewModel } from './interfaces';
 import { CreateBlogDto } from './dto/create.dto';
 import { PostsService } from '../posts/posts.service';
@@ -9,6 +22,8 @@ import { UpdateBlogDto } from './dto/update.dto';
 import { CreatePostFromBlog } from '../posts/dto/create.dto';
 import { Paginator } from '../common/interfaces';
 import { SkipThrottle } from '@nestjs/throttler';
+import { Request } from 'express';
+import { JwtTokenOptionalGuard } from '../auth/guards/jwt-token-optional.guard';
 
 @SkipThrottle()
 @Controller('blogs')
@@ -36,14 +51,15 @@ export class BlogsController {
   }
 
   @Get('/:id/posts')
-  public async findAllPosts(@Param('id') id: string, @Query() queryParams: PaginationBlogDto) {
+  @UseGuards(JwtTokenOptionalGuard)
+  public async findAllPosts(@Param('id') id: string, @Query() queryParams: PaginationBlogDto, @Req() req: Request) {
     const findBlog = await this.blogsService.findOne(id);
 
     if (!findBlog) {
       throw new NotFoundException({});
     }
 
-    return this.postsService.findAllByBlogId(queryParams, id);
+    return this.postsService.findAllByBlogId(queryParams, id, req.user?.login);
   }
 
   @Post()

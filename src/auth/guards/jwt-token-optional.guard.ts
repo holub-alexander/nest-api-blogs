@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 
 @Injectable()
-export class JwtTokenGuard implements CanActivate {
+export class JwtTokenOptionalGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -11,7 +11,7 @@ export class JwtTokenGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      throw new UnauthorizedException();
+      return true;
     }
 
     try {

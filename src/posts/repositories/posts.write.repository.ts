@@ -46,6 +46,14 @@ export class PostsWriteRepository {
     return false;
   }
 
+  public async setLike(_id: ObjectId, isInc: boolean) {
+    return this.PostModel.updateOne({ _id }, { $inc: { 'likesInfo.likesCount': isInc ? 1 : -1 } });
+  }
+
+  public async setDislike(_id: ObjectId, isInc: boolean) {
+    return this.PostModel.updateOne({ _id }, { $inc: { 'likesInfo.dislikesCount': isInc ? 1 : -1 } });
+  }
+
   public async deleteMany(): Promise<boolean> {
     const res = await this.PostModel.deleteMany({});
     return res.deletedCount > 0;

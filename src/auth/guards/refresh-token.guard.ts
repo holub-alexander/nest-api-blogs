@@ -10,7 +10,7 @@ export class RefreshTokenGuard implements CanActivate {
     private readonly securityDevicesQueryRepository: SecurityDevicesQueryRepository,
   ) {}
 
-  public async canActivate(context: ExecutionContext): Promise<boolean> {
+  public async canActivate(context: ExecutionContext): Promise<boolean | never> {
     const request = context.switchToHttp().getRequest();
     const tokenFromCookie = request.cookies.refreshToken;
 
@@ -24,8 +24,6 @@ export class RefreshTokenGuard implements CanActivate {
       });
       const findUser = await this.securityDevicesQueryRepository.findUserByDeviceId(refreshTokenPayload.deviceId);
 
-      console.log('user');
-
       if (!findUser) {
         throw new UnauthorizedException();
       }
@@ -33,8 +31,6 @@ export class RefreshTokenGuard implements CanActivate {
       const checkIssuedAt = findUser.refreshTokensMeta.findIndex(
         (device) => new Date(device.issuedAt).valueOf() === refreshTokenPayload.iat * 1000,
       );
-
-      console.log('checkIssuedAt', findUser, 'date', new Date(checkIssuedAt).valueOf(), refreshTokenPayload.iat * 1000);
 
       if (checkIssuedAt === -1) {
         throw new UnauthorizedException();

@@ -30,7 +30,7 @@ export class Blog {
   })
   websiteUrl: string;
 
-  @Prop({ type: Date })
+  @Prop({ type: Date, default: new Date().toISOString })
   createdAt: Date;
 
   @Prop({

@@ -3,6 +3,14 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export type PostDocument = HydratedDocument<Post>;
 
+export class LikesInfo {
+  @Prop({ required: true, type: Number, default: 0 })
+  likesCount: number;
+
+  @Prop({ required: true, type: Number, default: 0 })
+  dislikesCount: number;
+}
+
 export class PostBlog {
   @Prop({ required: true, type: Types.ObjectId })
   id: Types.ObjectId;
@@ -17,8 +25,6 @@ export class PostBlog {
 
 @Schema()
 export class Post {
-  _id: Types.ObjectId;
-
   @Prop({
     required: true,
     trim: true,
@@ -51,6 +57,9 @@ export class Post {
 
   @Prop({ required: true, type: Date })
   createdAt: Date;
+
+  @Prop({ required: true, schema: LikesInfo })
+  likesInfo: LikesInfo;
 }
 
 export const PostEntity = SchemaFactory.createForClass(Post);

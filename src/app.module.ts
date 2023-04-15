@@ -33,6 +33,14 @@ import { JwtModule } from '@nestjs/jwt';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { SecurityDevicesController } from './security-devices/security-devices.controller';
+import { CommentsController } from './comments/comments.controller';
+import { CommentsService } from './comments/comments.service';
+import { CommentsQueryRepository } from './comments/repositories/comments.query.repository';
+import { CommentsWriteRepository } from './comments/repositories/comments.write.repository';
+import { ReactionsWriteRepository } from './reactions/repositories/reactions.write.repository';
+import { ReactionsQueryRepository } from './reactions/repositories/reactions.query.repository';
+import { Comment, CommentEntity } from './entity/comment.entity';
+import { Reaction, ReactionEntity } from './entity/reaction.entity';
 
 @Module({
   imports: [
@@ -76,6 +84,8 @@ import { SecurityDevicesController } from './security-devices/security-devices.c
       { name: Post.name, schema: PostEntity },
       { name: User.name, schema: UserEntity },
       { name: RefreshTokensMeta.name, schema: RefreshTokenEntity },
+      { name: Comment.name, schema: CommentEntity },
+      { name: Reaction.name, schema: ReactionEntity },
     ]),
 
     JwtModule.register({
@@ -90,13 +100,14 @@ import { SecurityDevicesController } from './security-devices/security-devices.c
     UsersController,
     AuthController,
     TestingController,
+    CommentsController,
     AppController,
   ],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ThrottlerGuard,
+    // },
     IsBlogFound,
     BlogsService,
     BlogsQueryRepository,
@@ -110,6 +121,11 @@ import { SecurityDevicesController } from './security-devices/security-devices.c
     SecurityDevicesService,
     SecurityDevicesWriteRepository,
     SecurityDevicesQueryRepository,
+    CommentsService,
+    CommentsQueryRepository,
+    CommentsWriteRepository,
+    ReactionsWriteRepository,
+    ReactionsQueryRepository,
     AuthService,
     MailService,
     AppService,
