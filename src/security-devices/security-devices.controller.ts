@@ -8,6 +8,7 @@ import {
   NotFoundException,
   Req,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { SecurityDevicesQueryRepository } from './repositories/security-devices.query.repository';
 import { SecurityDevicesWriteRepository } from './repositories/security-devices.write.repository';
@@ -15,6 +16,7 @@ import { UsersQueryRepository } from '../users/repositories/users.query.reposito
 import { DeviceViewModel } from './interfaces';
 import { SecurityMapper } from '../common/mappers/security-devices.mapper';
 import { SkipThrottle } from '@nestjs/throttler';
+import { RefreshTokenGuard } from '../auth/guards/refresh-token.guard';
 
 @SkipThrottle()
 @Controller('security/devices')
@@ -26,6 +28,7 @@ export class SecurityDevicesController {
   ) {}
 
   @Get()
+  @UseGuards(RefreshTokenGuard)
   public async findAllSessions(@Req() req: Request): Promise<DeviceViewModel[]> {
     const user = await this.usersQueryRepository.findByLogin(req.userRefreshTokenPayload.login);
 
@@ -37,6 +40,7 @@ export class SecurityDevicesController {
   }
 
   @Delete()
+  @UseGuards(RefreshTokenGuard)
   @HttpCode(204)
   public async deleteAllSessions(@Req() req: Request) {
     const user = await this.usersQueryRepository.findByDeviceId(
@@ -53,6 +57,7 @@ export class SecurityDevicesController {
   }
 
   @Delete('/:deviceId')
+  @UseGuards(RefreshTokenGuard)
   @HttpCode(204)
   public async deleteSessionById(@Req() req: Request<{ deviceId: string }>) {
     const findUser = await this.securityQueryRepository.findUserByDeviceId(req.params.deviceId);

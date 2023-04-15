@@ -30,7 +30,7 @@ export class SecurityDevicesService {
     const data = new this.refreshTokensMetaModel({
       issuedAt: new Date(new Date().setMilliseconds(0)),
       expirationDate: add(new Date(), {
-        seconds: 20,
+        seconds: parseInt(config.refreshTokenExpiration),
       }),
       deviceId: uuidv4(),
       title: userAgent,
@@ -56,7 +56,7 @@ export class SecurityDevicesService {
     const data = {
       deviceId,
       expirationDate: add(new Date(), {
-        seconds: 20,
+        seconds: parseInt(config.refreshTokenExpiration),
       }),
       issuedAt: new Date(iat * 1000),
       newIssuedAt: newIssuedAtWithoutMs,

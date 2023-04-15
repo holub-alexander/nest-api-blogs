@@ -32,6 +32,7 @@ import { MailService } from './mail/mail.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { SecurityDevicesController } from './security-devices/security-devices.controller';
 
 @Module({
   imports: [
@@ -82,7 +83,15 @@ import { APP_GUARD } from '@nestjs/core';
       signOptions: { expiresIn: '10m' },
     }),
   ],
-  controllers: [BlogsController, PostsController, UsersController, AuthController, TestingController, AppController],
+  controllers: [
+    BlogsController,
+    PostsController,
+    SecurityDevicesController,
+    UsersController,
+    AuthController,
+    TestingController,
+    AppController,
+  ],
   providers: [
     {
       provide: APP_GUARD,

@@ -105,6 +105,7 @@ export class AuthController {
   @SkipThrottle()
   @UseGuards(RefreshTokenGuard)
   @Post('/refresh-token')
+  @HttpCode(200)
   public async refreshToken(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     if (!req.cookies.refreshToken) {
       throw new UnauthorizedException();
