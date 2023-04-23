@@ -1,5 +1,5 @@
 import { UserDocument } from '../../entity/user.entity';
-import { UserViewModel } from '../../users/interfaces';
+import { UserViewModel } from '../../application/Users/interfaces';
 
 export class UsersMapper {
   public static mapUsersViewModel(data: UserDocument[]): UserViewModel[] {

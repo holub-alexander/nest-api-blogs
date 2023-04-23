@@ -1,7 +1,7 @@
 import { LikeStatuses } from '../interfaces';
 import { Comment, CommentDocument } from '../../entity/comment.entity';
 import { Reaction, ReactionDocument } from '../../entity/reaction.entity';
-import { CommentViewModel } from '../../comments/interfaces';
+import { CommentViewModel } from '../../application/Comments/interfaces';
 
 export class CommentMapper {
   public static mapCommentsViewModel(

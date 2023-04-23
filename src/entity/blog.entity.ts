@@ -4,10 +4,19 @@ import { WEBSITE_URL } from '../common/constants/regexp';
 
 export type BlogDocument = HydratedDocument<Blog>;
 
+export class BloggerInfo {
+  @Prop({
+    type: String,
+    required: true,
+  })
+  login: string;
+
+  @Prop({ required: true, type: Types.ObjectId })
+  id: Types.ObjectId;
+}
+
 @Schema()
 export class Blog {
-  _id: Types.ObjectId;
-
   @Prop({
     required: true,
     type: String,
@@ -38,6 +47,11 @@ export class Blog {
     default: false,
   })
   isMembership: boolean;
+
+  @Prop({
+    schema: BloggerInfo,
+  })
+  bloggerInfo: BloggerInfo;
 }
 
 export const BlogEntity = SchemaFactory.createForClass(Blog);

@@ -1,4 +1,4 @@
-import { MeViewModel } from 'src/auth/interfaces';
+import { MeViewModel } from 'src/application/Auth/interfaces';
 import { UserDocument } from '../../entity/user.entity';
 
 export class AuthMapper {

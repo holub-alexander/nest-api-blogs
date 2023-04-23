@@ -1,4 +1,4 @@
-import { NewestLike, PostViewModel } from '../../posts/interfaces';
+import { NewestLike, PostViewModel } from '../../application/Posts/interfaces';
 import { PostDocument } from '../../entity/post.entity';
 import { LikeStatuses } from '../interfaces';
 import { ReactionDocument } from '../../entity/reaction.entity';
