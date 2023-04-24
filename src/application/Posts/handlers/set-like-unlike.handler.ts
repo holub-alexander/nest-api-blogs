@@ -1,6 +1,5 @@
 import { Reaction, ReactionDocument } from '../../../entity/reaction.entity';
 import { LikeStatuses } from '../../../common/interfaces';
-import { ObjectId } from 'mongodb';
 import { CommandHandler } from '@nestjs/cqrs';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -25,42 +24,6 @@ export class SetLikeUnlikeForPostHandler {
     private readonly reactionsWriteRepository: ReactionsWriteRepository,
   ) {}
 
-  private async incrementDecrementLikeCounter(
-    postId: ObjectId,
-    userReactionType: LikeStatuses | null,
-    likeStatus: LikeStatuses,
-  ) {
-    if (likeStatus === LikeStatuses.NONE && userReactionType !== LikeStatuses.NONE) {
-      if (userReactionType === LikeStatuses.LIKE) {
-        return this.postsWriteRepository.setLike(postId, false);
-      }
-
-      return this.postsWriteRepository.setDislike(postId, false);
-    }
-
-    if (userReactionType === likeStatus) {
-      return;
-    }
-
-    if (likeStatus === LikeStatuses.LIKE && userReactionType === LikeStatuses.DISLIKE) {
-      await this.postsWriteRepository.setDislike(postId, false);
-      return this.postsWriteRepository.setLike(postId, true);
-    }
-
-    if (likeStatus === LikeStatuses.DISLIKE && userReactionType === LikeStatuses.LIKE) {
-      await this.postsWriteRepository.setLike(postId, false);
-      return this.postsWriteRepository.setDislike(postId, true);
-    }
-
-    if (likeStatus === LikeStatuses.LIKE) {
-      return this.postsWriteRepository.setLike(postId, true);
-    }
-
-    if (likeStatus === LikeStatuses.DISLIKE) {
-      return this.postsWriteRepository.setDislike(postId, true);
-    }
-  }
-
   public async execute({ likeStatus, postId, login }: SetLikeUnlikeForPostCommand): Promise<ReactionDocument | null> {
     const post = await this.postsQueryRepository.findOne(postId);
     const user = await this.usersQueryRepository.findByLogin(login);
@@ -76,7 +39,6 @@ export class SetLikeUnlikeForPostHandler {
     }
 
     if (reaction) {
-      await this.incrementDecrementLikeCounter(post._id, reaction.likeStatus, likeStatus);
       const res = await this.reactionsWriteRepository.updateLikeStatus(reaction._id, likeStatus);
 
       if (res) {
@@ -92,12 +54,12 @@ export class SetLikeUnlikeForPostHandler {
       user: {
         id: user._id,
         login: user.accountData.login,
+        isBanned: false,
       },
       createdAt: new Date(),
       likeStatus,
     });
 
-    await this.incrementDecrementLikeCounter(post._id, null, likeStatus);
     await this.reactionsWriteRepository.save(reactionDTO);
 
     return reactionDTO;

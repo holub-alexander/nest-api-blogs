@@ -34,8 +34,15 @@ export class CreateUserHandler {
     const passwordSalt = await bcrypt.genSalt(10);
     const passwordHash = await generateHash(password, passwordSalt);
 
-    const createUserData = new this.UserModel({
-      accountData: { email, login, password: passwordHash, createdAt: new Date().toISOString() },
+    const createUserData = new this.UserModel<User>({
+      accountData: {
+        email,
+        login,
+        password: passwordHash,
+        createdAt: new Date().toISOString(),
+        isBanned: false,
+        banReason: null,
+      },
       emailConfirmation: {
         confirmationCode: null,
         expirationDate: null,

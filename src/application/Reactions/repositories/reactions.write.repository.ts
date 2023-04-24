@@ -23,4 +23,8 @@ export class ReactionsWriteRepository {
     const res = await this.ReactionModel.deleteMany({});
     return res.deletedCount > 0;
   }
+
+  public async updateUserBanStatus(userId: ObjectId, isBanned: boolean) {
+    await this.ReactionModel.updateMany({ 'user.id': userId }, { 'user.isBanned': isBanned });
+  }
 }

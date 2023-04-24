@@ -32,7 +32,7 @@ export class CreateCommentForPostHandler {
 
     const newComment = new this.CommentModel<Comment>({
       content: body.content,
-      commentatorInfo: { id: user._id, login },
+      commentatorInfo: { id: user._id, login, isBanned: false },
       createdAt: new Date().toISOString(),
       postId: findPost._id,
       likesInfo: {
@@ -43,6 +43,6 @@ export class CreateCommentForPostHandler {
 
     await this.commentsWriteRepository.save(newComment);
 
-    return CommentMapper.mapCommentViewModel(newComment, null);
+    return CommentMapper.mapCommentViewModel(newComment, null, 0, 0);
   }
 }

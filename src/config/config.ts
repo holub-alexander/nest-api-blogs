@@ -1,7 +1,7 @@
 const config = {
   login: 'admin',
   password: 'qwerty',
-  enableSecureCookie: true,
+  enableSecureCookie: false,
   accessTokenExpiration: '10000s',
   refreshTokenExpiration: '10000s',
 };

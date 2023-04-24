@@ -35,16 +35,20 @@ export class CommentsWriteRepository {
     return res.modifiedCount > 0;
   }
 
-  public async likeCommentById(id: ObjectId, isInc: boolean) {
-    return this.CommentModel.updateOne({ _id: id }, { $inc: { 'likesInfo.likesCount': isInc ? 1 : -1 } });
+  public async updateLikesCount(id: ObjectId, count: number) {
+    return this.CommentModel.updateOne({ _id: id }, { 'likesInfo.likesCount': count });
   }
 
-  public async dislikeCommentById(id: ObjectId, isInc: boolean) {
-    return this.CommentModel.updateOne({ _id: id }, { $inc: { 'likesInfo.dislikesCount': isInc ? 1 : -1 } });
+  public async updateDislikesCount(id: ObjectId, count: number) {
+    return this.CommentModel.updateOne({ _id: id }, { 'likesInfo.dislikesCount': count });
   }
 
   public async deleteMany(): Promise<boolean> {
     const res = await this.CommentModel.deleteMany({});
     return res.deletedCount > 0;
+  }
+
+  public async updateUserBanStatus(userId: ObjectId, isBanned: boolean) {
+    await this.CommentModel.updateMany({ 'commentatorInfo.id': userId }, { 'commentatorInfo.isBanned': isBanned });
   }
 }

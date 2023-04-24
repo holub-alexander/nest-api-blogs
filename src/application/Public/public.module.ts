@@ -19,6 +19,7 @@ import { SecurityDevicesService } from '../Security-Devices/security-devices.ser
 import { AuthService } from '../Auth/auth.service';
 import { TestingModule } from '../Testing/testing.module';
 import { PublicTestingController } from './controllers/public-testing.controller';
+import { ReactionsModule } from '../Reactions/reactions.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { PublicTestingController } from './controllers/public-testing.controller
     BlogsModule,
     PostsModule,
     CommentsModule,
+    ReactionsModule,
     TestingModule,
   ],
   controllers: [

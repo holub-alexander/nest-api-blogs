@@ -85,4 +85,13 @@ export class UsersWriteRepository {
 
     return res.modifiedCount === 1;
   }
+
+  public async banUnban(userId: ObjectId, isBanned: boolean, banReason: string | null) {
+    const res = await this.UserModel.updateOne(
+      { _id: userId },
+      { 'accountData.isBanned': isBanned, 'accountData.banReason': banReason },
+    );
+
+    return res.modifiedCount === 1;
+  }
 }

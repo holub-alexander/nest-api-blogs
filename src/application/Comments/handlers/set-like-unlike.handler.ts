@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongodb';
 import { LikeStatuses } from '../../../common/interfaces';
 import { Reaction, ReactionDocument } from '../../../entity/reaction.entity';
 import { InjectModel } from '@nestjs/mongoose';
@@ -25,42 +24,6 @@ export class SetLikeUnlikeForCommentHandler {
     private readonly reactionsWriteRepository: ReactionsWriteRepository,
   ) {}
 
-  private async incrementDecrementLikeCounter(
-    commentId: ObjectId,
-    userReactionType: LikeStatuses | null,
-    likeStatus: LikeStatuses,
-  ) {
-    if (likeStatus === LikeStatuses.NONE && userReactionType !== LikeStatuses.NONE) {
-      if (userReactionType === LikeStatuses.LIKE) {
-        return this.commentsWriteRepository.likeCommentById(commentId, false);
-      }
-
-      return this.commentsWriteRepository.dislikeCommentById(commentId, false);
-    }
-
-    if (userReactionType === likeStatus) {
-      return;
-    }
-
-    if (likeStatus === LikeStatuses.LIKE && userReactionType === LikeStatuses.DISLIKE) {
-      await this.commentsWriteRepository.dislikeCommentById(commentId, false);
-      return this.commentsWriteRepository.likeCommentById(commentId, true);
-    }
-
-    if (likeStatus === LikeStatuses.DISLIKE && userReactionType === LikeStatuses.LIKE) {
-      await this.commentsWriteRepository.likeCommentById(commentId, false);
-      return this.commentsWriteRepository.dislikeCommentById(commentId, true);
-    }
-
-    if (likeStatus === LikeStatuses.LIKE) {
-      return this.commentsWriteRepository.likeCommentById(commentId, true);
-    }
-
-    if (likeStatus === LikeStatuses.DISLIKE) {
-      return this.commentsWriteRepository.dislikeCommentById(commentId, true);
-    }
-  }
-
   public async execute({
     commentId,
     likeStatus,
@@ -82,7 +45,6 @@ export class SetLikeUnlikeForCommentHandler {
     }
 
     if (reaction) {
-      await this.incrementDecrementLikeCounter(comment._id, reaction.likeStatus, likeStatus);
       const res = await this.reactionsWriteRepository.updateLikeStatus(reaction._id, likeStatus);
 
       if (res) {
@@ -98,12 +60,12 @@ export class SetLikeUnlikeForCommentHandler {
       user: {
         id: user._id,
         login: user.accountData.login,
+        isBanned: false,
       },
       createdAt: new Date(),
       likeStatus,
     });
 
-    await this.incrementDecrementLikeCounter(comment._id, null, likeStatus);
     await this.reactionsWriteRepository.save(newReaction);
 
     return newReaction;

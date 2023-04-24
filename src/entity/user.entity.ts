@@ -16,6 +16,12 @@ export class AccountData {
 
   @Prop({ required: true, type: Date })
   createdAt: string;
+
+  @Prop({ type: Boolean, default: false })
+  isBanned: boolean;
+
+  @Prop({ type: String, default: null })
+  banReason: string | null;
 }
 
 export class EmailConfirmation {
@@ -54,8 +60,6 @@ export class RefreshTokensMeta {
 
 @Schema()
 export class User {
-  _id: Types.ObjectId;
-
   @Prop({ required: true, schema: AccountData })
   accountData: AccountData;
 

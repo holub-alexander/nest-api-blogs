@@ -38,6 +38,8 @@ export class PostsMapper {
     post: PostDocument,
     reaction: ReactionDocument | null,
     lastReactions: ReactionDocument[] | [],
+    likesCount: number,
+    dislikesCount: number,
   ): PostViewModel {
     return {
       id: post._id.toString(),
@@ -48,8 +50,8 @@ export class PostsMapper {
       blogName: post.blog.name,
       createdAt: post.createdAt,
       extendedLikesInfo: {
-        likesCount: post.likesInfo.likesCount,
-        dislikesCount: post.likesInfo.dislikesCount,
+        likesCount: likesCount,
+        dislikesCount: dislikesCount,
         myStatus: reaction ? reaction.likeStatus : LikeStatuses.NONE,
         newestLikes: this.mapNewestLikes(lastReactions),
       },

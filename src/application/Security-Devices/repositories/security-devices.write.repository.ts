@@ -63,4 +63,10 @@ export class SecurityDevicesWriteRepository {
 
     return res.modifiedCount === 1;
   }
+
+  public async deleteAllDevices(userId: ObjectId): Promise<boolean> {
+    const res = await this.UserModel.updateOne({ _id: userId }, { refreshTokensMeta: [] });
+
+    return res.modifiedCount === 1;
+  }
 }

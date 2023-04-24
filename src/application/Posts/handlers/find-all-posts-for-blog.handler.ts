@@ -15,7 +15,8 @@ import { UsersQueryRepository } from '../../Users/repositories/users.query.repos
 import { CommentsQueryRepository } from '../../Comments/repositories/comments.query.repository';
 import { CommentsWriteRepository } from '../../Comments/repositories/comments.write.repository';
 import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';
-import { CommandHandler } from '@nestjs/cqrs';
+import { CommandBus, CommandHandler } from '@nestjs/cqrs';
+import { FindAllLikesCommand } from '../../Reactions/handlers/find-all-likes.handler';
 
 export class FindAllPostsByBlogIdCommand {
   constructor(public paginationOptions: PaginationOptionsDto, public id: string, public userLogin = '') {}
@@ -27,6 +28,7 @@ export class FindAllPostsByBlogIdHandler {
     @InjectModel(Post.name) private PostModel: Model<PostDocument>,
     @InjectModel(Comment.name) private readonly CommentModel: Model<CommentDocument>,
     @InjectModel(Reaction.name) private readonly ReactionModel: Model<ReactionDocument>,
+    private readonly commandBus: CommandBus,
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly postsWriteRepository: PostsWriteRepository,
     private readonly blogsQueryRepository: BlogsQueryRepository,
@@ -39,9 +41,10 @@ export class FindAllPostsByBlogIdHandler {
   private formatPosts(items: PostDocument[], reactions: ReactionDocument[] | null): Promise<PostViewModel>[] {
     return items.map(async (post: PostDocument) => {
       const lastReactions = await this.reactionsQueryRepository.findLatestReactionsForPost(post._id, 3);
+      const { likesCount, dislikesCount } = await this.commandBus.execute(new FindAllLikesCommand('post', post._id));
 
       if (!reactions || !lastReactions) {
-        return PostsMapper.mapPostViewModel(post, null, lastReactions);
+        return PostsMapper.mapPostViewModel(post, null, lastReactions, likesCount, dislikesCount);
       }
 
       const foundReactionIndex = reactions.findIndex(
@@ -49,10 +52,16 @@ export class FindAllPostsByBlogIdHandler {
       );
 
       if (foundReactionIndex > -1) {
-        return PostsMapper.mapPostViewModel(post, reactions[foundReactionIndex], lastReactions);
+        return PostsMapper.mapPostViewModel(
+          post,
+          reactions[foundReactionIndex],
+          lastReactions,
+          likesCount,
+          dislikesCount,
+        );
       }
 
-      return PostsMapper.mapPostViewModel(post, null, lastReactions);
+      return PostsMapper.mapPostViewModel(post, null, lastReactions, likesCount, dislikesCount);
     });
   }
 

@@ -41,7 +41,7 @@ export class CreatePostHandler {
 
       await this.postsWriteRepository.save(doc);
 
-      return PostsMapper.mapPostViewModel(doc, null, []);
+      return PostsMapper.mapPostViewModel(doc, null, [], 0, 0);
     }
 
     return null;

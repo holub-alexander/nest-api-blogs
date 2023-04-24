@@ -6,7 +6,8 @@ import { PostsQueryRepository } from '../repositories/posts.query.repository';
 import { CommentsQueryRepository } from '../../Comments/repositories/comments.query.repository';
 import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
 import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';
-import { CommandHandler } from '@nestjs/cqrs';
+import { CommandBus, CommandHandler } from '@nestjs/cqrs';
+import { FindAllLikesCommand } from '../../Reactions/handlers/find-all-likes.handler';
 
 export class FindAllCommentsForPostCommand {
   constructor(public pagination: PaginationOptionsDto, public postId: string, public userLogin: string | null) {}
@@ -15,10 +16,11 @@ export class FindAllCommentsForPostCommand {
 @CommandHandler(FindAllCommentsForPostCommand)
 export class FindAllCommentsForPostHandler {
   constructor(
-    private postsQueryRepository: PostsQueryRepository,
-    private commentsQueryRepository: CommentsQueryRepository,
-    private usersQueryRepository: UsersQueryRepository,
-    private reactionsQueryRepository: ReactionsQueryRepository,
+    private readonly commandBus: CommandBus,
+    private readonly postsQueryRepository: PostsQueryRepository,
+    private readonly commentsQueryRepository: CommentsQueryRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly reactionsQueryRepository: ReactionsQueryRepository,
   ) {}
 
   public async execute({
@@ -34,6 +36,12 @@ export class FindAllCommentsForPostHandler {
 
     const { meta, items } = await this.commentsQueryRepository.findMany(pagination, postId);
 
+    const subject = await Promise.all(
+      items.map((reaction) => {
+        return this.commandBus.execute(new FindAllLikesCommand('comment', reaction._id));
+      }),
+    );
+
     if (userLogin) {
       const user = await this.usersQueryRepository.findByLogin(userLogin);
       const reactions = await this.reactionsQueryRepository.findReactionsByIds(
@@ -44,13 +52,13 @@ export class FindAllCommentsForPostHandler {
 
       return {
         ...meta,
-        items: CommentMapper.mapCommentsViewModel(items, reactions),
+        items: CommentMapper.mapCommentsViewModel(items, reactions, subject),
       };
     }
 
     return {
       ...meta,
-      items: CommentMapper.mapCommentsViewModel(items, null),
+      items: CommentMapper.mapCommentsViewModel(items, null, subject),
     };
   }
 }

@@ -7,10 +7,16 @@ export class CommentMapper {
   public static mapCommentsViewModel(
     comments: CommentDocument[],
     reactions: ReactionDocument[] | null,
+    allReactions: { likesCount: number; dislikesCount: number }[],
   ): CommentViewModel[] {
-    return comments.map((comment) => {
+    return comments.map((comment, index) => {
       if (!reactions) {
-        return this.mapCommentViewModel(comment, null);
+        return this.mapCommentViewModel(
+          comment,
+          null,
+          allReactions[index].likesCount,
+          allReactions[index].dislikesCount,
+        );
       }
 
       const foundReactionIndex = reactions.findIndex(
@@ -18,14 +24,24 @@ export class CommentMapper {
       );
 
       if (foundReactionIndex > -1) {
-        return this.mapCommentViewModel(comment, reactions[foundReactionIndex]);
+        return this.mapCommentViewModel(
+          comment,
+          reactions[foundReactionIndex],
+          allReactions[index].likesCount,
+          allReactions[index].dislikesCount,
+        );
       }
 
-      return this.mapCommentViewModel(comment, null);
+      return this.mapCommentViewModel(comment, null, allReactions[index].likesCount, allReactions[index].dislikesCount);
     });
   }
 
-  public static mapCommentViewModel(comment: CommentDocument, reaction: Reaction | null): CommentViewModel {
+  public static mapCommentViewModel(
+    comment: CommentDocument,
+    reaction: Reaction | null,
+    likesCount: number,
+    dislikesCount: number,
+  ): CommentViewModel {
     return {
       id: comment._id.toString(),
       content: comment.content,
@@ -35,8 +51,8 @@ export class CommentMapper {
       },
       createdAt: comment.createdAt,
       likesInfo: {
-        likesCount: comment.likesInfo.likesCount,
-        dislikesCount: comment.likesInfo.dislikesCount,
+        likesCount: likesCount,
+        dislikesCount: dislikesCount,
         myStatus: reaction ? reaction.likeStatus : LikeStatuses.NONE,
       },
     };

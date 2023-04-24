@@ -9,6 +9,9 @@ export class CommentatorInfo {
 
   @Prop({ required: true, type: String })
   login: string;
+
+  @Prop({ required: true, type: Boolean, default: false })
+  isBanned: boolean;
 }
 
 export class LikesInfo {
