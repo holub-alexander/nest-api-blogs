@@ -7,9 +7,10 @@ import { BlogsQueryRepository } from '../../Blogs/repositories/blogs.query.repos
 import { CreatePostDto } from '../dto/create.dto';
 import { PostsMapper } from '../../../common/mappers/posts.mapper';
 import { CommandHandler } from '@nestjs/cqrs';
+import { ObjectId } from 'mongodb';
 
 export class CreatePostCommand {
-  constructor(public body: CreatePostDto) {}
+  constructor(public body: CreatePostDto, public blogId: string, public userId: ObjectId) {}
 }
 
 @CommandHandler(CreatePostCommand)
@@ -21,7 +22,7 @@ export class CreatePostHandler {
   ) {}
 
   public async execute(command: CreatePostCommand): Promise<PostViewModel | null> {
-    const findBlog = await this.blogsQueryRepository.findOne(command.body.blogId);
+    const findBlog = await this.blogsQueryRepository.findOne(command.blogId);
 
     if (findBlog) {
       const doc = new this.PostModel<Post>({
@@ -32,6 +33,10 @@ export class CreatePostHandler {
         blog: {
           id: findBlog._id,
           name: findBlog.name,
+        },
+        userInfo: {
+          id: command.userId,
+          isBanned: false,
         },
         likesInfo: {
           likesCount: 0,

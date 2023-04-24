@@ -31,10 +31,11 @@ export class PostsQueryRepository {
     sortBy = '',
   }: PaginationOptionsDto): Promise<PaginationDto<PostDocument>> {
     const sorting = getObjectToSort({ sortBy, sortDirection, field: getFieldToSort(sortBy) });
+    const filter = { 'userInfo.isBanned': false };
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
 
-    const totalCount = await this.PostModel.countDocuments({});
-    const items = await this.PostModel.find<PostDocument>()
+    const totalCount = await this.PostModel.countDocuments(filter);
+    const items = await this.PostModel.find<PostDocument>(filter)
       .skip((+pageNumber - 1) * +pageSizeValue)
       .limit(+pageSizeValue)
       .sort(sorting);
@@ -52,10 +53,11 @@ export class PostsQueryRepository {
     id: ObjectId,
   ): Promise<PaginationDto<PostDocument>> {
     const sorting = getObjectToSort({ sortBy, sortDirection });
+    const filter = { 'blog.id': id, 'userInfo.isBanned': false };
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
 
-    const totalCount = await this.PostModel.find({ 'blog.id': id }).countDocuments({});
-    const items = await this.PostModel.find<PostDocument>({ 'blog.id': id })
+    const totalCount = await this.PostModel.find(filter).countDocuments({});
+    const items = await this.PostModel.find<PostDocument>(filter)
       .skip((+pageNumber - 1) * +pageSizeValue)
       .limit(+pageSizeValue)
       .sort(sorting);
@@ -72,7 +74,7 @@ export class PostsQueryRepository {
     const isValidId = ObjectId.isValid(postId);
 
     if (isValidId) {
-      const data = await this.PostModel.findById(new ObjectId(postId));
+      const data = await this.PostModel.findOne({ _id: new ObjectId(postId), 'userInfo.isBanned': false });
 
       if (data) {
         return data;

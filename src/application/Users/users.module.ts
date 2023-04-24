@@ -14,6 +14,8 @@ import { CommentEntity, Comment } from '../../entity/comment.entity';
 import { ReactionsWriteRepository } from '../Reactions/repositories/reactions.write.repository';
 import { Reaction, ReactionEntity } from '../../entity/reaction.entity';
 import { SecurityDevicesWriteRepository } from '../Security-Devices/repositories/security-devices.write.repository';
+import { PostsWriteRepository } from '../Posts/repositories/posts.write.repository';
+import { PostEntity, Post } from '../../entity/post.entity';
 
 export const CommandHandlers = [
   FindAllUsersHandler,
@@ -30,6 +32,7 @@ export const CommandHandlers = [
       { name: User.name, schema: UserEntity },
       { name: Comment.name, schema: CommentEntity },
       { name: Reaction.name, schema: ReactionEntity },
+      { name: Post.name, schema: PostEntity },
     ]),
   ],
   controllers: [],
@@ -39,6 +42,7 @@ export const CommandHandlers = [
     CommentsWriteRepository,
     UsersService,
     ReactionsWriteRepository,
+    PostsWriteRepository,
     ...CommandHandlers,
   ],
 })

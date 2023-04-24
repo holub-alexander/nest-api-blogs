@@ -1,7 +1,6 @@
 import {
   IsNotEmpty,
   Length,
-  Validate,
   ValidationArguments,
   ValidatorConstraint,
   ValidatorConstraintInterface,
@@ -32,7 +31,7 @@ export class IsBlogFound implements ValidatorConstraintInterface {
   }
 }
 
-export class CreatePostDto implements Omit<Post, '_id' | 'blog' | 'createdAt' | 'likesInfo'> {
+export class CreatePostDto implements Omit<Post, '_id' | 'blog' | 'createdAt' | 'likesInfo' | 'userInfo'> {
   @IsNotEmpty()
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(1, 30)
@@ -47,15 +46,9 @@ export class CreatePostDto implements Omit<Post, '_id' | 'blog' | 'createdAt' | 
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(1, 1000)
   public content: string;
-
-  @IsNotEmpty()
-  @Transform(({ value }: TransformFnParams) => value?.trim())
-  @Length(1, 30)
-  @Validate(IsBlogFound)
-  public blogId: string;
 }
 
-export class CreatePostFromBlog implements Omit<Post, '_id' | 'blog' | 'createdAt' | 'likesInfo'> {
+export class CreatePostFromBlog implements Omit<Post, '_id' | 'blog' | 'createdAt' | 'likesInfo' | 'userInfo'> {
   @IsNotEmpty()
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(1, 30)

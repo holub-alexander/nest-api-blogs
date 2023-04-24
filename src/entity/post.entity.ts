@@ -23,6 +23,14 @@ export class PostBlog {
   name: string;
 }
 
+export class UserInfo {
+  @Prop({ required: true, type: Types.ObjectId })
+  id: any;
+
+  @Prop({ required: true, type: Boolean, default: false })
+  isBanned: boolean;
+}
+
 @Schema()
 export class Post {
   @Prop({
@@ -60,6 +68,9 @@ export class Post {
 
   @Prop({ required: true, schema: LikesInfo })
   likesInfo: LikesInfo;
+
+  @Prop({ required: true, schema: UserInfo })
+  userInfo: UserInfo;
 }
 
 export const PostEntity = SchemaFactory.createForClass(Post);

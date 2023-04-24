@@ -17,7 +17,11 @@ export type ExtendedLikesInfoViewModel = LikesInfoViewModel & {
   newestLikes: NewestLike[] | [];
 };
 
-export interface PostViewModel extends CreatePostDto {
+export interface PostViewModel {
+  title: string;
+  shortDescription: string;
+  content: string;
+  blogId: string;
   id: string;
   blogName: string;
   createdAt: string | Date;

@@ -4,15 +4,10 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { UpdatePostDto } from '../dto/update.dto';
 import { Post, PostDocument } from '../../../entity/post.entity';
-import { FindOneBlogCommand } from '../../Blogs/handlers/find-one-blog.handler';
-import { CommandBus } from '@nestjs/cqrs';
 
 @Injectable()
 export class PostsWriteRepository {
-  constructor(
-    @InjectModel(Post.name) private readonly PostModel: Model<PostDocument>,
-    private commandBus: CommandBus,
-  ) {}
+  constructor(@InjectModel(Post.name) private readonly PostModel: Model<PostDocument>) {}
 
   public async save(doc: PostDocument): Promise<PostDocument> {
     return doc.save();
@@ -44,16 +39,12 @@ export class PostsWriteRepository {
     return false;
   }
 
-  public async setLike(_id: ObjectId, isInc: boolean) {
-    return this.PostModel.updateOne({ _id }, { $inc: { 'likesInfo.likesCount': isInc ? 1 : -1 } });
-  }
-
-  public async setDislike(_id: ObjectId, isInc: boolean) {
-    return this.PostModel.updateOne({ _id }, { $inc: { 'likesInfo.dislikesCount': isInc ? 1 : -1 } });
-  }
-
   public async deleteMany(): Promise<boolean> {
     const res = await this.PostModel.deleteMany({});
     return res.deletedCount > 0;
+  }
+
+  public async updateUserBanStatus(userId: ObjectId, isBanned: boolean) {
+    await this.PostModel.updateMany({ 'userInfo.id': userId }, { 'userInfo.isBanned': isBanned });
   }
 }

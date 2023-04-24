@@ -33,6 +33,7 @@ import { BlogDocument } from '../../entity/blog.entity';
 import { BlogsQueryRepository } from '../Blogs/repositories/blogs.query.repository';
 import { PostsQueryRepository } from '../Posts/repositories/posts.query.repository';
 import { DeleteOnePostCommand } from '../Posts/handlers/delete-one-post.handler';
+import { UsersQueryRepository } from '../Users/repositories/users.query.repository';
 
 @SkipThrottle()
 @Controller('blogger/blogs')
@@ -42,6 +43,7 @@ export class BloggerController {
     private readonly blogsWriteRepository: BlogsWriteRepository,
     private readonly blogsQueryRepository: BlogsQueryRepository,
     private readonly postsQueryRepository: PostsQueryRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
   ) {}
 
   private async checkAccessToBlog(blogId: string, userLogin: string): Promise<BlogDocument | never> {
@@ -130,8 +132,9 @@ export class BloggerController {
     @Req() req: Request,
   ) {
     const findBlog = await this.checkAccessToBlog(id, req.user.login);
+    const user = await this.usersQueryRepository.findByLogin(req.user.login);
 
-    return this.commandBus.execute(new CreatePostCommand({ ...body, blogId: findBlog.id }));
+    return this.commandBus.execute(new CreatePostCommand(body, findBlog.id.toString(), user!._id));
   }
 
   @Put('/:blogId/posts/:postId')
