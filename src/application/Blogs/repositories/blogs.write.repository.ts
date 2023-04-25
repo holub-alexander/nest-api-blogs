@@ -37,6 +37,7 @@ export class BlogsWriteRepository {
 
   public async deleteMany(): Promise<boolean> {
     const res = await this.BlogModel.deleteMany({});
+
     return res.deletedCount > 0;
   }
 
