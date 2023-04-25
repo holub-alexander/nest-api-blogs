@@ -119,6 +119,7 @@ export class BloggerController {
   }
 
   @Get()
+  @UseGuards(JwtTokenGuard)
   public async findAll(@Query() queryParams: PaginationBlogDto): Promise<Paginator<BlogViewModel[]>> {
     return this.commandBus.execute(new FindAllBlogsCommand(queryParams));
   }
@@ -157,7 +158,7 @@ export class BloggerController {
     return true;
   }
 
-  @Delete('/:id')
+  @Delete('/:blogsId/posts/:postId')
   @UseGuards(JwtTokenGuard)
   @HttpCode(204)
   public async deleteOnePost(@Param('blogId') blogId: string, @Param('postId') postId: string, @Req() req: Request) {
