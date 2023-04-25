@@ -13,6 +13,9 @@ export class BloggerInfo {
 
   @Prop({ required: true, type: Types.ObjectId })
   id: Types.ObjectId;
+
+  @Prop({ type: Boolean, default: false })
+  isBanned: boolean;
 }
 
 @Schema()

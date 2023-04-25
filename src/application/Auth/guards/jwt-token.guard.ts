@@ -5,7 +5,7 @@ import { UsersQueryRepository } from '../../Users/repositories/users.query.repos
 
 @Injectable()
 export class JwtTokenGuard implements CanActivate {
-  constructor(private jwtService: JwtService, private usersQueryRepository: UsersQueryRepository) {}
+  constructor(private readonly jwtService: JwtService, private readonly usersQueryRepository: UsersQueryRepository) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -22,7 +22,7 @@ export class JwtTokenGuard implements CanActivate {
 
       const user = await this.usersQueryRepository.findByLogin(payload.login);
 
-      if (!user) {
+      if (!user || user.accountData.isBanned) {
         throw new UnauthorizedException();
       }
 

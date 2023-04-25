@@ -39,4 +39,8 @@ export class BlogsWriteRepository {
     const res = await this.BlogModel.deleteMany({});
     return res.deletedCount > 0;
   }
+
+  public async updateUserBanStatus(userId: ObjectId, isBanned: boolean) {
+    await this.BlogModel.updateMany({ 'bloggerInfo.id': userId }, { 'bloggerInfo.isBanned': isBanned });
+  }
 }

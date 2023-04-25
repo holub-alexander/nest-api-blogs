@@ -22,7 +22,7 @@ export class BlogsQueryRepository {
   }: PaginationBlogDto): Promise<PaginationDto<BlogDocument>> {
     const sorting = getObjectToSort({ sortBy, sortDirection });
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
-    const filter = { name: { $regex: searchNameTerm, $options: 'i' } };
+    const filter = { name: { $regex: searchNameTerm, $options: 'i' }, 'bloggerInfo.isBanned': false };
 
     const totalCount = await this.BlogModel.countDocuments(filter);
     const items = await this.BlogModel.find<BlogDocument>(filter)
@@ -42,7 +42,10 @@ export class BlogsQueryRepository {
     const isValidId = ObjectId.isValid(blogId);
 
     if (isValidId) {
-      const blog = await this.BlogModel.findById<BlogDocument>(new ObjectId(blogId));
+      const blog = await this.BlogModel.findOne<BlogDocument>({
+        _id: new ObjectId(blogId),
+        'bloggerInfo.isBanned': false,
+      });
 
       if (blog) {
         return blog;

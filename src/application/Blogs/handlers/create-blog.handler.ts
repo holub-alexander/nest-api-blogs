@@ -32,6 +32,7 @@ export class CreateBlogHandler {
       bloggerInfo: {
         login: command.userLogin,
         id: user!._id ?? null,
+        isBanned: false,
       },
     });
 
