@@ -7,7 +7,7 @@ import { SecurityDevicesWriteRepository } from '../../Security-Devices/repositor
 import { PostsWriteRepository } from 'src/application/Posts/repositories/posts.write.repository';
 
 export class BanUnbanUserCommand {
-  constructor(public userId: ObjectId, public isBanned: boolean, public banReason: string) {}
+  constructor(public userId: ObjectId, public isBanned: boolean, public banReason: string, public banDate: string) {}
 }
 
 @CommandHandler(BanUnbanUserCommand)
@@ -26,7 +26,12 @@ export class BanUnbanUserHandler {
     }
 
     return Promise.all([
-      this.usersWriteRepository.banUnban(command.userId, command.isBanned, command.isBanned ? command.banReason : null),
+      this.usersWriteRepository.banUnban(
+        command.userId,
+        command.isBanned,
+        command.isBanned ? command.banReason : null,
+        command.isBanned ? command.banDate : null,
+      ),
       this.commentsWriteRepository.updateUserBanStatus(command.userId, command.isBanned),
       this.reactionsWriteRepository.updateUserBanStatus(command.userId, command.isBanned),
       this.postsWriteRepository.updateUserBanStatus(command.userId, command.isBanned),

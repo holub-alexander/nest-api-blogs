@@ -22,6 +22,9 @@ export class AccountData {
 
   @Prop({ type: String, default: null })
   banReason: string | null;
+
+  @Prop({ type: Date, default: null })
+  banDate: string | null;
 }
 
 export class EmailConfirmation {

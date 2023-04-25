@@ -11,6 +11,12 @@ export enum LikeStatuses {
   DISLIKE = 'Dislike',
 }
 
+export enum BanStatuses {
+  All = 'all',
+  Banned = 'banned',
+  NotBanned = 'notBanned',
+}
+
 export interface PageMetaDtoParameters {
   paginationOptionsDto: PaginationOptionsDto;
   totalCount: number;

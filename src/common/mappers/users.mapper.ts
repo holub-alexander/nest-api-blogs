@@ -8,6 +8,11 @@ export class UsersMapper {
       login: user.accountData.login,
       email: user.accountData.email,
       createdAt: user.accountData.createdAt,
+      banInfo: {
+        banDate: user.accountData.banDate,
+        banReason: user.accountData.banReason,
+        isBanned: user.accountData.isBanned,
+      },
     }));
   }
 
@@ -17,6 +22,11 @@ export class UsersMapper {
       login: user.accountData.login,
       email: user.accountData.email,
       createdAt: user.accountData.createdAt,
+      banInfo: {
+        banDate: user.accountData.banDate,
+        banReason: user.accountData.banReason,
+        isBanned: user.accountData.isBanned,
+      },
     };
   }
 }

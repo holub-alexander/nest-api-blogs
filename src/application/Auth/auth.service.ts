@@ -114,6 +114,7 @@ export class AuthService {
         createdAt: new Date().toISOString(),
         isBanned: false,
         banReason: null,
+        banDate: null,
       },
       emailConfirmation: {
         confirmationCode: uuidv4(),

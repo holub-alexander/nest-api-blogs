@@ -4,16 +4,18 @@ import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { UserViewModel } from '../interfaces';
 import { User, UserDocument } from '../../../entity/user.entity';
-import { SortDirections } from '../../../common/interfaces';
+import { BanStatuses, SortDirections } from '../../../common/interfaces';
 import { PaginationDto } from '../../../common/dto/pagination.dto';
 import { getObjectToSort } from '../../../common/utils/get-object-to-sort';
 import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
+import { PaginationUsersDto } from '../dto/pagination-users.dto';
 
 type UserViewFields = {
   [key in keyof UserViewModel]: string;
 };
 
 const getFieldToSort = (field: string): string => {
+  // @ts-ignore
   const fields: UserViewFields = {
     id: '_id',
     login: 'accountData.login',
@@ -36,15 +38,20 @@ export class UsersQueryRepository {
     sortBy = '',
     searchLoginTerm = '',
     searchEmailTerm = '',
-  }): Promise<PaginationDto<UserDocument>> {
+    banStatus = BanStatuses.All,
+  }: PaginationUsersDto): Promise<PaginationDto<UserDocument>> {
     const sorting = getObjectToSort({ sortBy, sortDirection, field: getFieldToSort(sortBy), getField: getFieldToSort });
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
-    const filter = {
+    const filter: { $or: {}[]; 'accountData.isBanned'?: boolean } = {
       $or: [
         { 'accountData.login': { $regex: searchLoginTerm, $options: 'i' } },
         { 'accountData.email': { $regex: searchEmailTerm, $options: 'i' } },
       ],
     };
+
+    if (banStatus === BanStatuses.Banned || banStatus === BanStatuses.NotBanned) {
+      filter['accountData.isBanned'] = BanStatuses.Banned === banStatus;
+    }
 
     const totalCount = await this.UserModel.countDocuments(filter);
     const items = await this.UserModel.find<UserDocument>(filter)

@@ -42,6 +42,7 @@ export class CreateUserHandler {
         createdAt: new Date().toISOString(),
         isBanned: false,
         banReason: null,
+        banDate: null,
       },
       emailConfirmation: {
         confirmationCode: null,

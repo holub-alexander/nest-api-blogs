@@ -27,7 +27,9 @@ export class SuperAdminUsersController {
       throw new NotFoundException();
     }
 
-    await this.commandBus.execute(new BanUnbanUserCommand(user._id, body.isBanned, body.banReason));
+    await this.commandBus.execute(
+      new BanUnbanUserCommand(user._id, body.isBanned, body.banReason, new Date().toISOString()),
+    );
   }
 
   @Get()
