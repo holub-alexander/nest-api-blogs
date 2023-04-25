@@ -30,6 +30,8 @@ export class SuperAdminUsersController {
     await this.commandBus.execute(
       new BanUnbanUserCommand(user._id, body.isBanned, body.banReason, new Date().toISOString()),
     );
+
+    return true;
   }
 
   @Get()

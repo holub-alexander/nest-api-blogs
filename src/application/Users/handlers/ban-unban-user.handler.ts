@@ -22,7 +22,7 @@ export class BanUnbanUserHandler {
 
   public async execute(command: BanUnbanUserCommand) {
     if (command.isBanned) {
-      // await this.securityDevicesWriteRepository.deleteAllDevices(command.userId);
+      await this.securityDevicesWriteRepository.deleteAllDevices(command.userId);
     }
 
     return Promise.all([
