@@ -13,16 +13,34 @@ import { getObjectToSort } from '../../../common/utils/get-object-to-sort';
 export class BlogsQueryRepository {
   constructor(@InjectModel(Blog.name) private readonly BlogModel: Model<BlogDocument>) {}
 
-  public async findAll({
-    sortBy = 'createdAt',
-    sortDirection = SortDirections.DESC,
-    searchNameTerm = '',
-    pageSize = 10,
-    pageNumber = 1,
-  }: PaginationBlogDto): Promise<PaginationDto<BlogDocument>> {
+  public async findAll(
+    {
+      sortBy = 'createdAt',
+      sortDirection = SortDirections.DESC,
+      searchNameTerm = '',
+      pageSize = 10,
+      pageNumber = 1,
+    }: PaginationBlogDto,
+    userId?: ObjectId | null,
+    isShowAllBlogs = false,
+  ): Promise<PaginationDto<BlogDocument>> {
     const sorting = getObjectToSort({ sortBy, sortDirection });
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
-    const filter = { name: { $regex: searchNameTerm, $options: 'i' }, 'bloggerInfo.isBanned': false };
+    const filter: {
+      name: { $regex: string; $options: string };
+      'bloggerInfo.isBanned'?: boolean;
+      'bloggerInfo.id'?: ObjectId;
+    } = {
+      name: { $regex: searchNameTerm, $options: 'i' },
+    };
+
+    if (!isShowAllBlogs) {
+      filter['bloggerInfo.isBanned'] = false;
+    }
+
+    if (userId) {
+      filter['bloggerInfo.id'] = userId;
+    }
 
     const totalCount = await this.BlogModel.countDocuments(filter);
     const items = await this.BlogModel.find<BlogDocument>(filter)

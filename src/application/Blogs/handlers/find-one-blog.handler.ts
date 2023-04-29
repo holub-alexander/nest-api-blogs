@@ -1,5 +1,5 @@
 import { BlogViewModel } from '../interfaces';
-import { BlogsMapper } from '../../../common/mappers/blogs.mapper';
+import { BlogsMapper } from '../mappers/blogs.mapper';
 import { BlogsQueryRepository } from '../repositories/blogs.query.repository';
 import { CommandHandler } from '@nestjs/cqrs';
 

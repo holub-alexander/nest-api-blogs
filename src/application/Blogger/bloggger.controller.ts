@@ -20,7 +20,6 @@ import { BlogsWriteRepository } from '../Blogs/repositories/blogs.write.reposito
 import { PaginationBlogDto } from '../Blogs/dto/pagination-blog.dto';
 import { Paginator } from '../../common/interfaces';
 import { BlogViewModel } from '../Blogs/interfaces';
-import { FindAllBlogsCommand } from '../Blogs/handlers/find-all-blogs.handler';
 import { CreateBlogDto } from '../Blogs/dto/create.dto';
 import { CreateBlogCommand } from '../Blogs/handlers/create-blog.handler';
 import { UpdateBlogDto } from '../Blogs/dto/update.dto';
@@ -34,6 +33,7 @@ import { BlogsQueryRepository } from '../Blogs/repositories/blogs.query.reposito
 import { PostsQueryRepository } from '../Posts/repositories/posts.query.repository';
 import { DeleteOnePostCommand } from '../Posts/handlers/delete-one-post.handler';
 import { UsersQueryRepository } from '../Users/repositories/users.query.repository';
+import { FindAllBlogsBloggerCommand } from './handlers/find-all-blogs.handler';
 
 @SkipThrottle()
 @Controller('blogger/blogs')
@@ -120,8 +120,11 @@ export class BloggerController {
 
   @Get()
   @UseGuards(JwtTokenGuard)
-  public async findAll(@Query() queryParams: PaginationBlogDto): Promise<Paginator<BlogViewModel[]>> {
-    return this.commandBus.execute(new FindAllBlogsCommand(queryParams));
+  public async findAll(
+    @Query() queryParams: PaginationBlogDto,
+    @Req() req: Request,
+  ): Promise<Paginator<BlogViewModel[]>> {
+    return this.commandBus.execute(new FindAllBlogsBloggerCommand(queryParams, req.user.login));
   }
 
   @Post('/:id/posts')

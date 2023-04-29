@@ -1,7 +1,7 @@
 import { CreateBlogDto } from '../dto/create.dto';
 import { BlogViewModel } from '../interfaces';
 import { Blog, BlogDocument } from '../../../entity/blog.entity';
-import { BlogsMapper } from '../../../common/mappers/blogs.mapper';
+import { BlogsMapper } from '../mappers/blogs.mapper';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BlogsQueryRepository } from '../repositories/blogs.query.repository';
