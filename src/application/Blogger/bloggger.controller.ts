@@ -120,7 +120,10 @@ export class BloggerController {
 
   @Get()
   @UseGuards(JwtTokenGuard)
-  public async findAll(@Query() queryParams: PaginationBlogDto): Promise<Paginator<BlogViewModel[]>> {
+  public async findAll(
+    @Query() queryParams: PaginationBlogDto,
+    @Req() req: Request,
+  ): Promise<Paginator<BlogViewModel[]>> {
     return this.commandBus.execute(new FindAllBlogsCommand(queryParams));
   }
 
