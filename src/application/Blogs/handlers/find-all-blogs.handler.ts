@@ -1,12 +1,12 @@
 import { PaginationBlogDto } from '../dto/pagination-blog.dto';
 import { Paginator } from '../../../common/interfaces';
 import { BlogViewModel } from '../interfaces';
-import { BlogsMapper } from '../../../common/mappers/blogs.mapper';
+import { BlogsMapper } from '../mappers/blogs.mapper';
 import { BlogsQueryRepository } from '../repositories/blogs.query.repository';
 import { CommandHandler } from '@nestjs/cqrs';
 
 export class FindAllBlogsCommand {
-  constructor(public paginationSortBlogDto: PaginationBlogDto, public superAdmin = false) {}
+  constructor(public paginationSortBlogDto: PaginationBlogDto) {}
 }
 
 @CommandHandler(FindAllBlogsCommand)
@@ -18,9 +18,7 @@ export class FindAllBlogsHandler {
 
     return {
       ...res.meta,
-      items: command.superAdmin
-        ? BlogsMapper.mapBlogsViewModelSuperAdmin(res.items)
-        : BlogsMapper.mapBlogsViewModel(res.items),
+      items: BlogsMapper.mapBlogsViewModel(res.items),
     };
   }
 }

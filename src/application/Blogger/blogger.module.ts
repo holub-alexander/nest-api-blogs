@@ -9,6 +9,9 @@ import { PostsQueryRepository } from '../Posts/repositories/posts.query.reposito
 import { PostEntity, Post } from '../../entity/post.entity';
 import { UsersQueryRepository } from '../Users/repositories/users.query.repository';
 import { User, UserEntity } from '../../entity/user.entity';
+import { FindAllBlogsBloggerHandler } from './handlers/find-all-blogs.handler';
+
+export const CommandHandlers = [FindAllBlogsBloggerHandler];
 
 @Module({
   imports: [
@@ -20,6 +23,12 @@ import { User, UserEntity } from '../../entity/user.entity';
     ]),
   ],
   controllers: [BloggerController],
-  providers: [BlogsWriteRepository, BlogsQueryRepository, PostsQueryRepository, UsersQueryRepository],
+  providers: [
+    BlogsWriteRepository,
+    BlogsQueryRepository,
+    PostsQueryRepository,
+    UsersQueryRepository,
+    ...CommandHandlers,
+  ],
 })
 export class BloggerModule {}

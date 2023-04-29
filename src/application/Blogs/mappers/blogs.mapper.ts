@@ -1,5 +1,5 @@
-import { BlogViewModel, BlogViewModelSuperAdmin } from '../../application/Blogs/interfaces';
-import { BlogDocument } from '../../entity/blog.entity';
+import { BlogViewModel } from '../interfaces';
+import { BlogDocument } from '../../../entity/blog.entity';
 
 export class BlogsMapper {
   public static mapBlogsViewModel(data: BlogDocument[]): BlogViewModel[] {
@@ -11,23 +11,6 @@ export class BlogsMapper {
         websiteUrl: blog.websiteUrl,
         createdAt: blog.createdAt,
         isMembership: blog.isMembership,
-      }),
-    );
-  }
-
-  public static mapBlogsViewModelSuperAdmin(data: BlogDocument[]): BlogViewModelSuperAdmin[] {
-    return data.map(
-      (blog): BlogViewModelSuperAdmin => ({
-        id: blog._id.toString(),
-        name: blog.name,
-        description: blog.description,
-        websiteUrl: blog.websiteUrl,
-        createdAt: blog.createdAt,
-        isMembership: blog.isMembership,
-        blogOwnerInfo: {
-          userId: blog.bloggerInfo.id.toString(),
-          userLogin: blog.bloggerInfo.login,
-        },
       }),
     );
   }

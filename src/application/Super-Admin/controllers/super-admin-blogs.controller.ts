@@ -1,10 +1,10 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { FindAllBlogsCommand } from '../../Blogs/handlers/find-all-blogs.handler';
 import { PaginationBlogDto } from '../../Blogs/dto/pagination-blog.dto';
 import { Paginator } from '../../../common/interfaces';
-import { BlogViewModel } from '../../Blogs/interfaces';
+import { BlogViewModelSuperAdmin } from '../../Blogs/interfaces';
 import { BasicAuthGuard } from '../../Auth/guards/basic-auth.guard';
+import { FindAllBlogsSuperAdminCommand } from '../handlers/find-all-blogs.handler';
 
 @Controller('sa/blogs')
 export class SuperAdminBlogsController {
@@ -12,7 +12,7 @@ export class SuperAdminBlogsController {
 
   @Get()
   @UseGuards(BasicAuthGuard)
-  public async findAll(@Query() queryParams: PaginationBlogDto): Promise<Paginator<BlogViewModel[]>> {
-    return this.commandBus.execute(new FindAllBlogsCommand(queryParams, true));
+  public async findAll(@Query() queryParams: PaginationBlogDto): Promise<Paginator<BlogViewModelSuperAdmin[]>> {
+    return this.commandBus.execute(new FindAllBlogsSuperAdminCommand(queryParams));
   }
 }
