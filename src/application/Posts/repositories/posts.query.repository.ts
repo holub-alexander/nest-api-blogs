@@ -24,7 +24,11 @@ const getFieldToSort = (field: string): string => {
 export class PostsQueryRepository {
   constructor(@InjectModel(Post.name) private readonly PostModel: Model<PostDocument>) {}
 
-  public async findAll({
+  public async findAllByUserId(userId: ObjectId) {
+    return this.PostModel.find({ 'userInfo.id': userId });
+  }
+
+  public async findAllWithPagination({
     pageSize = 10,
     pageNumber = 1,
     sortDirection = SortDirections.DESC,

@@ -65,7 +65,7 @@ export class FindAllPostsHandler {
   }
 
   public async execute({ paginationQueryParams, userLogin }: FindAllPostsCommand): Promise<Paginator<PostViewModel[]>> {
-    const { meta, items } = await this.postsQueryRepository.findAll(paginationQueryParams);
+    const { meta, items } = await this.postsQueryRepository.findAllWithPagination(paginationQueryParams);
 
     if (userLogin) {
       const user = await this.usersQueryRepository.findByLogin(userLogin);

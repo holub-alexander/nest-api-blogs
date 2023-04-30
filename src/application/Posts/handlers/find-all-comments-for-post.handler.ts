@@ -34,7 +34,7 @@ export class FindAllCommentsForPostHandler {
       return null;
     }
 
-    const { meta, items } = await this.commentsQueryRepository.findMany(pagination, postId);
+    const { meta, items } = await this.commentsQueryRepository.findAllWithPagination(pagination, postId);
 
     const subject = await Promise.all(
       items.map((reaction) => {

@@ -35,6 +35,7 @@ export class CreateCommentForPostHandler {
       commentatorInfo: { id: user._id, login, isBanned: false },
       createdAt: new Date().toISOString(),
       postId: findPost._id,
+      blogId: findPost.blog.id,
       likesInfo: {
         likesCount: 0,
         dislikesCount: 0,

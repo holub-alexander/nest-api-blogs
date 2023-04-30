@@ -26,13 +26,40 @@ export class CommentsQueryRepository {
     return null;
   }
 
-  public async findMany(
+  public async findAllWithPagination(
     { pageSize = 10, pageNumber = 1, sortDirection = SortDirections.DESC, sortBy = '' }: PaginationOptionsDto,
     postId: string,
   ): Promise<PaginationDto<CommentDocument>> {
     const sorting = getObjectToSort({ sortBy, sortDirection });
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
     const filter = { postId: new mongoose.Types.ObjectId(postId), 'commentatorInfo.isBanned': false };
+
+    const totalCount = await this.CommentModel.countDocuments(filter);
+    const items = await this.CommentModel.find<CommentDocument>(filter)
+      .skip((+pageNumber - 1) * +pageSizeValue)
+      .limit(+pageSizeValue)
+      .sort(sorting);
+
+    const paginationMetaDto = new PaginationMetaDto({
+      paginationOptionsDto: { pageSize, pageNumber, sortBy, sortDirection },
+      totalCount,
+    });
+
+    return new PaginationDto(items, paginationMetaDto);
+  }
+
+  public async findAllByPostsIds(
+    { pageSize = 10, pageNumber = 1, sortDirection = SortDirections.DESC, sortBy = '' }: PaginationOptionsDto,
+    postsIds: ObjectId[],
+    userId: ObjectId,
+  ) {
+    const sorting = getObjectToSort({ sortBy, sortDirection });
+    const pageSizeValue = pageSize < 1 ? 1 : pageSize;
+    const filter = {
+      postId: { $in: postsIds },
+      'commentatorInfo.id': { $ne: userId },
+      'commentatorInfo.isBanned': false,
+    };
 
     const totalCount = await this.CommentModel.countDocuments(filter);
     const items = await this.CommentModel.find<CommentDocument>(filter)

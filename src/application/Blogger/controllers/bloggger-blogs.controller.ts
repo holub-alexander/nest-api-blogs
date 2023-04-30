@@ -16,24 +16,26 @@ import {
 import { Request } from 'express';
 import { SkipThrottle } from '@nestjs/throttler';
 import { CommandBus } from '@nestjs/cqrs';
-import { BlogsWriteRepository } from '../Blogs/repositories/blogs.write.repository';
-import { PaginationBlogDto } from '../Blogs/dto/pagination-blog.dto';
-import { Paginator } from '../../common/interfaces';
-import { BlogViewModel } from '../Blogs/interfaces';
-import { CreateBlogDto } from '../Blogs/dto/create.dto';
-import { CreateBlogCommand } from '../Blogs/handlers/create-blog.handler';
-import { UpdateBlogDto } from '../Blogs/dto/update.dto';
-import { CreatePostFromBlog } from '../Posts/dto/create.dto';
-import { CreatePostCommand } from '../Posts/handlers/create-post.handler';
-import { UpdatePostDto } from '../Posts/dto/update.dto';
-import { UpdatePostCommand } from '../Posts/handlers/update-post.handler';
-import { JwtTokenGuard } from '../Auth/guards/jwt-token.guard';
-import { BlogDocument } from '../../entity/blog.entity';
-import { BlogsQueryRepository } from '../Blogs/repositories/blogs.query.repository';
-import { PostsQueryRepository } from '../Posts/repositories/posts.query.repository';
-import { DeleteOnePostCommand } from '../Posts/handlers/delete-one-post.handler';
-import { UsersQueryRepository } from '../Users/repositories/users.query.repository';
-import { FindAllBlogsBloggerCommand } from './handlers/find-all-blogs.handler';
+import { BlogsWriteRepository } from '../../Blogs/repositories/blogs.write.repository';
+import { PaginationBlogDto } from '../../Blogs/dto/pagination-blog.dto';
+import { Paginator } from '../../../common/interfaces';
+import { BlogViewModel } from '../../Blogs/interfaces';
+import { CreateBlogDto } from '../../Blogs/dto/create.dto';
+import { CreateBlogCommand } from '../../Blogs/handlers/create-blog.handler';
+import { UpdateBlogDto } from '../../Blogs/dto/update.dto';
+import { CreatePostFromBlog } from '../../Posts/dto/create.dto';
+import { CreatePostCommand } from '../../Posts/handlers/create-post.handler';
+import { UpdatePostDto } from '../../Posts/dto/update.dto';
+import { UpdatePostCommand } from '../../Posts/handlers/update-post.handler';
+import { JwtTokenGuard } from '../../Auth/guards/jwt-token.guard';
+import { BlogDocument } from '../../../entity/blog.entity';
+import { BlogsQueryRepository } from '../../Blogs/repositories/blogs.query.repository';
+import { PostsQueryRepository } from '../../Posts/repositories/posts.query.repository';
+import { DeleteOnePostCommand } from '../../Posts/handlers/delete-one-post.handler';
+import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
+import { FindAllBlogsBloggerCommand } from '../handlers/find-all-blogs.handler';
+import { PaginationOptionsDto } from '../../../common/dto/pagination-options.dto';
+import { FindAllBloggerCommentsCommand } from '../handlers/find-all-blogger-comments.handler';
 
 @SkipThrottle()
 @Controller('blogger/blogs')
@@ -174,5 +176,11 @@ export class BloggerController {
     }
 
     return true;
+  }
+
+  @Get('/comments')
+  @UseGuards(JwtTokenGuard)
+  public async findAllBloggerComments(@Query() queryParams: PaginationOptionsDto, @Req() req: Request) {
+    return this.commandBus.execute(new FindAllBloggerCommentsCommand(queryParams, req.user.login));
   }
 }

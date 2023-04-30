@@ -35,6 +35,9 @@ export class Comment {
   commentatorInfo: CommentatorInfo;
 
   @Prop({ required: true, type: Types.ObjectId })
+  blogId: Types.ObjectId;
+
+  @Prop({ required: true, type: Types.ObjectId })
   postId: Types.ObjectId;
 
   @Prop({ required: true, type: Date, default: new Date().toISOString })

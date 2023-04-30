@@ -25,7 +25,7 @@ export class FindAllBlogsBloggerHandler {
       throw new UnauthorizedException();
     }
 
-    const res = await this.blogsQueryRepository.findAll(command.paginationSortBlogDto, user._id);
+    const res = await this.blogsQueryRepository.findAllWithPagination(command.paginationSortBlogDto, user._id);
 
     return {
       ...res.meta,

@@ -13,7 +13,7 @@ import { getObjectToSort } from '../../../common/utils/get-object-to-sort';
 export class BlogsQueryRepository {
   constructor(@InjectModel(Blog.name) private readonly BlogModel: Model<BlogDocument>) {}
 
-  public async findAll(
+  public async findAllWithPagination(
     {
       sortBy = 'createdAt',
       sortDirection = SortDirections.DESC,

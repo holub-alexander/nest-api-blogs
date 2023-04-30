@@ -14,7 +14,7 @@ export class FindAllBlogsHandler {
   constructor(private readonly blogsQueryRepository: BlogsQueryRepository) {}
 
   public async execute(command: FindAllBlogsCommand): Promise<Paginator<BlogViewModel[]>> {
-    const res = await this.blogsQueryRepository.findAll(command.paginationSortBlogDto);
+    const res = await this.blogsQueryRepository.findAllWithPagination(command.paginationSortBlogDto);
 
     return {
       ...res.meta,
