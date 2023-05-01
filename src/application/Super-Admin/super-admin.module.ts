@@ -1,19 +1,38 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { BlogsModule } from '../Blogs/blogs.module';
 import { SuperAdminBlogsController } from './controllers/super-admin-blogs.controller';
 import { SuperAdminUsersController } from './controllers/super-admin-users.controller';
-import { UsersModule } from '../Users/users.module';
 import { FindAllBlogsSuperAdminHandler } from './handlers/find-all-blogs.handler';
 import { BlogsQueryRepository } from '../Blogs/repositories/blogs.query.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Blog, BlogEntity } from '../../entity/blog.entity';
+import { BanUnbanBlogSuperAdminHandler } from './handlers/ban-unban-blog.handler';
+import { Post, PostEntity } from '../../entity/post.entity';
+import { Comment, CommentEntity } from '../../entity/comment.entity';
+import { BlogsWriteRepository } from '../Blogs/repositories/blogs.write.repository';
+import { PostsWriteRepository } from '../Posts/repositories/posts.write.repository';
+import { CommentsWriteRepository } from '../Comments/repositories/comments.write.repository';
+import { UsersModule } from '../Users/users.module';
 
-export const CommandHandlers = [FindAllBlogsSuperAdminHandler];
+export const CommandHandlers = [FindAllBlogsSuperAdminHandler, BanUnbanBlogSuperAdminHandler];
 
 @Module({
-  imports: [CqrsModule, BlogsModule, UsersModule, MongooseModule.forFeature([{ name: Blog.name, schema: BlogEntity }])],
+  imports: [
+    CqrsModule,
+    UsersModule,
+    MongooseModule.forFeature([
+      { name: Blog.name, schema: BlogEntity },
+      { name: Post.name, schema: PostEntity },
+      { name: Comment.name, schema: CommentEntity },
+    ]),
+  ],
   controllers: [SuperAdminBlogsController, SuperAdminUsersController],
-  providers: [BlogsQueryRepository, ...CommandHandlers],
+  providers: [
+    BlogsQueryRepository,
+    BlogsWriteRepository,
+    PostsWriteRepository,
+    CommentsWriteRepository,
+    ...CommandHandlers,
+  ],
 })
 export class SuperAdminModule {}

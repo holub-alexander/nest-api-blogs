@@ -52,6 +52,12 @@ export class Blog {
   isMembership: boolean;
 
   @Prop({
+    type: Boolean,
+    default: false,
+  })
+  isBanned: boolean;
+
+  @Prop({
     schema: BloggerInfo,
   })
   bloggerInfo: BloggerInfo;

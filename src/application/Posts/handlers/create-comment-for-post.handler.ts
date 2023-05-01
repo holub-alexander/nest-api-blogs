@@ -1,6 +1,6 @@
 import { CreateCommentForPostDto } from '../../Comments/dto/create.dto';
 import { CommentViewModel } from '../../Comments/interfaces';
-import { CommentMapper } from '../../../common/mappers/comment.mapper';
+import { CommentMapper } from '../../Comments/mappers/comment.mapper';
 import { InjectModel } from '@nestjs/mongoose';
 import { Comment, CommentDocument } from '../../../entity/comment.entity';
 import { Model } from 'mongoose';
@@ -8,6 +8,8 @@ import { PostsQueryRepository } from '../repositories/posts.query.repository';
 import { CommentsWriteRepository } from '../../Comments/repositories/comments.write.repository';
 import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
 import { CommandHandler } from '@nestjs/cqrs';
+import { BanUserQueryRepository } from '../../BanUser/repositories/ban-user.query.repository';
+import { ForbiddenException } from '@nestjs/common';
 
 export class CreateCommentForPostCommand {
   constructor(public postId: string, public body: CreateCommentForPostDto, public login: string) {}
@@ -20,6 +22,7 @@ export class CreateCommentForPostHandler {
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly usersQueryRepository: UsersQueryRepository,
     private readonly commentsWriteRepository: CommentsWriteRepository,
+    private readonly banUserQueryRepository: BanUserQueryRepository,
   ) {}
 
   public async execute({ postId, body, login }: CreateCommentForPostCommand): Promise<CommentViewModel | null> {
@@ -30,12 +33,19 @@ export class CreateCommentForPostHandler {
       return null;
     }
 
+    const bannedUserFound = await this.banUserQueryRepository.findBanForBlog(user._id, findPost.blog.id);
+
+    if (bannedUserFound) {
+      throw new ForbiddenException();
+    }
+
     const newComment = new this.CommentModel<Comment>({
       content: body.content,
       commentatorInfo: { id: user._id, login, isBanned: false },
       createdAt: new Date().toISOString(),
       postId: findPost._id,
       blogId: findPost.blog.id,
+      isBanned: false,
       likesInfo: {
         likesCount: 0,
         dislikesCount: 0,

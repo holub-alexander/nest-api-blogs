@@ -11,6 +11,8 @@ import { Post } from '../../../entity/post.entity';
 import { CommandBus } from '@nestjs/cqrs';
 import { FindOneBlogCommand } from '../../Blogs/handlers/find-one-blog.handler';
 
+type CreatePost = Omit<Post, '_id' | 'blog' | 'createdAt' | 'likesInfo' | 'userInfo' | 'isBanned'>;
+
 @ValidatorConstraint({ name: 'customText', async: true })
 @Injectable()
 export class IsBlogFound implements ValidatorConstraintInterface {
@@ -31,7 +33,7 @@ export class IsBlogFound implements ValidatorConstraintInterface {
   }
 }
 
-export class CreatePostDto implements Omit<Post, '_id' | 'blog' | 'createdAt' | 'likesInfo' | 'userInfo'> {
+export class CreatePostDto implements CreatePost {
   @IsNotEmpty()
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(1, 30)
@@ -48,7 +50,7 @@ export class CreatePostDto implements Omit<Post, '_id' | 'blog' | 'createdAt' | 
   public content: string;
 }
 
-export class CreatePostFromBlog implements Omit<Post, '_id' | 'blog' | 'createdAt' | 'likesInfo' | 'userInfo'> {
+export class CreatePostFromBlog implements CreatePost {
   @IsNotEmpty()
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(1, 30)

@@ -3,7 +3,7 @@ import { Transform, TransformFnParams } from 'class-transformer';
 import { Blog } from '../../../entity/blog.entity';
 import { WEBSITE_URL } from '../../../common/constants/regexp';
 
-export class CreateBlogDto implements Omit<Blog, '_id' | 'isMembership' | 'createdAt' | 'bloggerInfo'> {
+export class CreateBlogDto implements Omit<Blog, '_id' | 'isMembership' | 'createdAt' | 'bloggerInfo' | 'isBanned'> {
   @IsNotEmpty()
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(1, 15)

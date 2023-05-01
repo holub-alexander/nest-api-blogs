@@ -35,7 +35,7 @@ export class PostsQueryRepository {
     sortBy = '',
   }: PaginationOptionsDto): Promise<PaginationDto<PostDocument>> {
     const sorting = getObjectToSort({ sortBy, sortDirection, field: getFieldToSort(sortBy) });
-    const filter = { 'userInfo.isBanned': false };
+    const filter = { 'userInfo.isBanned': false, isBanned: false };
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
 
     const totalCount = await this.PostModel.countDocuments(filter);
@@ -57,7 +57,7 @@ export class PostsQueryRepository {
     id: ObjectId,
   ): Promise<PaginationDto<PostDocument>> {
     const sorting = getObjectToSort({ sortBy, sortDirection });
-    const filter = { 'blog.id': id, 'userInfo.isBanned': false };
+    const filter = { 'blog.id': id, 'userInfo.isBanned': false, isBanned: false };
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
 
     const totalCount = await this.PostModel.find(filter).countDocuments({});
@@ -78,7 +78,11 @@ export class PostsQueryRepository {
     const isValidId = ObjectId.isValid(postId);
 
     if (isValidId) {
-      const data = await this.PostModel.findOne({ _id: new ObjectId(postId), 'userInfo.isBanned': false });
+      const data = await this.PostModel.findOne({
+        _id: new ObjectId(postId),
+        'userInfo.isBanned': false,
+        isBanned: false,
+      });
 
       if (data) {
         return data;

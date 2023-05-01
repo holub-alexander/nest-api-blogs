@@ -1,7 +1,7 @@
-import { NewestLike, PostViewModel } from '../../application/Posts/interfaces';
-import { PostDocument } from '../../entity/post.entity';
-import { LikeStatuses } from '../interfaces';
-import { ReactionDocument } from '../../entity/reaction.entity';
+import { NewestLike, PostViewModel } from '../interfaces';
+import { PostDocument } from '../../../entity/post.entity';
+import { LikeStatuses } from '../../../common/interfaces';
+import { ReactionDocument } from '../../../entity/reaction.entity';
 
 export class PostsMapper {
   public static mapNewestLikes(reactions: ReactionDocument[]): NewestLike[] {

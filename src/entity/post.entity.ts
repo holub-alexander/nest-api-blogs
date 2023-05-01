@@ -66,6 +66,12 @@ export class Post {
   @Prop({ required: true, type: Date })
   createdAt: Date;
 
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  isBanned: boolean;
+
   @Prop({ required: true, schema: LikesInfo })
   likesInfo: LikesInfo;
 

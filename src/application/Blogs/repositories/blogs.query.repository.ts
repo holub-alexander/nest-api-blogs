@@ -30,12 +30,14 @@ export class BlogsQueryRepository {
       name: { $regex: string; $options: string };
       'bloggerInfo.isBanned'?: boolean;
       'bloggerInfo.id'?: ObjectId;
+      isBanned?: boolean;
     } = {
       name: { $regex: searchNameTerm, $options: 'i' },
     };
 
     if (!isShowAllBlogs) {
       filter['bloggerInfo.isBanned'] = false;
+      filter['isBanned'] = false;
     }
 
     if (userId) {
@@ -56,14 +58,21 @@ export class BlogsQueryRepository {
     return new PaginationDto(items, paginationMetaDto);
   }
 
-  public async findOne(blogId: string): Promise<BlogDocument | null> {
+  public async findOne(blogId: string, isFindBanned = false): Promise<BlogDocument | null> {
     const isValidId = ObjectId.isValid(blogId);
 
     if (isValidId) {
-      const blog = await this.BlogModel.findOne<BlogDocument>({
+      const filter: { _id: ObjectId; isBanned?: boolean; 'bloggerInfo.isBanned'?: boolean } = {
         _id: new ObjectId(blogId),
-        'bloggerInfo.isBanned': false,
-      });
+        isBanned: false,
+      };
+
+      const blog = await this.BlogModel.findOne<BlogDocument>();
+
+      if (!isFindBanned) {
+        filter['bloggerInfo.isBanned'] = false;
+        filter['isBanned'] = false;
+      }
 
       if (blog) {
         return blog;

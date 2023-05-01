@@ -4,6 +4,7 @@ import { CommentsQueryRepository } from '../repositories/comments.query.reposito
 import { CommentsWriteRepository } from '../repositories/comments.write.repository';
 import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
 import { CommandHandler } from '@nestjs/cqrs';
+import { BanUserQueryRepository } from '../../BanUser/repositories/ban-user.query.repository';
 
 export class UpdateCommentCommand {
   constructor(public login: string, public body: UpdateCommentForPostDto, public id: string) {}
@@ -15,6 +16,7 @@ export class UpdateCommentHandler {
     private readonly commentsQueryRepository: CommentsQueryRepository,
     private readonly commentsWriteRepository: CommentsWriteRepository,
     private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly banUserQueryRepository: BanUserQueryRepository,
   ) {}
 
   public async execute(command: UpdateCommentCommand) {
@@ -25,7 +27,9 @@ export class UpdateCommentHandler {
       throw new NotFoundException();
     }
 
-    if (user.accountData.login !== comment.commentatorInfo.login) {
+    const bannedUserFound = await this.banUserQueryRepository.findBanForBlog(user._id, comment.blogId);
+
+    if (user.accountData.login !== comment.commentatorInfo.login || bannedUserFound) {
       throw new ForbiddenException();
     }
 

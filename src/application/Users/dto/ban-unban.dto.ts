@@ -8,6 +8,6 @@ export class BanUnbanUserDto {
 
   @IsNotEmpty()
   @Transform(({ value }: TransformFnParams) => value?.trim())
-  @Length(20, 1000, { message: 'The field must contain from 2 to 1000 characters' })
+  @Length(20, 1000, { message: 'The field must contain from 20 to 1000 characters' })
   public banReason: string;
 }

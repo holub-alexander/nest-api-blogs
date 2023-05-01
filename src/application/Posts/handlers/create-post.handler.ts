@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { PostsWriteRepository } from '../repositories/posts.write.repository';
 import { BlogsQueryRepository } from '../../Blogs/repositories/blogs.query.repository';
 import { CreatePostDto } from '../dto/create.dto';
-import { PostsMapper } from '../../../common/mappers/posts.mapper';
+import { PostsMapper } from '../mappers/posts.mapper';
 import { CommandHandler } from '@nestjs/cqrs';
 import { ObjectId } from 'mongodb';
 
@@ -30,6 +30,7 @@ export class CreatePostHandler {
         shortDescription: command.body.shortDescription,
         content: command.body.content,
         createdAt: new Date(),
+        isBanned: false,
         blog: {
           id: findBlog._id,
           name: findBlog.name,

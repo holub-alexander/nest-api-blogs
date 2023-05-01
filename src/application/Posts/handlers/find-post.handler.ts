@@ -1,5 +1,5 @@
 import { PostViewModel } from '../interfaces';
-import { PostsMapper } from '../../../common/mappers/posts.mapper';
+import { PostsMapper } from '../mappers/posts.mapper';
 import { PostsQueryRepository } from '../repositories/posts.query.repository';
 import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
 import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';

@@ -35,14 +35,6 @@ export class CommentsWriteRepository {
     return res.modifiedCount > 0;
   }
 
-  public async updateLikesCount(id: ObjectId, count: number) {
-    return this.CommentModel.updateOne({ _id: id }, { 'likesInfo.likesCount': count });
-  }
-
-  public async updateDislikesCount(id: ObjectId, count: number) {
-    return this.CommentModel.updateOne({ _id: id }, { 'likesInfo.dislikesCount': count });
-  }
-
   public async deleteMany(): Promise<boolean> {
     const res = await this.CommentModel.deleteMany({});
     return res.deletedCount > 0;
@@ -50,5 +42,9 @@ export class CommentsWriteRepository {
 
   public async updateUserBanStatus(userId: ObjectId, isBanned: boolean) {
     await this.CommentModel.updateMany({ 'commentatorInfo.id': userId }, { 'commentatorInfo.isBanned': isBanned });
+  }
+
+  public async updateBanStatusByBlogId(blogId: ObjectId, isBanned: boolean) {
+    await this.CommentModel.updateOne({ blogId }, { isBanned });
   }
 }

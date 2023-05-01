@@ -1,5 +1,5 @@
 import { CommentViewModel } from '../interfaces';
-import { CommentMapper } from '../../../common/mappers/comment.mapper';
+import { CommentMapper } from '../mappers/comment.mapper';
 import { InjectModel } from '@nestjs/mongoose';
 import { Reaction, ReactionDocument } from '../../../entity/reaction.entity';
 import { Model } from 'mongoose';

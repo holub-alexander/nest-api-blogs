@@ -24,6 +24,8 @@ import { UpdatePostHandler } from './handlers/update-post.handler';
 import { DeleteOnePostHandler } from './handlers/delete-one-post.handler';
 import { FindAllCommentsForPostHandler } from './handlers/find-all-comments-for-post.handler';
 import { CreateCommentForPostHandler } from './handlers/create-comment-for-post.handler';
+import { BanUserQueryRepository } from '../BanUser/repositories/ban-user.query.repository';
+import { BanUser, BanUserEntity } from '../../entity/ban-user.entity';
 
 export const CommandHandler = [
   FindAllPostsHandler,
@@ -46,6 +48,7 @@ export const CommandHandler = [
       { name: User.name, schema: UserEntity },
       { name: Comment.name, schema: CommentEntity },
       { name: Reaction.name, schema: ReactionEntity },
+      { name: BanUser.name, schema: BanUserEntity },
     ]),
   ],
   controllers: [],
@@ -59,6 +62,7 @@ export const CommandHandler = [
     ReactionsWriteRepository,
     BlogsQueryRepository,
     UsersQueryRepository,
+    BanUserQueryRepository,
     ...CommandHandler,
   ],
 })

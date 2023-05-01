@@ -4,7 +4,7 @@ import { PostViewModel } from '../interfaces';
 import { ObjectId } from 'mongodb';
 import { Post, PostDocument } from '../../../entity/post.entity';
 import { Reaction, ReactionDocument } from '../../../entity/reaction.entity';
-import { PostsMapper } from '../../../common/mappers/posts.mapper';
+import { PostsMapper } from '../mappers/posts.mapper';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Comment, CommentDocument } from '../../../entity/comment.entity';

@@ -13,6 +13,8 @@ import { UsersQueryRepository } from '../Users/repositories/users.query.reposito
 import { ReactionsQueryRepository } from '../Reactions/repositories/reactions.query.repository';
 import { ReactionsWriteRepository } from '../Reactions/repositories/reactions.write.repository';
 import { User, UserEntity } from '../../entity/user.entity';
+import { BanUser, BanUserEntity } from '../../entity/ban-user.entity';
+import { BanUserQueryRepository } from '../BanUser/repositories/ban-user.query.repository';
 
 export const CommandHandlers = [
   FindCommentHandler,
@@ -28,6 +30,7 @@ export const CommandHandlers = [
       { name: User.name, schema: UserEntity },
       { name: Comment.name, schema: CommentEntity },
       { name: Reaction.name, schema: ReactionEntity },
+      { name: BanUser.name, schema: BanUserEntity },
     ]),
   ],
   controllers: [],
@@ -37,6 +40,7 @@ export const CommandHandlers = [
     UsersQueryRepository,
     ReactionsQueryRepository,
     ReactionsWriteRepository,
+    BanUserQueryRepository,
     ...CommandHandlers,
   ],
 })

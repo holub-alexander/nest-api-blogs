@@ -39,7 +39,7 @@ import { FindAllBloggerCommentsCommand } from '../handlers/find-all-blogger-comm
 
 @SkipThrottle()
 @Controller('blogger/blogs')
-export class BloggerController {
+export class BloggerBlogsController {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly blogsWriteRepository: BlogsWriteRepository,

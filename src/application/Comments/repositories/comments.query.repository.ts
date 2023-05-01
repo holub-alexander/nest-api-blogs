@@ -20,6 +20,7 @@ export class CommentsQueryRepository {
       return this.CommentModel.findOne<CommentDocument>({
         _id: new ObjectId(commentId),
         'commentatorInfo.isBanned': false,
+        isBanned: false,
       });
     }
 
@@ -32,7 +33,7 @@ export class CommentsQueryRepository {
   ): Promise<PaginationDto<CommentDocument>> {
     const sorting = getObjectToSort({ sortBy, sortDirection });
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
-    const filter = { postId: new mongoose.Types.ObjectId(postId), 'commentatorInfo.isBanned': false };
+    const filter = { postId: new mongoose.Types.ObjectId(postId), 'commentatorInfo.isBanned': false, isBanned: false };
 
     const totalCount = await this.CommentModel.countDocuments(filter);
     const items = await this.CommentModel.find<CommentDocument>(filter)
@@ -59,6 +60,7 @@ export class CommentsQueryRepository {
       postId: { $in: postsIds },
       'commentatorInfo.id': { $ne: userId },
       'commentatorInfo.isBanned': false,
+      isBanned: false,
     };
 
     const totalCount = await this.CommentModel.countDocuments(filter);

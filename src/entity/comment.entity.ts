@@ -43,6 +43,12 @@ export class Comment {
   @Prop({ required: true, type: Date, default: new Date().toISOString })
   createdAt: string;
 
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  isBanned: boolean;
+
   @Prop({ required: true, schema: LikesInfo })
   likesInfo: LikesInfo;
 }
