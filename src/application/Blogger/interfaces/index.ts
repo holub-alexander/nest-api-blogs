@@ -1,4 +1,5 @@
 import { CommentViewModel } from '../../Comments/interfaces';
+import { BanUserInfoViewModel } from '../../Users/interfaces';
 
 export interface PostInfo {
   id: string;
@@ -9,4 +10,10 @@ export interface PostInfo {
 
 export interface CommentBloggerViewModel extends Omit<CommentViewModel, 'likesInfo'> {
   postInfo: PostInfo;
+}
+
+export interface UserBloggerViewModel {
+  id: string;
+  login: string;
+  banInfo: BanUserInfoViewModel;
 }

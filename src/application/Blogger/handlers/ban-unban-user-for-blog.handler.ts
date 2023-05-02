@@ -42,7 +42,7 @@ export class BanUnbanUserForBlogHandler {
         banInfo: {
           isBanned,
           banReason,
-          banDate: new Date(),
+          banDate: new Date().toISOString(),
         },
         blogId: command.blogId,
       });

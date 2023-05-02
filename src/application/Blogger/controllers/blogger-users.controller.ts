@@ -3,10 +3,12 @@ import {
   Body,
   Controller,
   ForbiddenException,
+  Get,
   HttpCode,
   NotFoundException,
   Param,
   Put,
+  Query,
   Req,
   UnauthorizedException,
   UseGuards,
@@ -19,6 +21,8 @@ import { JwtTokenGuard } from '../../Auth/guards/jwt-token.guard';
 import { Request } from 'express';
 import { BlogDocument } from '../../../entity/blog.entity';
 import { BlogsQueryRepository } from '../../Blogs/repositories/blogs.query.repository';
+import { PaginationBannedUsersDto } from '../dto/pagination-banned-users.dto';
+import { FindAllBannedUsersForBlogCommand } from '../handlers/find-all-banned-users-for-blog.handler';
 
 @SkipThrottle()
 @Controller('blogger/users')
@@ -63,5 +67,20 @@ export class BloggerUsersController {
     }
 
     return true;
+  }
+
+  @Get('/blog/:blogId')
+  @UseGuards(JwtTokenGuard)
+  public async findAllBannedUsersForBlog(
+    @Param('blogId') blogId: string,
+    @Query() queryParams: PaginationBannedUsersDto,
+  ) {
+    const foundBlog = await this.blogsQueryRepository.findOne(blogId);
+
+    if (!foundBlog) {
+      throw new NotFoundException();
+    }
+
+    return this.commandBus.execute(new FindAllBannedUsersForBlogCommand(foundBlog._id, queryParams));
   }
 }

@@ -19,8 +19,14 @@ import { BanUnbanUserForBlogHandler } from './handlers/ban-unban-user-for-blog.h
 import { BanUserWriteRepository } from '../BanUser/repositories/ban-user.write.repository';
 import { BloggerUsersController } from './controllers/blogger-users.controller';
 import { BanUserQueryRepository } from '../BanUser/repositories/ban-user.query.repository';
+import { FindAllBannedUsersForBlogHandler } from './handlers/find-all-banned-users-for-blog.handler';
 
-export const CommandHandlers = [FindAllBlogsBloggerHandler, FindAllBloggerCommentsHandler, BanUnbanUserForBlogHandler];
+export const CommandHandlers = [
+  FindAllBlogsBloggerHandler,
+  FindAllBloggerCommentsHandler,
+  BanUnbanUserForBlogHandler,
+  FindAllBannedUsersForBlogHandler,
+];
 
 @Module({
   imports: [

@@ -11,7 +11,7 @@ export class BanInfo {
   banReason: string;
 
   @Prop({ type: Date, required: true })
-  banDate: Date;
+  banDate: string;
 }
 
 export class User {

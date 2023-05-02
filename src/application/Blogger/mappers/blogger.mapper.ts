@@ -1,7 +1,8 @@
 import { CommentDocument } from '../../../entity/comment.entity';
-import { CommentBloggerViewModel } from '../interfaces';
+import { CommentBloggerViewModel, UserBloggerViewModel } from '../interfaces';
 import { PostDocument } from '../../../entity/post.entity';
 import { CommentViewModel } from '../../Comments/interfaces';
+import { BanUserDocument } from '../../../entity/ban-user.entity';
 
 export class BloggerMapper {
   public static mapCommentBloggerViewModel(
@@ -36,6 +37,20 @@ export class BloggerMapper {
           title: post.title,
           blogId: post.blog.id.toString(),
           blogName: post.blog.name,
+        },
+      };
+    });
+  }
+
+  public static mapUserBloggerViewModel(items: BanUserDocument[]): UserBloggerViewModel[] {
+    return items.map((banUser): UserBloggerViewModel => {
+      return {
+        id: banUser._id.toString(),
+        login: banUser.user.login,
+        banInfo: {
+          banDate: banUser.banInfo.banDate,
+          isBanned: banUser.banInfo.isBanned,
+          banReason: banUser.banInfo.banReason,
         },
       };
     });

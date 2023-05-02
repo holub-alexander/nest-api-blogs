@@ -67,12 +67,12 @@ export class BlogsQueryRepository {
         isBanned: false,
       };
 
-      const blog = await this.BlogModel.findOne<BlogDocument>();
-
       if (!isFindBanned) {
         filter['bloggerInfo.isBanned'] = false;
         filter['isBanned'] = false;
       }
+
+      const blog = await this.BlogModel.findOne<BlogDocument>(filter);
 
       if (blog) {
         return blog;

@@ -8,6 +8,7 @@ import { BlogsQueryRepository } from '../repositories/blogs.query.repository';
 import { BlogsWriteRepository } from '../repositories/blogs.write.repository';
 import { CommandHandler } from '@nestjs/cqrs';
 import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
+import { UnauthorizedException } from '@nestjs/common';
 
 export class CreateBlogCommand {
   constructor(public body: CreateBlogDto, public userLogin: string) {}
@@ -25,14 +26,18 @@ export class CreateBlogHandler {
   public async execute(command: CreateBlogCommand): Promise<BlogViewModel | null> {
     const user = await this.usersQueryRepository.findByLogin(command.userLogin);
 
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
     const doc: BlogDocument = new this.BlogModel<Blog>({
       ...command.body,
       createdAt: new Date(),
       isMembership: false,
       isBanned: false,
       bloggerInfo: {
-        login: command.userLogin,
-        id: user!._id ?? null,
+        login: user.accountData.login,
+        id: user._id,
         isBanned: false,
       },
     });
