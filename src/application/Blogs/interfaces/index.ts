@@ -6,6 +6,11 @@ export interface BlogViewModel extends CreateBlogDto {
   isMembership: boolean;
 }
 
+export interface BanBlogInfoViewModel {
+  isBanned: boolean;
+  banDate: string | null;
+}
+
 export interface BlogViewModelSuperAdmin extends CreateBlogDto {
   id: string;
   createdAt: string | Date;
@@ -14,4 +19,5 @@ export interface BlogViewModelSuperAdmin extends CreateBlogDto {
     userId: string;
     userLogin: string;
   };
+  banInfo: BanBlogInfoViewModel;
 }

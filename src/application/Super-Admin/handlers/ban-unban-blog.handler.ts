@@ -26,7 +26,12 @@ export class BanUnbanBlogSuperAdminHandler {
       return null;
     }
 
-    await this.blogsWriteRepository.updateBanStatus(command.blogId, command.body.isBanned);
+    if (command.body.isBanned) {
+      await this.blogsWriteRepository.updateBanStatus(command.blogId, new Date(), true);
+    } else {
+      await this.blogsWriteRepository.updateBanStatus(command.blogId, null, false);
+    }
+
     await this.postsWriteRepository.updateBanStatusByBlogId(command.blogId, command.body.isBanned);
     await this.commentsWriteRepository.updateBanStatusByBlogId(command.blogId, command.body.isBanned);
 

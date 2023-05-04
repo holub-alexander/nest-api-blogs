@@ -15,6 +15,10 @@ export class SuperAdminMapper {
           userId: blog.bloggerInfo.id.toString(),
           userLogin: blog.bloggerInfo.login,
         },
+        banInfo: {
+          isBanned: blog.banInfo.isBanned,
+          banDate: blog.banInfo.banDate,
+        },
       }),
     );
   }

@@ -18,6 +18,20 @@ export class BloggerInfo {
   isBanned: boolean;
 }
 
+export class BanInfo {
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  isBanned: boolean;
+
+  @Prop({
+    type: Date,
+    default: null,
+  })
+  banDate: string | null;
+}
+
 @Schema()
 export class Blog {
   @Prop({
@@ -52,10 +66,10 @@ export class Blog {
   isMembership: boolean;
 
   @Prop({
-    type: Boolean,
-    default: false,
+    type: BanInfo,
+    required: true,
   })
-  isBanned: boolean;
+  banInfo: BanInfo;
 
   @Prop({
     schema: BloggerInfo,

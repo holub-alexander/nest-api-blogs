@@ -45,7 +45,7 @@ export class BlogsWriteRepository {
     await this.BlogModel.updateMany({ 'bloggerInfo.id': userId }, { 'bloggerInfo.isBanned': isBanned });
   }
 
-  public async updateBanStatus(blogId: ObjectId, isBanned: boolean) {
-    await this.BlogModel.updateOne({ _id: blogId }, { isBanned });
+  public async updateBanStatus(blogId: ObjectId, banDate: Date | null, isBanned: boolean) {
+    await this.BlogModel.updateOne({ _id: blogId }, { 'banInfo.isBanned': isBanned, 'banInfo.banDate': banDate });
   }
 }

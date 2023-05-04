@@ -30,14 +30,14 @@ export class BlogsQueryRepository {
       name: { $regex: string; $options: string };
       'bloggerInfo.isBanned'?: boolean;
       'bloggerInfo.id'?: ObjectId;
-      isBanned?: boolean;
+      'banInfo.isBanned'?: boolean;
     } = {
       name: { $regex: searchNameTerm, $options: 'i' },
     };
 
     if (!isShowAllBlogs) {
       filter['bloggerInfo.isBanned'] = false;
-      filter['isBanned'] = false;
+      filter['banInfo.isBanned'] = false;
     }
 
     if (userId) {
@@ -62,14 +62,13 @@ export class BlogsQueryRepository {
     const isValidId = ObjectId.isValid(blogId);
 
     if (isValidId) {
-      const filter: { _id: ObjectId; isBanned?: boolean; 'bloggerInfo.isBanned'?: boolean } = {
+      const filter: { _id: ObjectId; 'banInfo.isBanned'?: boolean; 'bloggerInfo.isBanned'?: boolean } = {
         _id: new ObjectId(blogId),
-        isBanned: false,
       };
 
       if (!isFindBanned) {
         filter['bloggerInfo.isBanned'] = false;
-        filter['isBanned'] = false;
+        filter['banInfo.isBanned'] = false;
       }
 
       const blog = await this.BlogModel.findOne<BlogDocument>(filter);

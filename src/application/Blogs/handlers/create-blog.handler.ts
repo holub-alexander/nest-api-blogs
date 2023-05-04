@@ -34,7 +34,10 @@ export class CreateBlogHandler {
       ...command.body,
       createdAt: new Date(),
       isMembership: false,
-      isBanned: false,
+      banInfo: {
+        banDate: null,
+        isBanned: false,
+      },
       bloggerInfo: {
         login: user.accountData.login,
         id: user._id,
