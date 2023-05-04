@@ -59,7 +59,7 @@ export class BloggerUsersController {
 
     const foundBlog = await this.checkAccessToBlog(body.blogId, req.user.login);
     const res = await this.commandBus.execute(
-      new BanUnbanUserForBlogCommand(user._id, foundBlog._id, req.user.login, body),
+      new BanUnbanUserForBlogCommand(user._id, foundBlog._id, user.accountData.login, body),
     );
 
     if (!res) {

@@ -10,7 +10,7 @@ export class PaginationBannedUsersDto extends PaginationOptionsDto {
 
   @IsOptional()
   @Transform(({ value }: TransformFnParams) => value?.trim())
-  @Length(3, 10)
+  @Length(3, 20)
   @Matches(LOGIN_REGEX)
   public readonly searchLoginTerm?: string;
 }
