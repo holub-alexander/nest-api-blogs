@@ -54,7 +54,7 @@ export class BloggerUsersController {
     const user = await this.commandBus.execute(new FindOneUserCommand(userId));
 
     if (!user) {
-      throw new UnauthorizedException();
+      throw new NotFoundException();
     }
 
     const foundBlog = await this.checkAccessToBlog(body.blogId, req.user.login);
@@ -74,8 +74,9 @@ export class BloggerUsersController {
   public async findAllBannedUsersForBlog(
     @Param('blogId') blogId: string,
     @Query() queryParams: PaginationBannedUsersDto,
+    @Req() req: Request,
   ) {
-    const foundBlog = await this.blogsQueryRepository.findOne(blogId);
+    const foundBlog = await this.checkAccessToBlog(blogId, req.user.login);
 
     if (!foundBlog) {
       throw new NotFoundException();
