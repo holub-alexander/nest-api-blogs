@@ -45,7 +45,7 @@ export class BloggerMapper {
   public static mapUserBloggerViewModel(items: BanUserDocument[]): UserBloggerViewModel[] {
     return items.map((banUser): UserBloggerViewModel => {
       return {
-        id: banUser._id.toString(),
+        id: banUser.user.id.toString(),
         login: banUser.user.login,
         banInfo: {
           banDate: banUser.banInfo.banDate,
