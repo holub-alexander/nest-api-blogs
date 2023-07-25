@@ -2,17 +2,17 @@ import { Module } from '@nestjs/common';
 import { PostsWriteRepository } from './repositories/posts.write.repository';
 import { PostsQueryRepository } from './repositories/posts.query.repository';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Post, PostEntity } from '../../entity/post.entity';
-import { Comment, CommentEntity } from '../../entity/comment.entity';
-import { Reaction, ReactionEntity } from '../../entity/reaction.entity';
+import { Post, PostEntity } from '../../db/entities/mongoose/post.entity';
+import { Comment, CommentEntity } from '../../db/entities/mongoose/comment.entity';
+import { Reaction, ReactionEntity } from '../../db/entities/mongoose/reaction.entity';
 import { BlogsQueryRepository } from '../Blogs/repositories/blogs.query.repository';
-import { Blog, BlogEntity } from '../../entity/blog.entity';
-import { UsersQueryRepository } from '../Users/repositories/users.query.repository';
+import { Blog, BlogEntity } from '../../db/entities/mongoose/blog.entity';
+import { UsersQueryRepository } from '../Users/repositories/mongoose/users.query.repository';
 import { CommentsQueryRepository } from '../Comments/repositories/comments.query.repository';
 import { CommentsWriteRepository } from '../Comments/repositories/comments.write.repository';
 import { ReactionsQueryRepository } from '../Reactions/repositories/reactions.query.repository';
 import { ReactionsWriteRepository } from '../Reactions/repositories/reactions.write.repository';
-import { User, UserEntity } from '../../entity/user.entity';
+import { User, UserEntity } from '../../db/entities/mongoose/user.entity';
 import { FindAllPostsByBlogIdHandler } from './handlers/find-all-posts-for-blog.handler';
 import { FindPostHandler } from './handlers/find-post.handler';
 import { CreatePostHandler } from './handlers/create-post.handler';
@@ -25,7 +25,7 @@ import { DeleteOnePostHandler } from './handlers/delete-one-post.handler';
 import { FindAllCommentsForPostHandler } from './handlers/find-all-comments-for-post.handler';
 import { CreateCommentForPostHandler } from './handlers/create-comment-for-post.handler';
 import { BanUserQueryRepository } from '../BanUser/repositories/ban-user.query.repository';
-import { BanUser, BanUserEntity } from '../../entity/ban-user.entity';
+import { BanUser, BanUserEntity } from '../../db/entities/mongoose/ban-user.entity';
 
 export const CommandHandler = [
   FindAllPostsHandler,

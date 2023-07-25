@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 import { Transform, TransformFnParams } from 'class-transformer';
 import { Injectable } from '@nestjs/common';
-import { Post } from '../../../entity/post.entity';
+import { Post } from '../../../db/entities/mongoose/post.entity';
 import { CommandBus } from '@nestjs/cqrs';
 import { FindOneBlogCommand } from '../../Blogs/handlers/find-one-blog.handler';
 

@@ -1,4 +1,4 @@
-import { RefreshTokensMeta } from '../../entity/user.entity';
+import { RefreshTokensMeta } from '../../db/entities/mongoose/user.entity';
 import { DeviceViewModel } from '../../application/Security-Devices/interfaces';
 
 export class SecurityMapper {

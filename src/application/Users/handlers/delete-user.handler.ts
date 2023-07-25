@@ -1,6 +1,6 @@
 import { CommandHandler } from '@nestjs/cqrs';
 import { NotFoundException } from '@nestjs/common';
-import { UsersWriteRepository } from '../repositories/users.write.repository';
+import { UsersWriteRepository } from '../repositories/mongoose/users.write.repository';
 
 export class DeleteUserCommand {
   constructor(public id: string) {}

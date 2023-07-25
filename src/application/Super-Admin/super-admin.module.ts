@@ -5,10 +5,10 @@ import { SuperAdminUsersController } from './controllers/super-admin-users.contr
 import { FindAllBlogsSuperAdminHandler } from './handlers/find-all-blogs.handler';
 import { BlogsQueryRepository } from '../Blogs/repositories/blogs.query.repository';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Blog, BlogEntity } from '../../entity/blog.entity';
+import { Blog, BlogEntity } from '../../db/entities/mongoose/blog.entity';
 import { BanUnbanBlogSuperAdminHandler } from './handlers/ban-unban-blog.handler';
-import { Post, PostEntity } from '../../entity/post.entity';
-import { Comment, CommentEntity } from '../../entity/comment.entity';
+import { Post, PostEntity } from '../../db/entities/mongoose/post.entity';
+import { Comment, CommentEntity } from '../../db/entities/mongoose/comment.entity';
 import { BlogsWriteRepository } from '../Blogs/repositories/blogs.write.repository';
 import { PostsWriteRepository } from '../Posts/repositories/posts.write.repository';
 import { CommentsWriteRepository } from '../Comments/repositories/comments.write.repository';

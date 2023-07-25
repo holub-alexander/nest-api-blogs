@@ -36,3 +36,9 @@ export interface SortQueryParams {
   field?: string;
   getField?: (field: string) => string;
 }
+
+export interface SortQueryParamsNew {
+  sortBy: string;
+  sortDirection: SortDirections;
+  allowedFieldForSorting: { [key: string]: string };
+}

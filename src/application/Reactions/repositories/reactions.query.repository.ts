@@ -1,6 +1,6 @@
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Reaction, ReactionDocument } from '../../../entity/reaction.entity';
+import { Reaction, ReactionDocument } from '../../../db/entities/mongoose/reaction.entity';
 import { ObjectId } from 'mongodb';
 import { LikeStatuses } from '../../../common/interfaces';
 import { Injectable } from '@nestjs/common';

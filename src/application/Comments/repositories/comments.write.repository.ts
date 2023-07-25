@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
-import { Comment, CommentDocument } from '../../../entity/comment.entity';
+import { Comment, CommentDocument } from '../../../db/entities/mongoose/comment.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 import { UpdateCommentForPostDto } from '../dto/update.dto';

@@ -7,8 +7,8 @@ import { PostViewModel } from '../interfaces';
 import { PaginationDto } from '../../../common/dto/pagination.dto';
 import { PaginationOptionsDto } from '../../../common/dto/pagination-options.dto';
 import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
-import { getObjectToSort } from '../../../common/utils/get-object-to-sort';
-import { Post, PostDocument } from '../../../entity/post.entity';
+import { getObjectToSort } from '../../../common/utils/mongoose/get-object-to-sort';
+import { Post, PostDocument } from '../../../db/entities/mongoose/post.entity';
 
 type PostViewFields = Pick<PostViewModel, 'blogName'> & { [key: string]: string };
 

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import { BadRequestException, Injectable } from '@nestjs/common';
@@ -6,10 +8,10 @@ import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { MailService } from '../Mail/mail.service';
 import { add } from 'date-fns';
-import { UsersQueryRepository } from '../Users/repositories/users.query.repository';
-import { User, UserDocument } from '../../entity/user.entity';
+import { UsersQueryRepository } from '../Users/repositories/mongoose/users.query.repository';
+import { User, UserDocument } from '../../db/entities/mongoose/user.entity';
 import { AuthMapper } from '../../common/mappers/auth.mapper';
-import { UsersWriteRepository } from '../Users/repositories/users.write.repository';
+import { UsersWriteRepository } from '../Users/repositories/mongoose/users.write.repository';
 import { getPasswordHash } from '../../common/utils/get-password-hash';
 import { UserRefreshTokenPayload } from './interfaces';
 import {
@@ -39,9 +41,11 @@ export class AuthService {
   public async checkCredentials(body: LoginInputDto): Promise<boolean> {
     const user = await this.usersQueryRepository.findByLoginOrEmail(body.loginOrEmail);
 
-    if (!user) return false;
+    if (!user) {
+      return false;
+    }
 
-    return bcrypt.compare(body.password, user.accountData.password);
+    return bcrypt.compare(body.password, user.password);
   }
 
   public async me(loginOrEmail = '') {
@@ -60,12 +64,12 @@ export class AuthService {
     const user = await this.usersQueryRepository.findByLoginOrEmail(body.loginOrEmail);
     const isCorrectCredentials = await this.checkCredentials(body);
 
-    if (!isCorrectCredentials || !user || user.accountData.isBanned) {
+    if (!isCorrectCredentials || !user || user.isBanned) {
       return null;
     }
 
     const addedSecurityDevice = await this.securityDevicesService.create({
-      userId: user._id,
+      userId: user.id,
       userAgent,
       ip,
     });
@@ -75,13 +79,13 @@ export class AuthService {
     }
 
     const accessToken = this.jwtService.sign(
-      { login: user.accountData.login },
+      { login: user.login },
       { secret: process.env.ACCESS_TOKEN_PRIVATE_KEY as string, expiresIn: config.accessTokenExpiration },
     );
 
     const refreshToken = this.jwtService.sign(
       {
-        login: user.accountData.login,
+        login: user.login,
         deviceId: addedSecurityDevice.deviceId,
         iat: Math.round(addedSecurityDevice.issuedAt.valueOf() / 1000),
       },

@@ -1,6 +1,6 @@
 import { IsNotEmpty, Length, Matches } from 'class-validator';
 import { Transform, TransformFnParams } from 'class-transformer';
-import { AccountData } from '../../../entity/user.entity';
+import { AccountData } from '../../../db/entities/mongoose/user.entity';
 import { EMAIL_REGEX, LOGIN_REGEX } from '../../../common/constants/regexp';
 
 export class CreateUserDto implements Omit<AccountData, 'createdAt' | 'banReason' | 'isBanned' | 'banDate'> {

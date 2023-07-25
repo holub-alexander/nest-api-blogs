@@ -1,6 +1,6 @@
 import { BlogsWriteRepository } from '../../Blogs/repositories/blogs.write.repository';
 import { PostsWriteRepository } from '../../Posts/repositories/posts.write.repository';
-import { UsersWriteRepository } from '../../Users/repositories/users.write.repository';
+import { UsersWriteRepository } from '../../Users/repositories/mongoose/users.write.repository';
 import { CommentsWriteRepository } from '../../Comments/repositories/comments.write.repository';
 import { ReactionsWriteRepository } from '../../Reactions/repositories/reactions.write.repository';
 import { CommandHandler } from '@nestjs/cqrs';

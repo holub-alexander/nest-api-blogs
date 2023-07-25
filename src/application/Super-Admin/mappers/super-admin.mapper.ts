@@ -1,4 +1,4 @@
-import { BlogDocument } from '../../../entity/blog.entity';
+import { BlogDocument } from '../../../db/entities/mongoose/blog.entity';
 import { BlogViewModelSuperAdmin } from '../../Blogs/interfaces';
 
 export class SuperAdminMapper {

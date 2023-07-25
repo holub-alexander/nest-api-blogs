@@ -2,23 +2,39 @@ import { ObjectId } from 'mongodb';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { RefreshTokensMeta, User, UserDocument } from '../../../entity/user.entity';
+import { RefreshTokensMeta, User, UserDocument } from '../../../db/entities/mongoose/user.entity';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import DeviceEntityTypeOrm from '../../../db/entities/typeorm/device.entity';
 
 @Injectable()
 export class SecurityDevicesWriteRepository {
-  constructor(@InjectModel(User.name) private readonly UserModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
+    @InjectDataSource() private dataSource: DataSource,
+  ) {}
 
-  public async create(userId: ObjectId, refreshTokenMetaData: RefreshTokensMeta): Promise<boolean> {
-    const res = await this.UserModel.updateOne(
-      { _id: userId },
-      {
-        $push: {
-          refreshTokensMeta: refreshTokenMetaData,
-        },
-      },
+  public async create(device: DeviceEntityTypeOrm): Promise<boolean> {
+    // const res = await this.UserModel.updateOne(
+    //   { _id: userId },
+    //   {
+    //     $push: {
+    //       refreshTokensMeta: refreshTokenMetaData,
+    //     },
+    //   },
+    // );
+
+    const result = this.dataSource.query(
+      `
+      INSERT INTO devices (user_id, ip, title, device_id, issued_at, expiration_date)
+      VALUES ($1, $2, $3, $4, $5, $6);
+    `,
+      [device.user.id, device.ip, device.title, device.device_id, device.issued_at, device.expiration_date],
     );
 
-    return res.modifiedCount === 1;
+    console.log('SecurityDevicesWriteRepository', 'create', result);
+
+    return Boolean(result);
   }
 
   public async updateDeviceRefreshToken({

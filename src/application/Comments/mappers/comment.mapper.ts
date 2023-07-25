@@ -1,6 +1,6 @@
 import { LikeStatuses } from '../../../common/interfaces';
-import { CommentDocument } from '../../../entity/comment.entity';
-import { Reaction, ReactionDocument } from '../../../entity/reaction.entity';
+import { CommentDocument } from '../../../db/entities/mongoose/comment.entity';
+import { Reaction, ReactionDocument } from '../../../db/entities/mongoose/reaction.entity';
 import { CommentViewModel } from '../interfaces';
 
 export class CommentMapper {

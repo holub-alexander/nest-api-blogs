@@ -2,7 +2,7 @@ import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { UpdateCommentForPostDto } from '../dto/update.dto';
 import { CommentsQueryRepository } from '../repositories/comments.query.repository';
 import { CommentsWriteRepository } from '../repositories/comments.write.repository';
-import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
+import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
 import { CommandHandler } from '@nestjs/cqrs';
 import { BanUserQueryRepository } from '../../BanUser/repositories/ban-user.query.repository';
 

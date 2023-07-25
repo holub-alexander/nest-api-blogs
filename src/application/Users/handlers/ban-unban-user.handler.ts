@@ -1,5 +1,5 @@
 import { CommandHandler } from '@nestjs/cqrs';
-import { UsersWriteRepository } from '../repositories/users.write.repository';
+import { UsersWriteRepository } from '../repositories/mongoose/users.write.repository';
 import { ObjectId } from 'mongodb';
 import { CommentsWriteRepository } from 'src/application/Comments/repositories/comments.write.repository';
 import { ReactionsWriteRepository } from '../../Reactions/repositories/reactions.write.repository';

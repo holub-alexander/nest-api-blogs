@@ -41,7 +41,7 @@ export class ValidateLoginOrEmail implements ValidatorConstraintInterface {
   }
 
   defaultMessage(args: ValidationArguments) {
-    return 'Blog with specified id was not found';
+    return 'Login or email not found';
   }
 }
 

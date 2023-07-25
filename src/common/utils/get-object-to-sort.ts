@@ -1,15 +1,11 @@
-import { SortDirections, SortQueryParams } from '../interfaces';
+import { SortDirections, SortQueryParamsNew } from '../interfaces';
 
-export const getObjectToSort = ({ sortBy, sortDirection, field = sortBy, getField }: SortQueryParams) => {
+export const getObjectToSort = ({ sortBy, sortDirection, allowedFieldForSorting }: SortQueryParamsNew) => {
   const sortDirectionValue = sortDirection === SortDirections.ASC ? SortDirections.ASC : SortDirections.DESC;
 
-  if (sortBy) {
-    return { [field]: sortDirectionValue };
+  if (allowedFieldForSorting[sortBy]) {
+    return { direction: sortDirectionValue.toUpperCase(), field: allowedFieldForSorting[sortBy] };
+  } else {
+    return { direction: sortDirectionValue.toUpperCase(), field: 'created_at' };
   }
-
-  if (getField) {
-    return { [getField('createdAt')]: sortDirectionValue };
-  }
-
-  return { createdAt: sortDirectionValue };
 };

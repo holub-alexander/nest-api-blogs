@@ -1,13 +1,13 @@
 import { CreateBlogDto } from '../dto/create.dto';
 import { BlogViewModel } from '../interfaces';
-import { Blog, BlogDocument } from '../../../entity/blog.entity';
+import { Blog, BlogDocument } from '../../../db/entities/mongoose/blog.entity';
 import { BlogsMapper } from '../mappers/blogs.mapper';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BlogsQueryRepository } from '../repositories/blogs.query.repository';
 import { BlogsWriteRepository } from '../repositories/blogs.write.repository';
 import { CommandHandler } from '@nestjs/cqrs';
-import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
+import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
 import { UnauthorizedException } from '@nestjs/common';
 
 export class CreateBlogCommand {

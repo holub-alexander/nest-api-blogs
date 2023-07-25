@@ -1,6 +1,6 @@
 import { PostViewModel } from '../interfaces';
 import { InjectModel } from '@nestjs/mongoose';
-import { Post, PostDocument } from '../../../entity/post.entity';
+import { Post, PostDocument } from '../../../db/entities/mongoose/post.entity';
 import { Model } from 'mongoose';
 import { PostsWriteRepository } from '../repositories/posts.write.repository';
 import { BlogsQueryRepository } from '../../Blogs/repositories/blogs.query.repository';

@@ -1,9 +1,9 @@
 import { LikeStatuses } from '../../../common/interfaces';
-import { Reaction, ReactionDocument } from '../../../entity/reaction.entity';
+import { Reaction, ReactionDocument } from '../../../db/entities/mongoose/reaction.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CommentsQueryRepository } from '../repositories/comments.query.repository';
-import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
+import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
 import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';
 import { CommentsWriteRepository } from '../repositories/comments.write.repository';
 import { ReactionsWriteRepository } from '../../Reactions/repositories/reactions.write.repository';

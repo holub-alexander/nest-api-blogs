@@ -1,5 +1,5 @@
 import { CommandHandler } from '@nestjs/cqrs';
-import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
+import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
 import { UnauthorizedException } from '@nestjs/common';
 import { PostsQueryRepository } from '../../Posts/repositories/posts.query.repository';
 import { CommentsQueryRepository } from '../../Comments/repositories/comments.query.repository';

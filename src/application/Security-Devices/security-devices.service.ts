@@ -6,9 +6,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { SecurityDevicesWriteRepository } from './repositories/security-devices.write.repository';
-import { RefreshTokensMeta, RefreshTokensMetaDocument } from '../../entity/user.entity';
+import { RefreshTokensMeta, RefreshTokensMetaDocument } from '../../db/entities/mongoose/user.entity';
 import { UserRefreshTokenPayload } from '../Auth/interfaces';
 import config from '../../config/config';
+import DeviceEntityTypeOrm from '../../db/entities/typeorm/device.entity';
 
 @Injectable()
 export class SecurityDevicesService {
@@ -23,23 +24,34 @@ export class SecurityDevicesService {
     ip,
     userAgent = null,
   }: {
-    userId: ObjectId;
+    userId: number;
     ip: string;
     userAgent?: string | null;
-  }): Promise<{ deviceId: string; issuedAt: Date } | null> {
-    const data = new this.refreshTokensMetaModel({
-      issuedAt: new Date(new Date().setMilliseconds(0)),
-      expirationDate: add(new Date(), {
-        seconds: parseInt(config.refreshTokenExpiration),
-      }),
-      deviceId: uuidv4(),
-      title: userAgent,
-      ip,
-    });
+  }): Promise<{ deviceId: string; issuedAt: Date | string } | null> {
+    // const data = new this.refreshTokensMetaModel({
+    //   issuedAt: new Date(new Date().setMilliseconds(0)),
+    //   expirationDate: add(new Date(), {
+    //     seconds: parseInt(config.refreshTokenExpiration),
+    //   }),
+    //   deviceId: uuidv4(),
+    //   title: userAgent,
+    //   ip,
+    // });
 
-    const res = await this.securityWriteRepository.create(userId, data);
+    const device = new DeviceEntityTypeOrm();
 
-    return res ? { deviceId: data.deviceId, issuedAt: data.issuedAt } : null;
+    device.user.id = userId;
+    device.issued_at = new Date(new Date().setMilliseconds(0)).toString();
+    device.expiration_date = add(new Date(), {
+      seconds: parseInt(config.refreshTokenExpiration),
+    }).toString();
+    device.device_id = uuidv4();
+    device.title = userAgent;
+    device.ip = ip;
+
+    const res = await this.securityWriteRepository.create(device);
+
+    return res ? { deviceId: device.device_id, issuedAt: device.issued_at } : null;
   }
 
   public async updateDeviceRefreshToken({

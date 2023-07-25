@@ -1,10 +1,9 @@
 import { CommandHandler } from '@nestjs/cqrs';
-import { UsersService } from '../users.service';
 import { PaginationUsersDto } from '../dto/pagination-users.dto';
 import { Paginator } from '../../../common/interfaces';
 import { UserViewModel } from '../interfaces';
-import { UsersMapper } from '../../../common/mappers/users.mapper';
-import { UsersQueryRepository } from '../repositories/users.query.repository';
+import { UsersMapper } from '../mappers/users.mapper';
+import { UsersTypeOrmQueryRepository } from '../repositories/typeorm/users.query.repository';
 
 export class FindAllUsersCommand {
   constructor(public queryParams: PaginationUsersDto) {}
@@ -12,7 +11,7 @@ export class FindAllUsersCommand {
 
 @CommandHandler(FindAllUsersCommand)
 export class FindAllUsersHandler {
-  constructor(private readonly usersQueryRepository: UsersQueryRepository) {}
+  constructor(private readonly usersQueryRepository: UsersTypeOrmQueryRepository) {}
 
   public async execute(command: FindAllUsersCommand): Promise<Paginator<UserViewModel[]>> {
     const { meta, items } = await this.usersQueryRepository.findAll(command.queryParams);

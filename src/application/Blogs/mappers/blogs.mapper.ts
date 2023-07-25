@@ -1,5 +1,5 @@
 import { BlogViewModel } from '../interfaces';
-import { BlogDocument } from '../../../entity/blog.entity';
+import { BlogDocument } from '../../../db/entities/mongoose/blog.entity';
 
 export class BlogsMapper {
   public static mapBlogsViewModel(data: BlogDocument[]): BlogViewModel[] {

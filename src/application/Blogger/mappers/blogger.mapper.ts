@@ -1,8 +1,8 @@
-import { CommentDocument } from '../../../entity/comment.entity';
+import { CommentDocument } from '../../../db/entities/mongoose/comment.entity';
 import { CommentBloggerViewModel, UserBloggerViewModel } from '../interfaces';
-import { PostDocument } from '../../../entity/post.entity';
+import { PostDocument } from '../../../db/entities/mongoose/post.entity';
 import { CommentViewModel } from '../../Comments/interfaces';
-import { BanUserDocument } from '../../../entity/ban-user.entity';
+import { BanUserDocument } from '../../../db/entities/mongoose/ban-user.entity';
 
 export class BloggerMapper {
   public static mapCommentBloggerViewModel(

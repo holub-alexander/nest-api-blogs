@@ -4,7 +4,7 @@ import { PaginationBlogDto } from '../../Blogs/dto/pagination-blog.dto';
 import { Paginator } from '../../../common/interfaces';
 import { BlogViewModel } from '../../Blogs/interfaces';
 import { BlogsMapper } from '../../Blogs/mappers/blogs.mapper';
-import { UsersQueryRepository } from 'src/application/Users/repositories/users.query.repository';
+import { UsersQueryRepository } from 'src/application/Users/repositories/mongoose/users.query.repository';
 import { UnauthorizedException } from '@nestjs/common';
 
 export class FindAllBlogsBloggerCommand {

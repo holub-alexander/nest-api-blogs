@@ -1,5 +1,5 @@
 import { MeViewModel } from 'src/application/Auth/interfaces';
-import { UserDocument } from '../../entity/user.entity';
+import { UserDocument } from '../../db/entities/mongoose/user.entity';
 
 export class AuthMapper {
   public static mapMeViewModel(data: UserDocument): MeViewModel {

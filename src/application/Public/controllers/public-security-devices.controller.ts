@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { SecurityDevicesQueryRepository } from '../../Security-Devices/repositories/security-devices.query.repository';
 import { SecurityDevicesWriteRepository } from '../../Security-Devices/repositories/security-devices.write.repository';
-import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
+import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
 import { DeviceViewModel } from '../../Security-Devices/interfaces';
 import { SecurityMapper } from '../../../common/mappers/security-devices.mapper';
 import { SkipThrottle } from '@nestjs/throttler';

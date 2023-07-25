@@ -1,4 +1,4 @@
-import { UsersQueryRepository } from '../repositories/users.query.repository';
+import { UsersQueryRepository } from '../repositories/mongoose/users.query.repository';
 import { CommandHandler } from '@nestjs/cqrs';
 
 export class FindOneUserCommand {
