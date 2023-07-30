@@ -13,6 +13,7 @@ import { Blog, BlogDocument } from '../../../entity/blog.entity';
 import { Model, Types } from 'mongoose';
 import { Post, PostDocument } from '../../../entity/post.entity';
 import { ObjectId } from 'mongodb';
+import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';
 
 export class FindAllBloggerCommentsCommand {
   constructor(public paginationSortBlogDto: PaginationBlogDto, public userLogin: string) {}
@@ -24,17 +25,37 @@ export class FindAllBloggerCommentsHandler implements OnModuleInit {
     private readonly usersQueryRepository: UsersQueryRepository,
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly commentsQueryRepository: CommentsQueryRepository,
+    private readonly reactionsQueryRepository: ReactionsQueryRepository,
     @InjectModel(Blog.name) private blogCollection: Model<BlogDocument>,
     @InjectModel(Post.name) private postCollection: Model<PostDocument>,
   ) {}
 
   async onModuleInit() {
-    const login = 'lg-501110';
-    const rawBlogIds = await this.blogCollection.find({ 'bloggerInfo.login': login }, { _id: 1 });
-    const blogIds = rawBlogIds.map((b) => b._id);
-    console.log(blogIds);
-    const posts = await this.postCollection.find({ 'blog.id': { $in: blogIds } });
-    console.log(posts);
+    // const userId = new ObjectId('64c6685e8a21123c540f5881');
+    // const login = 'lg-418583';
+    // const rawBlogIds = await this.blogCollection.find({ 'bloggerInfo.login': login }, { _id: 1 });
+    // const blogIds = rawBlogIds.map((b) => b._id);
+    //
+    // // console.log(blogIds);
+    //
+    // const posts = await this.postCollection.find({ 'blog.id': { $in: blogIds } });
+    // const postsIds = posts.map((p) => p._id);
+    //
+    // // @ts-ignore
+    // const { meta, items } = await this.commentsQueryRepository.findAllByPostsIds({}, postsIds, userId);
+    //
+    // const reactions = await this.reactionsQueryRepository.findReactionsByIds(
+    //   items.map((comment) => comment._id),
+    //   userId,
+    //   'comment',
+    // );
+    //
+    // const res = {
+    //   ...meta,
+    //   items: BloggerMapper.mapCommentBloggerViewModel(items, posts, reactions),
+    // };
+    //
+    // console.log(res);
   }
   public async execute(
     command: FindAllBloggerCommentsCommand,
@@ -47,8 +68,10 @@ export class FindAllBloggerCommentsHandler implements OnModuleInit {
 
     const rawBlogIds = await this.blogCollection.find({ 'bloggerInfo.login': command.userLogin }, { _id: 1 });
     const blogIds = rawBlogIds.map((b) => b._id);
+
     const posts = await this.postCollection.find({ 'blog.id': { $in: blogIds } });
     const postsIds = posts.map((p) => p._id);
+
     // const foundPosts = await this.postsQueryRepository.findAllByUserId(user._id);
     // const postsIds = foundPosts.map((post) => post._id);
 
@@ -58,9 +81,15 @@ export class FindAllBloggerCommentsHandler implements OnModuleInit {
       user._id,
     );
 
+    const reactions = await this.reactionsQueryRepository.findReactionsByIds(
+      items.map((comment) => comment._id),
+      user._id,
+      'comment',
+    );
+
     return {
       ...meta,
-      items: BloggerMapper.mapCommentBloggerViewModel(items, posts),
+      items: BloggerMapper.mapCommentBloggerViewModel(items, posts, reactions),
     };
   }
 }

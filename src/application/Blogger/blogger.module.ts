@@ -20,6 +20,8 @@ import { BanUserWriteRepository } from '../BanUser/repositories/ban-user.write.r
 import { BloggerUsersController } from './controllers/blogger-users.controller';
 import { BanUserQueryRepository } from '../BanUser/repositories/ban-user.query.repository';
 import { FindAllBannedUsersForBlogHandler } from './handlers/find-all-banned-users-for-blog.handler';
+import { ReactionsQueryRepository } from '../Reactions/repositories/reactions.query.repository';
+import { Reaction, ReactionEntity } from '../../entity/reaction.entity';
 
 export const CommandHandlers = [
   FindAllBlogsBloggerHandler,
@@ -36,6 +38,7 @@ export const CommandHandlers = [
       { name: Blog.name, schema: BlogEntity },
       { name: Post.name, schema: PostEntity },
       { name: User.name, schema: UserEntity },
+      { name: Reaction.name, schema: ReactionEntity },
       { name: Comment.name, schema: CommentEntity },
       { name: BanUser.name, schema: BanUserEntity },
     ]),
@@ -49,6 +52,7 @@ export const CommandHandlers = [
     CommentsQueryRepository,
     BanUserWriteRepository,
     BanUserQueryRepository,
+    ReactionsQueryRepository,
     ...CommandHandlers,
   ],
 })
