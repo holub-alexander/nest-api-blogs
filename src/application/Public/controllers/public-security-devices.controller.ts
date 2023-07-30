@@ -36,6 +36,10 @@ export class PublicSecurityDevicesController {
       throw new UnauthorizedException();
     }
 
+    if (!user.id.toString() || !Number.isInteger(+user.id.toString())) {
+      throw new UnauthorizedException();
+    }
+
     const devices = await this.securityQueryRepository.findAllByUserId(user.id.toString());
 
     return SecurityMapper.getAllDevicesForUser(devices);

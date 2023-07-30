@@ -101,6 +101,10 @@ export class SecurityDevicesTypeOrmWriteRepository {
     //
     // return res.modifiedCount === 1;
 
+    if (!userId || !Number.isInteger(+userId)) {
+      return false;
+    }
+
     const result = await this.dataSource.query<[[], number]>(
       `
       DELETE FROM devices
@@ -118,6 +122,10 @@ export class SecurityDevicesTypeOrmWriteRepository {
     // const res = await this.UserModel.updateOne({ _id: userId }, { refreshTokensMeta: [] });
     //
     // return res.modifiedCount === 1;
+
+    if (!userId || !Number.isInteger(+userId)) {
+      return false;
+    }
 
     const result = await this.dataSource.query<[[], number]>(
       `

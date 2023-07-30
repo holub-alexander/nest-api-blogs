@@ -50,6 +50,10 @@ export class UsersTypeOrmWriteRepository {
   }
 
   public async deleteOne(userId: string): Promise<boolean> {
+    if (!userId || !Number.isInteger(+userId)) {
+      return false;
+    }
+
     const result = await this.dataSource.query(
       `
       DELETE FROM users
@@ -101,6 +105,10 @@ export class UsersTypeOrmWriteRepository {
     //   },
     // );
 
+    if (!id || !Number.isInteger(+id)) {
+      return false;
+    }
+
     const result = await this.dataSource.query<[UserEntityTypeOrm[], number]>(
       `
       UPDATE users
@@ -126,6 +134,10 @@ export class UsersTypeOrmWriteRepository {
     // );
     //
     // return res.modifiedCount === 1;
+
+    if (!userId || !Number.isInteger(+userId)) {
+      return false;
+    }
 
     const result = await this.dataSource.query<[[], number]>(
       `
@@ -178,6 +190,10 @@ export class UsersTypeOrmWriteRepository {
     // );
     //
     // return res.modifiedCount === 1;
+
+    if (!userId || !Number.isInteger(+userId)) {
+      return false;
+    }
 
     const result = await this.dataSource.query<[[], number]>(
       `

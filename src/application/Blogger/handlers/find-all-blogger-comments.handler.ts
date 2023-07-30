@@ -1,6 +1,6 @@
 import { CommandHandler } from '@nestjs/cqrs';
 import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
-import { OnModuleInit, UnauthorizedException } from "@nestjs/common";
+import { OnModuleInit, UnauthorizedException } from '@nestjs/common';
 import { PostsQueryRepository } from '../../Posts/repositories/posts.query.repository';
 import { CommentsQueryRepository } from '../../Comments/repositories/comments.query.repository';
 import { PaginationBlogDto } from '../../Blogs/dto/pagination-blog.dto';
@@ -8,10 +8,11 @@ import { BloggerMapper } from '../mappers/blogger.mapper';
 import { Paginator } from '../../../common/interfaces';
 import { CommentBloggerViewModel } from '../interfaces';
 import { CommentViewModel } from '../../Comments/interfaces';
-import { ReactionsQueryRepository } from "../../Reactions/repositories/reactions.query.repository";
-import { Model } from "mongoose";
-import { Blog, BlogDocument } from "../../../db/entities/mongoose/blog.entity";
-import { Post, PostDocument } from "../../../db/entities/mongoose/post.entity";
+import { Model } from 'mongoose';
+import { Blog, BlogDocument } from '../../../db/entities/mongoose/blog.entity';
+import { Post, PostDocument } from '../../../db/entities/mongoose/post.entity';
+import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';
+import { InjectModel } from '@nestjs/mongoose';
 
 export class FindAllBloggerCommentsCommand {
   constructor(public paginationSortBlogDto: PaginationBlogDto, public userLogin: string) {}

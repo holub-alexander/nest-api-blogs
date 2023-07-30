@@ -82,7 +82,7 @@ export class UsersTypeOrmQueryRepository {
     return new PaginationDto(result, paginationMetaDto);
   }
 
-  public async findUserById(userId: string): Promise<UserEntityTypeOrm> {
+  public async findUserById(userId: string): Promise<UserEntityTypeOrm | null> {
     // const isValidId = ObjectId.isValid(userId);
     //
     // if (isValidId) {
@@ -92,6 +92,10 @@ export class UsersTypeOrmQueryRepository {
     //     return findUser;
     //   }
     // }
+
+    if (!userId || !Number.isInteger(+userId)) {
+      return null;
+    }
 
     const result = await this.dataSource.query<UserEntityTypeOrm[]>(
       `
