@@ -28,7 +28,7 @@ export class BloggerMapper {
           likesInfo: {
             dislikesCount: comment.likesInfo.dislikesCount,
             likesCount: comment.likesInfo.likesCount,
-            myStatus: currentReaction ? currentReaction.likeStatus : LikeStatuses.LIKE,
+            myStatus: currentReaction ? currentReaction.likeStatus : LikeStatuses.NONE,
           },
           createdAt: comment.createdAt,
         };
@@ -45,7 +45,7 @@ export class BloggerMapper {
         likesInfo: {
           dislikesCount: comment.likesInfo.dislikesCount,
           likesCount: comment.likesInfo.likesCount,
-          myStatus: currentReaction ? currentReaction.likeStatus : LikeStatuses.LIKE,
+          myStatus: currentReaction ? currentReaction.likeStatus : LikeStatuses.NONE,
         },
         postInfo: {
           id: post._id.toString(),
