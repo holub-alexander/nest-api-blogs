@@ -93,7 +93,7 @@ export class PublicAuthController {
   @UseGuards(JwtTokenGuard)
   @Get('/me')
   public async me(@Req() req: Request) {
-    const userMe = await this.authService.me(req.user.loginOrEmail);
+    const userMe = await this.authService.me(req.user.login);
 
     if (!userMe) {
       throw new UnauthorizedException();
@@ -110,6 +110,8 @@ export class PublicAuthController {
     if (!req.cookies.refreshToken) {
       throw new UnauthorizedException();
     }
+
+    console.log('reqeq.cookies.refreshToken');
 
     const newTokens = await this.authService.updateTokens(req.userRefreshTokenPayload);
 

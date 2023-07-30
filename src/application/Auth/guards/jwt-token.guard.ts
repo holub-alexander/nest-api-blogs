@@ -1,11 +1,14 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
+import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
 
 @Injectable()
 export class JwtTokenGuard implements CanActivate {
-  constructor(private readonly jwtService: JwtService, private readonly usersQueryRepository: UsersQueryRepository) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
+  ) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -22,7 +25,7 @@ export class JwtTokenGuard implements CanActivate {
 
       const user = await this.usersQueryRepository.findByLogin(payload.login);
 
-      if (!user || user.accountData.isBanned) {
+      if (!user || user.is_banned) {
         throw new UnauthorizedException();
       }
 

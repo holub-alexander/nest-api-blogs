@@ -13,6 +13,8 @@ import { Reaction, ReactionEntity } from '../../db/entities/mongoose/reaction.en
 import { CommentEntity, Comment } from '../../db/entities/mongoose/comment.entity';
 import { Post, PostEntity } from '../../db/entities/mongoose/post.entity';
 import { Blog, BlogEntity } from '../../db/entities/mongoose/blog.entity';
+import { UsersTypeOrmWriteRepository } from '../Users/repositories/typeorm/users.write.repository';
+import { SecurityDevicesTypeOrmWriteRepository } from '../Security-Devices/repositories/typeorm/security-devices.write.repository';
 
 export const CommandHandlers = [DeleteAllHandler];
 
@@ -36,6 +38,8 @@ export const CommandHandlers = [DeleteAllHandler];
     CommentsWriteRepository,
     ReactionsWriteRepository,
     UsersQueryRepository,
+    UsersTypeOrmWriteRepository,
+    SecurityDevicesTypeOrmWriteRepository,
     ...CommandHandlers,
   ],
 })

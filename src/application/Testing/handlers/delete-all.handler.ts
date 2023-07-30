@@ -1,9 +1,10 @@
 import { BlogsWriteRepository } from '../../Blogs/repositories/blogs.write.repository';
 import { PostsWriteRepository } from '../../Posts/repositories/posts.write.repository';
-import { UsersWriteRepository } from '../../Users/repositories/mongoose/users.write.repository';
 import { CommentsWriteRepository } from '../../Comments/repositories/comments.write.repository';
 import { ReactionsWriteRepository } from '../../Reactions/repositories/reactions.write.repository';
 import { CommandHandler } from '@nestjs/cqrs';
+import { UsersTypeOrmWriteRepository } from '../../Users/repositories/typeorm/users.write.repository';
+import { SecurityDevicesTypeOrmWriteRepository } from '../../Security-Devices/repositories/typeorm/security-devices.write.repository';
 
 export class DeleteAllCommand {}
 
@@ -12,7 +13,8 @@ export class DeleteAllHandler {
   constructor(
     private readonly blogsWriteRepository: BlogsWriteRepository,
     private readonly postsWriteRepository: PostsWriteRepository,
-    private readonly usersWriteRepository: UsersWriteRepository,
+    private readonly usersWriteRepository: UsersTypeOrmWriteRepository,
+    private readonly securityDevicesWriteRepository: SecurityDevicesTypeOrmWriteRepository,
     private readonly commentsWriteRepository: CommentsWriteRepository,
     private readonly reactionsWriteRepository: ReactionsWriteRepository,
   ) {}
@@ -24,6 +26,7 @@ export class DeleteAllHandler {
       this.usersWriteRepository.deleteMany(),
       this.commentsWriteRepository.deleteMany(),
       this.reactionsWriteRepository.deleteMany(),
+      this.securityDevicesWriteRepository.deleteMany(),
     ]);
   }
 }

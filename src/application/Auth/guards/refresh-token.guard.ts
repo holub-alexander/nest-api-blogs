@@ -1,13 +1,15 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { SecurityDevicesQueryRepository } from '../../Security-Devices/repositories/security-devices.query.repository';
 import { UserRefreshTokenPayload } from '../interfaces';
+import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
+import { SecurityDevicesTypeOrmQueryRepository } from '../../Security-Devices/repositories/typeorm/security-devices.query.repository';
 
 @Injectable()
 export class RefreshTokenGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly securityDevicesQueryRepository: SecurityDevicesQueryRepository,
+    private readonly securityDevicesQueryRepository: SecurityDevicesTypeOrmQueryRepository,
+    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
   ) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean | never> {
@@ -22,20 +24,22 @@ export class RefreshTokenGuard implements CanActivate {
       const refreshTokenPayload: UserRefreshTokenPayload = await this.jwtService.verifyAsync(tokenFromCookie, {
         secret: process.env.REFRESH_TOKEN_PRIVATE_KEY as string,
       });
-      const findUser = await this.securityDevicesQueryRepository.findUserByDeviceId(refreshTokenPayload.deviceId);
+      const foundDevice = await this.securityDevicesQueryRepository.findDeviceById(refreshTokenPayload.deviceId);
 
-      if (!findUser) {
+      if (!foundDevice) {
         throw new UnauthorizedException();
       }
 
-      const checkIssuedAt = findUser.refreshTokensMeta.findIndex(
-        // @ts-ignore
-        (device) => new Date(device.issuedAt).valueOf() === refreshTokenPayload.iat * 1000,
-      );
+      const foundUser = await this.usersQueryRepository.findUserById(foundDevice.user_id.toString());
 
-      if (checkIssuedAt === -1) {
-        throw new UnauthorizedException();
-      }
+      // const checkIssuedAt = findUser.refreshTokensMeta.findIndex(
+      //   // @ts-ignore
+      //   (device) => new Date(device.issuedAt).valueOf() === refreshTokenPayload.iat * 1000,
+      // );
+
+      // if (checkIssuedAt === -1) {
+      //   throw new UnauthorizedException();
+      // }
 
       request['userRefreshTokenPayload'] = refreshTokenPayload;
     } catch (err) {

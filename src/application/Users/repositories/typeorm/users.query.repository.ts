@@ -82,39 +82,78 @@ export class UsersTypeOrmQueryRepository {
     return new PaginationDto(result, paginationMetaDto);
   }
 
-  public async getUserById(userId: string): Promise<UserEntityTypeOrm | null> {
-    const result = await this.dataSource.query<UserEntityTypeOrm>(
+  public async findUserById(userId: string): Promise<UserEntityTypeOrm> {
+    // const isValidId = ObjectId.isValid(userId);
+    //
+    // if (isValidId) {
+    //   const findUser = await this.UserModel.findOne({ _id: new ObjectId(userId) });
+    //
+    //   if (findUser) {
+    //     return findUser;
+    //   }
+    // }
+
+    const result = await this.dataSource.query<UserEntityTypeOrm[]>(
       `
       SELECT * FROM users
-      WHERE id = $1
-      LIMIT 1;
+      WHERE id = $1;
     `,
       [userId],
     );
 
-    return result || null;
+    return result[0];
   }
-  //
-  // public async findByLoginOrEmail(loginOrEmail: string): Promise<UserDocument | null> {
-  //   const filter = {
-  //     $or: [{ 'accountData.login': { $regex: loginOrEmail } }, { 'accountData.email': { $regex: loginOrEmail } }],
-  //   };
-  //
-  //   return this.UserModel.findOne(filter);
-  // }
-  //
-  // public async findByLogin(login: string): Promise<UserDocument | null> {
-  //   return this.UserModel.findOne({ 'accountData.login': login });
-  // }
-  //
-  // public async findByEmail(email: string): Promise<UserDocument | null> {
-  //   return this.UserModel.findOne({ 'accountData.email': email });
-  // }
-  //
-  // public async findByConfirmationCode(code: string): Promise<UserDocument | null> {
-  //   return this.UserModel.findOne({ 'emailConfirmation.confirmationCode': code });
-  // }
-  //
+
+  public async findByLoginOrEmail(loginOrEmail: string) {
+    const result = await this.dataSource.query<[UserEntityTypeOrm]>(
+      `
+      SELECT * FROM users
+      WHERE login = $1 OR email = $1;
+    `,
+      [loginOrEmail],
+    );
+
+    return result[0];
+  }
+
+  public async findByLogin(login: string): Promise<UserEntityTypeOrm | null> {
+    const result = await this.dataSource.query<UserEntityTypeOrm[]>(
+      `
+      SELECT * FROM users
+      WHERE login = $1
+      LIMIT 1;
+    `,
+      [login],
+    );
+
+    return result[0];
+  }
+
+  public async findByEmail(email: string): Promise<UserEntityTypeOrm | null> {
+    const result = await this.dataSource.query<UserEntityTypeOrm[]>(
+      `
+      SELECT * FROM users
+      WHERE email = $1
+      LIMIT 1;
+    `,
+      [email],
+    );
+
+    return result[0];
+  }
+
+  public async findByConfirmationCode(code: string): Promise<UserEntityTypeOrm> {
+    const result = await this.dataSource.query<UserEntityTypeOrm[]>(
+      `
+      SELECT * FROM users
+      WHERE confirmation_code = $1;
+    `,
+      [code],
+    );
+
+    return result[0];
+  }
+
   // public async findByDeviceId(login: string, deviceId: string): Promise<UserDocument | null> {
   //   return this.UserModel.findOne({
   //     'accountData.login': login,

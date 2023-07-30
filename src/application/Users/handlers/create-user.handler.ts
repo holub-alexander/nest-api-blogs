@@ -5,12 +5,9 @@ import { BadRequestException } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 import { generateHash } from '../../../common/utils/generate-hash';
 import { UsersMapper } from '../mappers/users.mapper';
-import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from '../../../db/entities/mongoose/user.entity';
-import { Model } from 'mongoose';
-import { UsersQueryRepository } from '../repositories/mongoose/users.query.repository';
-import { UsersWriteRepository } from '../repositories/mongoose/users.write.repository';
 import UserEntityTypeOrm from '../../../db/entities/typeorm/user.entity';
+import { UsersTypeOrmQueryRepository } from '../repositories/typeorm/users.query.repository';
+import { UsersTypeOrmWriteRepository } from '../repositories/typeorm/users.write.repository';
 
 export class CreateUserCommand {
   constructor(public body: CreateUserDto) {}
@@ -19,8 +16,8 @@ export class CreateUserCommand {
 @CommandHandler(CreateUserCommand)
 export class CreateUserHandler {
   constructor(
-    private readonly usersQueryRepository: UsersQueryRepository,
-    private readonly usersWriteRepository: UsersWriteRepository,
+    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
+    private readonly usersWriteRepository: UsersTypeOrmWriteRepository,
   ) {}
 
   public async execute(command: CreateUserCommand): Promise<UserViewModel | null | never> {
@@ -39,7 +36,7 @@ export class CreateUserHandler {
     createUserData.email = email;
     createUserData.login = login;
     createUserData.password = passwordHash;
-    createUserData.created_at = new Date().toISOString();
+    createUserData.created_at = new Date();
     createUserData.is_banned = false;
     createUserData.ban_reason = null;
     createUserData.ban_date = null;

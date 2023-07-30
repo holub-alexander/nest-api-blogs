@@ -10,8 +10,8 @@ define(DeviceEntityTypeOrm, () => {
   device.ip = faker.internet.ip();
   device.title = faker.internet.userAgent();
   device.device_id = faker.string.uuid();
-  device.issued_at = getRandomDateWithTimeZone();
-  device.expiration_date = getRandomDateWithTimeZone();
+  device.issued_at = new Date(getRandomDateWithTimeZone());
+  device.expiration_date = new Date(getRandomDateWithTimeZone());
 
   return device;
 });

@@ -13,7 +13,7 @@ import { CommentsWriteRepository } from '../Comments/repositories/comments.write
 import { CommentEntity, Comment } from '../../db/entities/mongoose/comment.entity';
 import { ReactionsWriteRepository } from '../Reactions/repositories/reactions.write.repository';
 import { Reaction, ReactionEntity } from '../../db/entities/mongoose/reaction.entity';
-import { SecurityDevicesWriteRepository } from '../Security-Devices/repositories/security-devices.write.repository';
+import { SecurityDevicesWriteRepository } from '../Security-Devices/repositories/mongoose/security-devices.write.repository';
 import { PostsWriteRepository } from '../Posts/repositories/posts.write.repository';
 import { PostEntity, Post } from '../../db/entities/mongoose/post.entity';
 import { BlogsWriteRepository } from '../Blogs/repositories/blogs.write.repository';
@@ -22,6 +22,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersTypeOrmQueryRepository } from './repositories/typeorm/users.query.repository';
 import UserEntityTypeOrm from '../../db/entities/typeorm/user.entity';
 import DeviceEntityTypeOrm from '../../db/entities/typeorm/device.entity';
+import { UsersTypeOrmWriteRepository } from './repositories/typeorm/users.write.repository';
 
 export const CommandHandlers = [
   FindAllUsersHandler,
@@ -46,9 +47,9 @@ export const CommandHandlers = [
   controllers: [],
   providers: [
     UsersQueryRepository,
-    UsersTypeOrmQueryRepository,
-
     UsersWriteRepository,
+    UsersTypeOrmQueryRepository,
+    UsersTypeOrmWriteRepository,
     CommentsWriteRepository,
     UsersService,
     ReactionsWriteRepository,

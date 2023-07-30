@@ -1,17 +1,10 @@
-// @ts-nocheck
-
 import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { MailService } from '../Mail/mail.service';
 import { add } from 'date-fns';
-import { UsersQueryRepository } from '../Users/repositories/mongoose/users.query.repository';
-import { User, UserDocument } from '../../db/entities/mongoose/user.entity';
-import { AuthMapper } from '../../common/mappers/auth.mapper';
-import { UsersWriteRepository } from '../Users/repositories/mongoose/users.write.repository';
+import { AuthMapper } from '../../common/mappers/typeorm/auth.mapper';
 import { getPasswordHash } from '../../common/utils/get-password-hash';
 import { UserRefreshTokenPayload } from './interfaces';
 import {
@@ -23,16 +16,20 @@ import {
 } from './dto/create.dto';
 import { SecurityDevicesService } from '../Security-Devices/security-devices.service';
 import { CreateUserDto } from '../Users/dto/create.dto';
-import { SecurityDevicesWriteRepository } from '../Security-Devices/repositories/security-devices.write.repository';
 import config from '../../config/config';
+import UserEntityTypeOrm from '../../db/entities/typeorm/user.entity';
+import { UsersTypeOrmQueryRepository } from '../Users/repositories/typeorm/users.query.repository';
+import { UsersTypeOrmWriteRepository } from '../Users/repositories/typeorm/users.write.repository';
+import { SecurityDevicesTypeOrmWriteRepository } from '../Security-Devices/repositories/typeorm/security-devices.write.repository';
+import { SecurityDevicesTypeOrmQueryRepository } from '../Security-Devices/repositories/typeorm/security-devices.query.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
-    private readonly usersQueryRepository: UsersQueryRepository,
-    private readonly usersWriteRepository: UsersWriteRepository,
-    private readonly securityDevicesWriteRepository: SecurityDevicesWriteRepository,
+    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
+    private readonly usersWriteRepository: UsersTypeOrmWriteRepository,
+    private readonly securityDevicesWriteRepository: SecurityDevicesTypeOrmWriteRepository,
+    private readonly securityDevicesQueryRepository: SecurityDevicesTypeOrmQueryRepository,
     private readonly securityDevicesService: SecurityDevicesService,
     private readonly mailService: MailService,
     private readonly jwtService: JwtService,
@@ -64,7 +61,7 @@ export class AuthService {
     const user = await this.usersQueryRepository.findByLoginOrEmail(body.loginOrEmail);
     const isCorrectCredentials = await this.checkCredentials(body);
 
-    if (!isCorrectCredentials || !user || user.isBanned) {
+    if (!isCorrectCredentials || !user || user.is_banned) {
       return null;
     }
 
@@ -95,11 +92,9 @@ export class AuthService {
     return { refreshToken, accessToken };
   }
 
-  public async register(body: CreateUserDto): Promise<UserDocument | null> {
+  public async register(body: CreateUserDto): Promise<UserEntityTypeOrm | null> {
     const findUserByLogin = await this.usersQueryRepository.findByLogin(body.login);
     const findUserByEmail = await this.usersQueryRepository.findByEmail(body.email);
-
-    console.log(findUserByLogin, findUserByEmail);
 
     if (findUserByLogin) {
       throw new BadRequestException([{ message: 'User with this login already exists', field: 'login' }]);
@@ -110,36 +105,50 @@ export class AuthService {
     }
 
     const passwordHash = await getPasswordHash(body.password);
-    const userData = new this.UserModel<User>({
-      accountData: {
-        login: body.login,
-        email: body.email,
-        password: passwordHash,
-        createdAt: new Date().toISOString(),
-        isBanned: false,
-        banReason: null,
-        banDate: null,
-      },
-      emailConfirmation: {
-        confirmationCode: uuidv4(),
-        expirationDate: add(new Date(), {
-          hours: 1,
-        }),
-        isConfirmed: false,
-      },
-      passwordRecovery: {
-        recoveryCode: null,
-      },
-      refreshTokensMeta: [],
+
+    const userData = new UserEntityTypeOrm();
+
+    userData.login = body.login;
+    userData.email = body.email;
+    userData.password = passwordHash;
+    userData.created_at = new Date();
+    userData.is_banned = false;
+    userData.ban_reason = null;
+    userData.ban_date = null;
+    userData.confirmation_code = uuidv4();
+    userData.expiration_date = add(new Date(), {
+      hours: 1,
     });
+    userData.is_confirmed = false;
+    userData.recovery_code = null;
+
+    // const userData = new this.UserModel<User>({
+    //   accountData: {
+    //     login: body.login,
+    //     email: body.email,
+    //     password: passwordHash,
+    //     createdAt: new Date().toISOString(),
+    //     isBanned: false,
+    //     banReason: null,
+    //     banDate: null,
+    //   },
+    //   emailConfirmation: {
+    //     confirmationCode: uuidv4(),
+    //     expirationDate: add(new Date(), {
+    //       hours: 1,
+    //     }),
+    //     isConfirmed: false,
+    //   },
+    //   passwordRecovery: {
+    //     recoveryCode: null,
+    //   },
+    //   refreshTokensMeta: [],
+    // });
 
     const createdUser = await this.usersWriteRepository.create(userData);
 
     if (createdUser) {
-      await this.mailService.sendConfirmationCodeEmail(
-        createdUser.accountData.email,
-        createdUser.emailConfirmation.confirmationCode ?? '',
-      );
+      await this.mailService.sendConfirmationCodeEmail(createdUser.email, createdUser.confirmation_code ?? '');
     }
 
     return createdUser;
@@ -149,18 +158,17 @@ export class AuthService {
     const findUser = await this.usersQueryRepository.findByConfirmationCode(body.code);
 
     if (!findUser) return false;
-    if (findUser.emailConfirmation.isConfirmed) return false;
-    if (findUser.emailConfirmation.confirmationCode !== body.code) return false;
-    if (findUser.emailConfirmation.expirationDate && findUser.emailConfirmation.expirationDate <= new Date())
-      return false;
+    if (findUser.is_confirmed) return false;
+    if (findUser.confirmation_code !== body.code) return false;
+    if (findUser.expiration_date && findUser.expiration_date <= new Date()) return false;
 
-    return await this.usersWriteRepository.confirmRegistration(findUser._id);
+    return await this.usersWriteRepository.confirmRegistration(findUser.id);
   }
 
   public async registrationEmailResending(body: RegistrationEmailResendingInputDto) {
     const user = await this.usersQueryRepository.findByLoginOrEmail(body.email);
 
-    if (!user || user.emailConfirmation.isConfirmed) {
+    if (!user || user.is_confirmed) {
       return false;
     }
 
@@ -172,12 +180,12 @@ export class AuthService {
     };
 
     const isUpdateConfirmationCode = await this.usersWriteRepository.updateConfirmationCode(
-      user._id,
+      user.id,
       newConfirmationCode,
     );
 
     if (isUpdateConfirmationCode) {
-      await this.mailService.sendConfirmationCodeEmail(user.accountData.email, newConfirmationCode.confirmationCode);
+      await this.mailService.sendConfirmationCodeEmail(user.email, newConfirmationCode.confirmationCode);
 
       return true;
     }
@@ -186,17 +194,15 @@ export class AuthService {
   public async updateTokens(
     refreshTokenPayload: UserRefreshTokenPayload,
   ): Promise<null | { accessToken: string; refreshToken: string }> {
-    const user = await this.usersQueryRepository.findByDeviceId(
-      refreshTokenPayload.login,
-      refreshTokenPayload.deviceId,
-    );
+    const foundDevice = await this.securityDevicesQueryRepository.findDeviceById(refreshTokenPayload.deviceId);
+    const foundUser = await this.usersQueryRepository.findUserById(foundDevice.user_id.toString());
 
-    if (!user) {
+    if (!foundDevice || !foundUser) {
       return null;
     }
 
     const newRefreshToken = await this.securityDevicesService.updateDeviceRefreshToken({
-      login: user.accountData.login,
+      login: foundUser.login,
       iat: refreshTokenPayload.iat,
       deviceId: refreshTokenPayload.deviceId,
     });
@@ -206,7 +212,7 @@ export class AuthService {
     }
 
     const accessToken = this.jwtService.sign(
-      { login: user.accountData.login },
+      { login: foundUser.login },
       { secret: process.env.ACCESS_TOKEN_PRIVATE_KEY as string, expiresIn: config.accessTokenExpiration },
     );
 
@@ -214,10 +220,7 @@ export class AuthService {
   }
 
   public async logout(refreshTokenPayload: UserRefreshTokenPayload): Promise<boolean> {
-    return this.securityDevicesWriteRepository.deleteDeviceSessionById(
-      refreshTokenPayload.login,
-      refreshTokenPayload.deviceId,
-    );
+    return this.securityDevicesWriteRepository.deleteDeviceSessionById(refreshTokenPayload.deviceId);
   }
 
   public async verifyPasswordRecoveryJwtToken(recoveryCode: string) {
@@ -241,13 +244,12 @@ export class AuthService {
     );
     const user = await this.usersQueryRepository.findByEmail(body.email);
 
-    await this.mailService.sendPasswordRecoveryEmail(body.email, recoveryCode);
-
     if (!user) {
-      return true;
+      return false;
     }
 
-    await this.usersWriteRepository.passwordRecovery(user._id, recoveryCode);
+    await this.mailService.sendPasswordRecoveryEmail(body.email, recoveryCode);
+    await this.usersWriteRepository.passwordRecovery(user.id, recoveryCode);
 
     return true;
   }

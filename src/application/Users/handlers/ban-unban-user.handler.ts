@@ -3,7 +3,7 @@ import { UsersWriteRepository } from '../repositories/mongoose/users.write.repos
 import { ObjectId } from 'mongodb';
 import { CommentsWriteRepository } from 'src/application/Comments/repositories/comments.write.repository';
 import { ReactionsWriteRepository } from '../../Reactions/repositories/reactions.write.repository';
-import { SecurityDevicesWriteRepository } from '../../Security-Devices/repositories/security-devices.write.repository';
+import { SecurityDevicesWriteRepository } from '../../Security-Devices/repositories/mongoose/security-devices.write.repository';
 import { PostsWriteRepository } from 'src/application/Posts/repositories/posts.write.repository';
 import { BlogsWriteRepository } from '../../Blogs/repositories/blogs.write.repository';
 

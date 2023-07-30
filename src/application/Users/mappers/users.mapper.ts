@@ -7,7 +7,7 @@ export class UsersMapper {
       id: user.id.toString(),
       login: user.login,
       email: user.email,
-      createdAt: user.created_at,
+      createdAt: user.created_at.toString(),
       banInfo: {
         banDate: user.ban_date,
         banReason: user.ban_reason,
@@ -21,7 +21,7 @@ export class UsersMapper {
       id: user.id.toString(),
       login: user.login,
       email: user.email,
-      createdAt: user.created_at,
+      createdAt: user.created_at.toString(),
       banInfo: {
         banDate: user.ban_date,
         banReason: user.ban_reason,

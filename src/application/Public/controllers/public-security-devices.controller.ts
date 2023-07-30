@@ -10,21 +10,21 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { SecurityDevicesQueryRepository } from '../../Security-Devices/repositories/security-devices.query.repository';
-import { SecurityDevicesWriteRepository } from '../../Security-Devices/repositories/security-devices.write.repository';
-import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
 import { DeviceViewModel } from '../../Security-Devices/interfaces';
-import { SecurityMapper } from '../../../common/mappers/security-devices.mapper';
+import { SecurityMapper } from '../../../common/mappers/typeorm/security-devices.mapper';
 import { SkipThrottle } from '@nestjs/throttler';
 import { RefreshTokenGuard } from '../../Auth/guards/refresh-token.guard';
+import { SecurityDevicesTypeOrmQueryRepository } from '../../Security-Devices/repositories/typeorm/security-devices.query.repository';
+import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
+import { SecurityDevicesTypeOrmWriteRepository } from '../../Security-Devices/repositories/typeorm/security-devices.write.repository';
 
 @SkipThrottle()
 @Controller('security/devices')
 export class PublicSecurityDevicesController {
   constructor(
-    private readonly securityQueryRepository: SecurityDevicesQueryRepository,
-    private readonly securityWriteRepository: SecurityDevicesWriteRepository,
-    private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly securityQueryRepository: SecurityDevicesTypeOrmQueryRepository,
+    private readonly securityWriteRepository: SecurityDevicesTypeOrmWriteRepository,
+    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
   ) {}
 
   @Get()
@@ -36,43 +36,54 @@ export class PublicSecurityDevicesController {
       throw new UnauthorizedException();
     }
 
-    return SecurityMapper.getAllDevicesForUser(user.refreshTokensMeta);
+    const devices = await this.securityQueryRepository.findAllByUserId(user.id.toString());
+
+    return SecurityMapper.getAllDevicesForUser(devices);
   }
 
   @Delete()
   @UseGuards(RefreshTokenGuard)
   @HttpCode(204)
   public async deleteAllSessions(@Req() req: Request) {
-    const user = await this.usersQueryRepository.findByDeviceId(
-      req.userRefreshTokenPayload.login,
-      req.userRefreshTokenPayload.deviceId,
-    );
+    const foundDevice = await this.securityQueryRepository.findDeviceById(req.userRefreshTokenPayload.deviceId);
 
-    if (!user) {
-      throw new UnauthorizedException();
+    if (!foundDevice) {
+      throw new NotFoundException();
     }
 
-    await this.securityWriteRepository.deleteAllDeviceSessions(user._id, req.userRefreshTokenPayload.deviceId);
+    const foundUser = await this.usersQueryRepository.findUserById(foundDevice.user_id.toString());
+
+    if (!foundUser) {
+      throw new NotFoundException();
+    }
+
+    return this.securityWriteRepository.deleteAllDeviceSessions(
+      foundUser.id.toString(),
+      req.userRefreshTokenPayload.deviceId,
+    );
   }
 
   @Delete('/:deviceId')
   @UseGuards(RefreshTokenGuard)
   @HttpCode(204)
   public async deleteSessionById(@Req() req: Request<{ deviceId: string }>) {
-    const findUser = await this.securityQueryRepository.findUserByDeviceId(req.params.deviceId);
+    const foundDevice = await this.securityQueryRepository.findDeviceById(req.params.deviceId);
 
-    if (!findUser) {
+    if (!foundDevice) {
       throw new NotFoundException();
     }
 
-    if (findUser && findUser.accountData.login !== req.userRefreshTokenPayload.login) {
+    const foundUser = await this.usersQueryRepository.findUserById(foundDevice.user_id.toString());
+
+    if (!foundUser) {
+      throw new NotFoundException();
+    }
+
+    if (foundUser && foundUser.login !== req.userRefreshTokenPayload.login) {
       throw new ForbiddenException();
     }
 
-    const response = await this.securityWriteRepository.deleteDeviceSessionById(
-      req.userRefreshTokenPayload.login,
-      req.params.deviceId,
-    );
+    const response = await this.securityWriteRepository.deleteDeviceSessionById(req.params.deviceId);
 
     if (!response) {
       throw new UnauthorizedException();

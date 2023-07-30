@@ -1,5 +1,5 @@
-import { UsersQueryRepository } from '../repositories/mongoose/users.query.repository';
 import { CommandHandler } from '@nestjs/cqrs';
+import { UsersTypeOrmQueryRepository } from '../repositories/typeorm/users.query.repository';
 
 export class FindOneUserCommand {
   constructor(public userId: string) {}
@@ -7,9 +7,9 @@ export class FindOneUserCommand {
 
 @CommandHandler(FindOneUserCommand)
 export class FindOneUserHandler {
-  constructor(private usersQueryRepository: UsersQueryRepository) {}
+  constructor(private usersQueryRepository: UsersTypeOrmQueryRepository) {}
 
   public async execute(command: FindOneUserCommand) {
-    return this.usersQueryRepository.getUserById(command.userId);
+    return this.usersQueryRepository.findUserById(command.userId);
   }
 }

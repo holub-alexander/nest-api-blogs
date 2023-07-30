@@ -20,6 +20,8 @@ import { BanUserWriteRepository } from '../BanUser/repositories/ban-user.write.r
 import { BloggerUsersController } from './controllers/blogger-users.controller';
 import { BanUserQueryRepository } from '../BanUser/repositories/ban-user.query.repository';
 import { FindAllBannedUsersForBlogHandler } from './handlers/find-all-banned-users-for-blog.handler';
+import { UsersTypeOrmQueryRepository } from '../Users/repositories/typeorm/users.query.repository';
+import { UsersTypeOrmWriteRepository } from '../Users/repositories/typeorm/users.write.repository';
 
 export const CommandHandlers = [
   FindAllBlogsBloggerHandler,
@@ -46,6 +48,8 @@ export const CommandHandlers = [
     BlogsQueryRepository,
     PostsQueryRepository,
     UsersQueryRepository,
+    UsersTypeOrmQueryRepository,
+    UsersTypeOrmWriteRepository,
     CommentsQueryRepository,
     BanUserWriteRepository,
     BanUserQueryRepository,

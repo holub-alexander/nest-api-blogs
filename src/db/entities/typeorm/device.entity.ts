@@ -9,21 +9,24 @@ class DeviceEntityTypeOrm {
   @Column({ type: 'varchar', length: 50, nullable: false })
   ip: string;
 
-  @Column({ type: 'varchar', default: null })
-  title: string | null;
+  @Column({ type: 'varchar', nullable: false })
+  title: string;
 
   @Column({ type: 'varchar', nullable: false })
   device_id: string;
 
   @Column({ type: 'timestamptz', nullable: false })
-  issued_at: string;
+  issued_at: Date;
 
   @Column({ type: 'timestamptz', nullable: false })
-  expiration_date: string;
+  expiration_date: Date;
 
   @ManyToOne(() => UserEntityTypeOrm, (user) => user.refresh_tokens_meta)
   @JoinColumn({ name: 'user_id' })
   user: UserEntityTypeOrm;
+
+  @Column({ type: 'int', nullable: false })
+  user_id: number;
 }
 
 export default DeviceEntityTypeOrm;

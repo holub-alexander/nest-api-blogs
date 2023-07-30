@@ -99,7 +99,7 @@ class UserEntityTypeOrm {
   email: string;
 
   @Column({ type: 'timestamptz', nullable: false })
-  created_at: string;
+  created_at: Date;
 
   @Column({ type: 'boolean', default: false })
   is_banned: boolean;
