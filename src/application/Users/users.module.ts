@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UsersQueryRepository } from './repositories/mongoose/users.query.repository';
 import { UsersWriteRepository } from './repositories/mongoose/users.write.repository';
-import { UsersService } from './users.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserEntity } from '../../db/entities/mongoose/user.entity';
 import { FindAllUsersHandler } from './handlers/find-all-users.handler';
@@ -23,6 +22,7 @@ import { UsersTypeOrmQueryRepository } from './repositories/typeorm/users.query.
 import UserEntityTypeOrm from '../../db/entities/typeorm/user.entity';
 import DeviceEntityTypeOrm from '../../db/entities/typeorm/device.entity';
 import { UsersTypeOrmWriteRepository } from './repositories/typeorm/users.write.repository';
+import { SecurityDevicesTypeOrmWriteRepository } from '../Security-Devices/repositories/typeorm/security-devices.write.repository';
 
 export const CommandHandlers = [
   FindAllUsersHandler,
@@ -30,7 +30,6 @@ export const CommandHandlers = [
   DeleteUserHandler,
   FindOneUserHandler,
   BanUnbanUserHandler,
-  SecurityDevicesWriteRepository,
 ];
 
 @Module({
@@ -51,10 +50,11 @@ export const CommandHandlers = [
     UsersTypeOrmQueryRepository,
     UsersTypeOrmWriteRepository,
     CommentsWriteRepository,
-    UsersService,
     ReactionsWriteRepository,
     PostsWriteRepository,
     BlogsWriteRepository,
+    SecurityDevicesWriteRepository,
+    SecurityDevicesTypeOrmWriteRepository,
     ...CommandHandlers,
   ],
 })

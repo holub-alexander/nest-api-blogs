@@ -114,10 +114,20 @@ export class SecurityDevicesTypeOrmWriteRepository {
     return result[1] > 0;
   }
 
-  public async deleteAllDevicesByUserId(userId: ObjectId): Promise<boolean> {
-    const res = await this.UserModel.updateOne({ _id: userId }, { refreshTokensMeta: [] });
+  public async deleteAllDevicesByUserId(userId: string): Promise<boolean> {
+    // const res = await this.UserModel.updateOne({ _id: userId }, { refreshTokensMeta: [] });
+    //
+    // return res.modifiedCount === 1;
 
-    return res.modifiedCount === 1;
+    const result = await this.dataSource.query<[[], number]>(
+      `
+      DELETE FROM devices
+      WHERE user_id = $1;
+    `,
+      [userId],
+    );
+
+    return result[1] > 0;
   }
 
   public async deleteMany() {}

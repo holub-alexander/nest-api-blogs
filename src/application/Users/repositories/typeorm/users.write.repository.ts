@@ -1,10 +1,7 @@
-// @ts-nocheck
-
 import { Injectable } from '@nestjs/common';
 import UserEntityTypeOrm from '../../../../db/entities/typeorm/user.entity';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { ObjectId } from 'mongodb';
 import { UserDocument } from '../../../../db/entities/mongoose/user.entity';
 
 @Injectable()
@@ -169,12 +166,30 @@ export class UsersTypeOrmWriteRepository {
     return result[1] > 0;
   }
 
-  public async banUnban(userId: ObjectId, isBanned: boolean, banReason: string | null, banDate: string | null) {
-    const res = await this.UserModel.updateOne(
-      { _id: userId },
-      { 'accountData.isBanned': isBanned, 'accountData.banReason': banReason, 'accountData.banDate': banDate },
+  public async banUnban(
+    userId: string,
+    isBanned: boolean,
+    banReason: string | null,
+    banDate: Date | null,
+  ): Promise<boolean> {
+    // const res = await this.UserModel.updateOne(
+    //   { _id: userId },
+    //   { 'accountData.isBanned': isBanned, 'accountData.banReason': banReason, 'accountData.banDate': banDate },
+    // );
+    //
+    // return res.modifiedCount === 1;
+
+    const result = await this.dataSource.query<[[], number]>(
+      `
+      UPDATE users
+      SET is_banned = $2,
+          ban_reason = $3,
+          ban_date = $4
+      WHERE id = $1;
+    `,
+      [userId, isBanned, banReason, banDate],
     );
 
-    return res.modifiedCount === 1;
+    return result[1] > 0;
   }
 }
