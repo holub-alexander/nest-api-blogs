@@ -22,6 +22,8 @@ import { BanUserQueryRepository } from '../BanUser/repositories/ban-user.query.r
 import { FindAllBannedUsersForBlogHandler } from './handlers/find-all-banned-users-for-blog.handler';
 import { UsersTypeOrmQueryRepository } from '../Users/repositories/typeorm/users.query.repository';
 import { UsersTypeOrmWriteRepository } from '../Users/repositories/typeorm/users.write.repository';
+import { ReactionsQueryRepository } from "../Reactions/repositories/reactions.query.repository";
+import { Reaction, ReactionEntity } from "../../db/entities/mongoose/reaction.entity";
 
 export const CommandHandlers = [
   FindAllBlogsBloggerHandler,
@@ -38,6 +40,7 @@ export const CommandHandlers = [
       { name: Blog.name, schema: BlogEntity },
       { name: Post.name, schema: PostEntity },
       { name: User.name, schema: UserEntity },
+      { name: Reaction.name, schema: ReactionEntity },
       { name: Comment.name, schema: CommentEntity },
       { name: BanUser.name, schema: BanUserEntity },
     ]),
@@ -53,6 +56,7 @@ export const CommandHandlers = [
     CommentsQueryRepository,
     BanUserWriteRepository,
     BanUserQueryRepository,
+    ReactionsQueryRepository,
     ...CommandHandlers,
   ],
 })

@@ -8,8 +8,8 @@ export interface PostInfo {
   blogName: string;
 }
 
-export interface CommentBloggerViewModel extends Omit<CommentViewModel, 'likesInfo'> {
-  postInfo: PostInfo;
+export interface CommentBloggerViewModel extends CommentViewModel {
+  postInfo?: PostInfo;
 }
 
 export interface UserBloggerViewModel {
