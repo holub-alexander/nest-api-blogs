@@ -1,6 +1,6 @@
 import { CommandHandler } from '@nestjs/cqrs';
 import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
-import { UnauthorizedException } from '@nestjs/common';
+import { OnModuleInit, UnauthorizedException } from '@nestjs/common';
 import { PostsQueryRepository } from '../../Posts/repositories/posts.query.repository';
 import { CommentsQueryRepository } from '../../Comments/repositories/comments.query.repository';
 import { PaginationBlogDto } from '../../Blogs/dto/pagination-blog.dto';
@@ -10,7 +10,7 @@ import { CommentBloggerViewModel } from '../interfaces';
 import { CommentViewModel } from '../../Comments/interfaces';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument } from '../../../entity/blog.entity';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Post, PostDocument } from '../../../entity/post.entity';
 import { ObjectId } from 'mongodb';
 
@@ -19,7 +19,7 @@ export class FindAllBloggerCommentsCommand {
 }
 
 @CommandHandler(FindAllBloggerCommentsCommand)
-export class FindAllBloggerCommentsHandler {
+export class FindAllBloggerCommentsHandler implements OnModuleInit {
   constructor(
     private readonly usersQueryRepository: UsersQueryRepository,
     private readonly postsQueryRepository: PostsQueryRepository,
@@ -28,6 +28,14 @@ export class FindAllBloggerCommentsHandler {
     @InjectModel(Post.name) private postCollection: Model<PostDocument>,
   ) {}
 
+  async onModuleInit() {
+    const login = 'lg-501110';
+    const rawBlogIds = await this.blogCollection.find({ 'bloggerInfo.login': login }, { _id: 1 });
+    const blogIds = rawBlogIds.map((b) => b._id);
+    console.log(blogIds);
+    const posts = await this.postCollection.find({ 'blog.id': { $in: blogIds } });
+    console.log(posts);
+  }
   public async execute(
     command: FindAllBloggerCommentsCommand,
   ): Promise<Paginator<CommentBloggerViewModel[] | Omit<CommentViewModel, 'likesInfo'>[]> | never> {
@@ -36,7 +44,9 @@ export class FindAllBloggerCommentsHandler {
     if (!user) {
       throw new UnauthorizedException();
     }
-    const blogIds: string[] = await this.blogCollection.find({ 'bloggerInfo.login': command.userLogin }, { _id: 1 });
+
+    const rawBlogIds = await this.blogCollection.find({ 'bloggerInfo.login': command.userLogin }, { _id: 1 });
+    const blogIds = rawBlogIds.map((b) => b._id);
     const posts = await this.postCollection.find({ 'blog.id': { $in: blogIds } });
     const postsIds = posts.map((p) => p._id);
     // const foundPosts = await this.postsQueryRepository.findAllByUserId(user._id);
