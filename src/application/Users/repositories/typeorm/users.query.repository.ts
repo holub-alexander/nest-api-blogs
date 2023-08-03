@@ -37,28 +37,58 @@ export class UsersTypeOrmQueryRepository {
     const conditions: string[] = [];
     let bannedQuery = '';
 
+    const totalQueryParams: (number | string | boolean)[] = [];
+    const totalQueryConditions: string[] = [];
+    let totalBannedQuery = '';
+
     if (searchLoginTerm && searchLoginTerm.trim() !== '') {
       queryParams.push(`%${searchLoginTerm}%`);
       conditions.push('login ILIKE $' + queryParams.length);
+
+      totalQueryParams.push(`%${searchLoginTerm}%`);
+      totalQueryConditions.push('login ILIKE $' + totalQueryParams.length);
     }
 
     if (searchEmailTerm && searchEmailTerm.trim() !== '') {
       queryParams.push(`%${searchEmailTerm}%`);
       conditions.push('email ILIKE $' + queryParams.length);
+
+      totalQueryParams.push(`%${searchEmailTerm}%`);
+      totalQueryConditions.push('email ILIKE $' + totalQueryParams.length);
     }
 
     let query = `
       SELECT * FROM users
     `;
 
+    let totalCountQuery = `
+      SELECT COUNT(*) FROM users
+    `;
+
     if (banStatus === BanStatuses.Banned || banStatus === BanStatuses.NotBanned) {
       queryParams.push(`${BanStatuses.Banned === banStatus}`);
-      bannedQuery += ' AND is_banned = $' + queryParams.length;
+      bannedQuery += 'is_banned = $' + queryParams.length;
+
+      totalQueryParams.push(`${BanStatuses.Banned === banStatus}`);
+      totalBannedQuery += 'is_banned = $' + totalQueryParams.length;
     }
 
     if (conditions.length > 0) {
       query += ' WHERE (' + conditions.join(' OR ') + ')';
-      query += bannedQuery;
+
+      if (bannedQuery) {
+        query += ' AND ' + bannedQuery;
+      }
+
+      totalCountQuery += ' WHERE (' + totalQueryConditions.join(' OR ') + ')';
+
+      if (totalBannedQuery) {
+        totalCountQuery += ' AND ' + totalBannedQuery;
+      }
+    } else if (bannedQuery) {
+      query += ` WHERE ${bannedQuery}`;
+
+      totalCountQuery += ` WHERE ${totalBannedQuery}`;
     }
 
     if (sorting) {
@@ -66,6 +96,8 @@ export class UsersTypeOrmQueryRepository {
       ORDER BY ${sorting.field} ${sorting.direction}
       `;
     }
+
+    const totalCount = await this.dataSource.query<[{ count: string }]>(totalCountQuery, totalQueryParams);
 
     query += `
       OFFSET $2
@@ -76,7 +108,7 @@ export class UsersTypeOrmQueryRepository {
 
     const paginationMetaDto = new PaginationMetaDto({
       paginationOptionsDto: { pageSize, pageNumber, sortBy, sortDirection },
-      totalCount: result.length,
+      totalCount: +totalCount[0].count,
     });
 
     return new PaginationDto(result, paginationMetaDto);
