@@ -30,4 +30,14 @@ export class SecurityDevicesTypeOrmQueryRepository {
       [userId],
     );
   }
+
+  public async findDeviceByIssuedAt(userId: string): Promise<DeviceEntityTypeOrm[]> {
+    return this.dataSource.query<DeviceEntityTypeOrm[]>(
+      `
+      SELECT * FROM devices
+      WHERE user_id = $1;
+    `,
+      [userId],
+    );
+  }
 }

@@ -30,12 +30,17 @@ export class RefreshTokenGuard implements CanActivate {
         throw new UnauthorizedException();
       }
 
-      const foundUser = await this.usersQueryRepository.findUserById(foundDevice.user_id.toString());
+      // const foundUser = await this.usersQueryRepository.findUserById(foundDevice.user_id.toString());
 
+      // console.log(refreshTokenPayload, foundDevice);
       // const checkIssuedAt = findUser.refreshTokensMeta.findIndex(
       //   // @ts-ignore
       //   (device) => new Date(device.issuedAt).valueOf() === refreshTokenPayload.iat * 1000,
       // );
+
+      if (new Date(foundDevice.issued_at).valueOf() !== refreshTokenPayload.iat * 1000) {
+        throw new UnauthorizedException();
+      }
 
       // if (checkIssuedAt === -1) {
       //   throw new UnauthorizedException();
