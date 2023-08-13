@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { BlogsWriteRepository } from '../Blogs/repositories/blogs.write.repository';
-import { PostsWriteRepository } from '../Posts/repositories/posts.write.repository';
+import { BlogsWriteRepository } from '../Blogs/repositories/mongoose/blogs.write.repository';
+import { PostsWriteRepository } from '../Posts/repositories/mongoose/posts.write.repository';
 import { UsersWriteRepository } from '../Users/repositories/mongoose/users.write.repository';
 import { CommentsWriteRepository } from '../Comments/repositories/comments.write.repository';
 import { ReactionsWriteRepository } from '../Reactions/repositories/reactions.write.repository';

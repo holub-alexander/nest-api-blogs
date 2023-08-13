@@ -1,10 +1,10 @@
 import { CommandHandler } from '@nestjs/cqrs';
 import { ObjectId } from 'mongodb';
 import { BanUnbanDto } from '../../../common/dto/ban-unban.dto';
-import { BlogsWriteRepository } from '../../Blogs/repositories/blogs.write.repository';
-import { PostsWriteRepository } from '../../Posts/repositories/posts.write.repository';
+import { BlogsWriteRepository } from '../../Blogs/repositories/mongoose/blogs.write.repository';
+import { PostsWriteRepository } from '../../Posts/repositories/mongoose/posts.write.repository';
 import { CommentsWriteRepository } from '../../Comments/repositories/comments.write.repository';
-import { BlogsQueryRepository } from '../../Blogs/repositories/blogs.query.repository';
+import { BlogsQueryRepository } from '../../Blogs/repositories/mongoose/blogs.query.repository';
 
 export class BanUnbanBlogSuperAdminCommand {
   constructor(public blogId: ObjectId, public body: BanUnbanDto) {}

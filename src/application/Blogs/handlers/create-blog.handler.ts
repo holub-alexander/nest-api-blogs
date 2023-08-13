@@ -1,14 +1,12 @@
 import { CreateBlogDto } from '../dto/create.dto';
 import { BlogViewModel } from '../interfaces';
-import { Blog, BlogDocument } from '../../../db/entities/mongoose/blog.entity';
 import { BlogsMapper } from '../mappers/blogs.mapper';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { BlogsQueryRepository } from '../repositories/blogs.query.repository';
-import { BlogsWriteRepository } from '../repositories/blogs.write.repository';
 import { CommandHandler } from '@nestjs/cqrs';
-import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
 import { UnauthorizedException } from '@nestjs/common';
+import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
+import { BlogsTypeOrmQueryRepository } from '../repositories/typeorm/blogs.query.repository';
+import { BlogsTypeOrmWriteRepository } from '../repositories/typeorm/blogs.write.repository';
+import BlogEntityTypeOrm from '../../../db/entities/typeorm/blog.entity';
 
 export class CreateBlogCommand {
   constructor(public body: CreateBlogDto, public userLogin: string) {}
@@ -17,10 +15,9 @@ export class CreateBlogCommand {
 @CommandHandler(CreateBlogCommand)
 export class CreateBlogHandler {
   constructor(
-    @InjectModel(Blog.name) private readonly BlogModel: Model<BlogDocument>,
-    private readonly blogsQueryRepository: BlogsQueryRepository,
-    private readonly blogsWriteRepository: BlogsWriteRepository,
-    private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly blogsQueryRepository: BlogsTypeOrmQueryRepository,
+    private readonly blogsWriteRepository: BlogsTypeOrmWriteRepository,
+    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
   ) {}
 
   public async execute(command: CreateBlogCommand): Promise<BlogViewModel | null> {
@@ -30,23 +27,19 @@ export class CreateBlogHandler {
       throw new UnauthorizedException();
     }
 
-    const doc: BlogDocument = new this.BlogModel<Blog>({
-      ...command.body,
-      createdAt: new Date(),
-      isMembership: false,
-      banInfo: {
-        banDate: null,
-        isBanned: false,
-      },
-      bloggerInfo: {
-        login: user.accountData.login,
-        id: user._id,
-        isBanned: false,
-      },
-    });
+    const blog = new BlogEntityTypeOrm();
 
-    await this.blogsWriteRepository.save(doc);
+    blog.name = command.body.name;
+    blog.description = command.body.description;
+    blog.website_url = command.body.websiteUrl;
+    blog.created_at = new Date();
+    blog.is_membership = false;
+    blog.ban_date = null;
+    blog.is_banned = false;
+    blog.user_id = user.id;
 
-    return BlogsMapper.mapBlogViewModel(doc);
+    const createdBlog = await this.blogsWriteRepository.create(blog);
+
+    return createdBlog ? BlogsMapper.mapBlogViewModel(createdBlog) : null;
   }
 }

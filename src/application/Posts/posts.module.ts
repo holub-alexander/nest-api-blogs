@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { PostsWriteRepository } from './repositories/posts.write.repository';
-import { PostsQueryRepository } from './repositories/posts.query.repository';
+import { PostsWriteRepository } from './repositories/mongoose/posts.write.repository';
+import { PostsQueryRepository } from './repositories/mongoose/posts.query.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Post, PostEntity } from '../../db/entities/mongoose/post.entity';
 import { Comment, CommentEntity } from '../../db/entities/mongoose/comment.entity';
 import { Reaction, ReactionEntity } from '../../db/entities/mongoose/reaction.entity';
-import { BlogsQueryRepository } from '../Blogs/repositories/blogs.query.repository';
+import { BlogsQueryRepository } from '../Blogs/repositories/mongoose/blogs.query.repository';
 import { Blog, BlogEntity } from '../../db/entities/mongoose/blog.entity';
 import { UsersQueryRepository } from '../Users/repositories/mongoose/users.query.repository';
 import { CommentsQueryRepository } from '../Comments/repositories/comments.query.repository';

@@ -13,9 +13,9 @@ import { CommentEntity, Comment } from '../../db/entities/mongoose/comment.entit
 import { ReactionsWriteRepository } from '../Reactions/repositories/reactions.write.repository';
 import { Reaction, ReactionEntity } from '../../db/entities/mongoose/reaction.entity';
 import { SecurityDevicesWriteRepository } from '../Security-Devices/repositories/mongoose/security-devices.write.repository';
-import { PostsWriteRepository } from '../Posts/repositories/posts.write.repository';
+import { PostsWriteRepository } from '../Posts/repositories/mongoose/posts.write.repository';
 import { PostEntity, Post } from '../../db/entities/mongoose/post.entity';
-import { BlogsWriteRepository } from '../Blogs/repositories/blogs.write.repository';
+import { BlogsWriteRepository } from '../Blogs/repositories/mongoose/blogs.write.repository';
 import { Blog, BlogEntity } from '../../db/entities/mongoose/blog.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersTypeOrmQueryRepository } from './repositories/typeorm/users.query.repository';

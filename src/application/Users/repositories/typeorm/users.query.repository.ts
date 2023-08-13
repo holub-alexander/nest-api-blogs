@@ -115,16 +115,6 @@ export class UsersTypeOrmQueryRepository {
   }
 
   public async findUserById(userId: string): Promise<UserEntityTypeOrm | null> {
-    // const isValidId = ObjectId.isValid(userId);
-    //
-    // if (isValidId) {
-    //   const findUser = await this.UserModel.findOne({ _id: new ObjectId(userId) });
-    //
-    //   if (findUser) {
-    //     return findUser;
-    //   }
-    // }
-
     if (!userId || !Number.isInteger(+userId)) {
       return null;
     }
@@ -162,7 +152,7 @@ export class UsersTypeOrmQueryRepository {
       [login],
     );
 
-    return result[0];
+    return result[0] || null;
   }
 
   public async findByEmail(email: string): Promise<UserEntityTypeOrm | null> {
@@ -175,10 +165,10 @@ export class UsersTypeOrmQueryRepository {
       [email],
     );
 
-    return result[0];
+    return result[0] || null;
   }
 
-  public async findByConfirmationCode(code: string): Promise<UserEntityTypeOrm> {
+  public async findByConfirmationCode(code: string): Promise<UserEntityTypeOrm | null> {
     const result = await this.dataSource.query<UserEntityTypeOrm[]>(
       `
       SELECT * FROM users
@@ -187,13 +177,6 @@ export class UsersTypeOrmQueryRepository {
       [code],
     );
 
-    return result[0];
+    return result[0] || null;
   }
-
-  // public async findByDeviceId(login: string, deviceId: string): Promise<UserDocument | null> {
-  //   return this.UserModel.findOne({
-  //     'accountData.login': login,
-  //     'refreshTokensMeta.deviceId': deviceId,
-  //   });
-  // }
 }

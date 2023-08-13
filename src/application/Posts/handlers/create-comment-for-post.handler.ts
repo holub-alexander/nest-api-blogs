@@ -4,7 +4,7 @@ import { CommentMapper } from '../../Comments/mappers/comment.mapper';
 import { InjectModel } from '@nestjs/mongoose';
 import { Comment, CommentDocument } from '../../../db/entities/mongoose/comment.entity';
 import { Model } from 'mongoose';
-import { PostsQueryRepository } from '../repositories/posts.query.repository';
+import { PostsQueryRepository } from '../repositories/mongoose/posts.query.repository';
 import { CommentsWriteRepository } from '../../Comments/repositories/comments.write.repository';
 import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
 import { CommandHandler } from '@nestjs/cqrs';

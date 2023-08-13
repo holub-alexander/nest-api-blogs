@@ -2,6 +2,7 @@ import { Factory, Seeder } from 'typeorm-seeding';
 import { Connection } from 'typeorm';
 import Users from '../../entities/typeorm/user.entity';
 import DeviceEntityTypeOrm from '../../entities/typeorm/device.entity';
+import BlogEntityTypeOrm from '../../entities/typeorm/blog.entity';
 
 export default class InitialDatabaseSeed implements Seeder {
   public async run(factory: Factory, connection: Connection): Promise<void> {
@@ -14,5 +15,7 @@ export default class InitialDatabaseSeed implements Seeder {
         return device;
       })
       .createMany(4);
+
+    await factory(BlogEntityTypeOrm)().createMany(11);
   }
 }

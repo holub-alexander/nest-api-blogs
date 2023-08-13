@@ -8,8 +8,6 @@ export class SecurityDevicesTypeOrmQueryRepository {
   constructor(@InjectDataSource() private dataSource: DataSource) {}
 
   public async findDeviceById(deviceId: string): Promise<DeviceEntityTypeOrm> {
-    // return this.UserModel.findOne<User>({ 'refreshTokensMeta.deviceId': deviceId });
-
     const result = await this.dataSource.query(
       `
       SELECT * FROM devices

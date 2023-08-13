@@ -1,6 +1,6 @@
 import { PostViewModel } from '../interfaces';
 import { PostsMapper } from '../mappers/posts.mapper';
-import { PostsQueryRepository } from '../repositories/posts.query.repository';
+import { PostsQueryRepository } from '../repositories/mongoose/posts.query.repository';
 import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
 import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';
 import { CommandBus, CommandHandler } from '@nestjs/cqrs';

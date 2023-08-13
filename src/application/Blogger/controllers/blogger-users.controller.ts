@@ -20,7 +20,7 @@ import { FindOneUserCommand } from '../../Users/handlers/find-one-user.handler';
 import { JwtTokenGuard } from '../../Auth/guards/jwt-token.guard';
 import { Request } from 'express';
 import { BlogDocument } from '../../../db/entities/mongoose/blog.entity';
-import { BlogsQueryRepository } from '../../Blogs/repositories/blogs.query.repository';
+import { BlogsQueryRepository } from '../../Blogs/repositories/mongoose/blogs.query.repository';
 import { PaginationBannedUsersDto } from '../dto/pagination-banned-users.dto';
 import { FindAllBannedUsersForBlogCommand } from '../handlers/find-all-banned-users-for-blog.handler';
 

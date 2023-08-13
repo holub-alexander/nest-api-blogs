@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import UserEntityTypeOrm from '../../../../db/entities/typeorm/user.entity';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { UserDocument } from '../../../../db/entities/mongoose/user.entity';
 
 @Injectable()
 export class UsersTypeOrmWriteRepository {
@@ -45,10 +44,6 @@ export class UsersTypeOrmWriteRepository {
     return result[0] || null;
   }
 
-  public async save(user: UserDocument): Promise<UserDocument> {
-    return user.save();
-  }
-
   public async deleteOne(userId: string): Promise<boolean> {
     if (!userId || !Number.isInteger(+userId)) {
       return false;
@@ -86,8 +81,6 @@ export class UsersTypeOrmWriteRepository {
       [id],
     );
 
-    // const res = await this.UserModel.updateOne({ _id }, { $set: { 'emailConfirmation.isConfirmed': true } });
-
     return result[1] > 0;
   }
 
@@ -95,16 +88,6 @@ export class UsersTypeOrmWriteRepository {
     id: number,
     { confirmationCode, expirationDate }: { confirmationCode: string; expirationDate: Date },
   ): Promise<boolean> {
-    // const res = await this.UserModel.updateOne(
-    //   { _id },
-    //   {
-    //     $set: {
-    //       'emailConfirmation.confirmationCode': confirmationCode,
-    //       'emailConfirmation.expirationDate': expirationDate,
-    //     },
-    //   },
-    // );
-
     if (!id || !Number.isInteger(+id)) {
       return false;
     }
@@ -124,17 +107,6 @@ export class UsersTypeOrmWriteRepository {
   }
 
   async passwordRecovery(userId: number, recoveryCode: string): Promise<boolean> {
-    // const res = await this.UserModel.updateOne(
-    //   { _id: userId },
-    //   {
-    //     $set: {
-    //       'passwordRecovery.recoveryCode': recoveryCode,
-    //     },
-    //   },
-    // );
-    //
-    // return res.modifiedCount === 1;
-
     if (!userId || !Number.isInteger(+userId)) {
       return false;
     }
@@ -158,13 +130,6 @@ export class UsersTypeOrmWriteRepository {
     passwordHash: string;
     recoveryCode: string;
   }): Promise<boolean> {
-    // const res = await this.UserModel.updateOne(
-    //   { 'passwordRecovery.recoveryCode': recoveryCode },
-    //   { $set: { 'passwordRecovery.recoveryCode': null, 'accountData.password': passwordHash } },
-    // );
-    //
-    // return res.modifiedCount === 1;
-
     const result = await this.dataSource.query<[[], number]>(
       `
       UPDATE users
@@ -184,13 +149,6 @@ export class UsersTypeOrmWriteRepository {
     banReason: string | null,
     banDate: Date | null,
   ): Promise<boolean> {
-    // const res = await this.UserModel.updateOne(
-    //   { _id: userId },
-    //   { 'accountData.isBanned': isBanned, 'accountData.banReason': banReason, 'accountData.banDate': banDate },
-    // );
-    //
-    // return res.modifiedCount === 1;
-
     if (!userId || !Number.isInteger(+userId)) {
       return false;
     }

@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { BanUser, BanUserDocument } from '../../../db/entities/mongoose/ban-user.entity';
 import { Model, Types } from 'mongoose';
 import { BanUserWriteRepository } from '../../BanUser/repositories/ban-user.write.repository';
-import { BlogsQueryRepository } from '../../Blogs/repositories/blogs.query.repository';
+import { BlogsQueryRepository } from '../../Blogs/repositories/mongoose/blogs.query.repository';
 import { BanUserQueryRepository } from '../../BanUser/repositories/ban-user.query.repository';
 
 export class BanUnbanUserForBlogCommand {

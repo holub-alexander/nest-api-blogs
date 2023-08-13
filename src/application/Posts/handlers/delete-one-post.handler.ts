@@ -1,4 +1,4 @@
-import { PostsWriteRepository } from '../repositories/posts.write.repository';
+import { PostsWriteRepository } from '../repositories/mongoose/posts.write.repository';
 import { CommandHandler } from '@nestjs/cqrs';
 
 export class DeleteOnePostCommand {

@@ -8,7 +8,8 @@ export class UsersTable1690010801165 implements MigrationInterface {
                 login VARCHAR(300) NOT NULL,
                 password VARCHAR(300) NOT NULL,
                 email VARCHAR(300) NOT NULL,
-                created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+                created_at TIMESTAMP WITH TIME ZONE NOT NULL, 
+                
                 is_banned BOOLEAN DEFAULT FALSE,
                 ban_reason VARCHAR(1000) DEFAULT NULL,
                 ban_date TIMESTAMP WITH TIME ZONE DEFAULT NULL,

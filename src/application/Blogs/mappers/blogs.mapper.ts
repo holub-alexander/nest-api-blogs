@@ -1,28 +1,30 @@
 import { BlogViewModel } from '../interfaces';
-import { BlogDocument } from '../../../db/entities/mongoose/blog.entity';
+import BlogEntityTypeOrm from '../../../db/entities/typeorm/blog.entity';
 
 export class BlogsMapper {
-  public static mapBlogsViewModel(data: BlogDocument[]): BlogViewModel[] {
+  public static mapBlogsViewModel(data: BlogEntityTypeOrm[]): BlogViewModel[] {
     return data.map(
       (blog): BlogViewModel => ({
-        id: blog._id.toString(),
+        id: blog.id.toString(),
         name: blog.name,
         description: blog.description,
-        websiteUrl: blog.websiteUrl,
-        createdAt: blog.createdAt,
-        isMembership: blog.isMembership,
+        websiteUrl: blog.website_url,
+        createdAt: blog.created_at,
+        isMembership: blog.is_membership,
       }),
     );
   }
 
-  public static mapBlogViewModel(blog: BlogDocument): BlogViewModel {
+  public static mapBlogViewModel(blog: BlogEntityTypeOrm): BlogViewModel {
+    console.log('blog', blog);
+
     return {
-      id: blog._id.toString(),
+      id: blog.id.toString(),
       name: blog.name,
       description: blog.description,
-      websiteUrl: blog.websiteUrl,
-      createdAt: blog.createdAt,
-      isMembership: blog.isMembership,
+      websiteUrl: blog.website_url,
+      createdAt: blog.created_at,
+      isMembership: blog.is_membership,
     };
   }
 }

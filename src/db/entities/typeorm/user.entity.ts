@@ -1,5 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import DeviceEntityTypeOrm from './device.entity';
+import BlogEntityTypeOrm from './blog.entity';
+import PostEntityTypeOrm from './post.entity';
 
 @Entity({ name: 'users' })
 class UserEntityTypeOrm {
@@ -55,6 +57,22 @@ class UserEntityTypeOrm {
     onDelete: 'CASCADE',
   })
   refresh_tokens_meta: DeviceEntityTypeOrm[];
+
+  /**
+   * Relation to blogs
+   * */
+  @OneToMany(() => BlogEntityTypeOrm, (blog) => blog.user, {
+    onDelete: 'CASCADE',
+  })
+  blogs: BlogEntityTypeOrm[];
+
+  /**
+   * Relation to posts
+   * */
+  @OneToMany(() => PostEntityTypeOrm, (post) => post.user, {
+    onDelete: 'CASCADE',
+  })
+  posts: PostEntityTypeOrm[];
 }
 
 export default UserEntityTypeOrm;

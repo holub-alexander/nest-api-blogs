@@ -2,13 +2,13 @@ import { ObjectId } from 'mongodb';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { SortDirections } from '../../../common/interfaces';
-import { PostViewModel } from '../interfaces';
-import { PaginationDto } from '../../../common/dto/pagination.dto';
-import { PaginationOptionsDto } from '../../../common/dto/pagination-options.dto';
-import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
-import { getObjectToSort } from '../../../common/utils/mongoose/get-object-to-sort';
-import { Post, PostDocument } from '../../../db/entities/mongoose/post.entity';
+import { SortDirections } from '../../../../common/interfaces';
+import { PostViewModel } from '../../interfaces';
+import { PaginationDto } from '../../../../common/dto/pagination.dto';
+import { PaginationOptionsDto } from '../../../../common/dto/pagination-options.dto';
+import { PaginationMetaDto } from '../../../../common/dto/pagination-meta.dto';
+import { getObjectToSort } from '../../../../common/utils/mongoose/get-object-to-sort';
+import { Post, PostDocument } from '../../../../db/entities/mongoose/post.entity';
 
 type PostViewFields = Pick<PostViewModel, 'blogName'> & { [key: string]: string };
 

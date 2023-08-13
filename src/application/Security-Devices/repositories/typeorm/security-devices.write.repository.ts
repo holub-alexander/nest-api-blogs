@@ -15,15 +15,6 @@ export class SecurityDevicesTypeOrmWriteRepository {
   ) {}
 
   public async create(device: DeviceEntityTypeOrm): Promise<boolean> {
-    // const res = await this.UserModel.updateOne(
-    //   { _id: userId },
-    //   {
-    //     $push: {
-    //       refreshTokensMeta: refreshTokenMetaData,
-    //     },
-    //   },
-    // );
-
     const result = await this.dataSource.query<DeviceEntityTypeOrm>(
       `
       INSERT INTO devices (user_id, ip, title, device_id, issued_at, expiration_date)
@@ -46,19 +37,6 @@ export class SecurityDevicesTypeOrmWriteRepository {
     expirationDate: Date;
     newIssuedAt: Date;
   }) {
-    // const res = await this.UserModel.updateOne(
-    //   { 'refreshTokensMeta.deviceId': deviceId, 'refreshTokensMeta.issuedAt': issuedAt },
-    //   {
-    //     $set: {
-    //       'refreshTokensMeta.$.deviceId': deviceId,
-    //       'refreshTokensMeta.$.issuedAt': newIssuedAt,
-    //       'refreshTokensMeta.$.expirationDate': expirationDate,
-    //     },
-    //   },
-    // );
-
-    // return res.modifiedCount === 1;
-
     const result = await this.dataSource.query<[DeviceEntityTypeOrm[], number]>(
       `
       UPDATE devices
@@ -73,13 +51,6 @@ export class SecurityDevicesTypeOrmWriteRepository {
   }
 
   public async deleteDeviceSessionById(deviceId: string): Promise<boolean> {
-    // const res = await this.UserModel.updateOne(
-    //   { 'accountData.login': login, 'refreshTokensMeta.deviceId': deviceId },
-    //   { $pull: { refreshTokensMeta: { deviceId } } },
-    // );
-    //
-    // return res.modifiedCount === 1;
-
     const result = await this.dataSource.query<[[], number]>(
       `
       DELETE FROM devices
@@ -94,13 +65,6 @@ export class SecurityDevicesTypeOrmWriteRepository {
   }
 
   public async deleteAllDeviceSessions(userId: string, activeDeviceId: string): Promise<boolean> {
-    // const res = await this.UserModel.updateOne(
-    //   { _id: userId },
-    //   { $pull: { refreshTokensMeta: { deviceId: { $ne: deviceId } } } },
-    // );
-    //
-    // return res.modifiedCount === 1;
-
     if (!userId || !Number.isInteger(+userId)) {
       return false;
     }
@@ -119,10 +83,6 @@ export class SecurityDevicesTypeOrmWriteRepository {
   }
 
   public async deleteAllDevicesByUserId(userId: string): Promise<boolean> {
-    // const res = await this.UserModel.updateOne({ _id: userId }, { refreshTokensMeta: [] });
-    //
-    // return res.modifiedCount === 1;
-
     if (!userId || !Number.isInteger(+userId)) {
       return false;
     }

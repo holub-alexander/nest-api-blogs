@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import {
   Body,
   Controller,
@@ -16,7 +18,6 @@ import {
 import { Request } from 'express';
 import { SkipThrottle } from '@nestjs/throttler';
 import { CommandBus } from '@nestjs/cqrs';
-import { BlogsWriteRepository } from '../../Blogs/repositories/blogs.write.repository';
 import { PaginationBlogDto } from '../../Blogs/dto/pagination-blog.dto';
 import { Paginator } from '../../../common/interfaces';
 import { BlogViewModel } from '../../Blogs/interfaces';
@@ -29,37 +30,41 @@ import { UpdatePostDto } from '../../Posts/dto/update.dto';
 import { UpdatePostCommand } from '../../Posts/handlers/update-post.handler';
 import { JwtTokenGuard } from '../../Auth/guards/jwt-token.guard';
 import { BlogDocument } from '../../../db/entities/mongoose/blog.entity';
-import { BlogsQueryRepository } from '../../Blogs/repositories/blogs.query.repository';
-import { PostsQueryRepository } from '../../Posts/repositories/posts.query.repository';
+import { PostsQueryRepository } from '../../Posts/repositories/mongoose/posts.query.repository';
 import { DeleteOnePostCommand } from '../../Posts/handlers/delete-one-post.handler';
 import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
 import { FindAllBlogsBloggerCommand } from '../handlers/find-all-blogs.handler';
 import { PaginationOptionsDto } from '../../../common/dto/pagination-options.dto';
 import { FindAllBloggerCommentsCommand } from '../handlers/find-all-blogger-comments.handler';
+import { BlogsTypeOrmQueryRepository } from '../../Blogs/repositories/typeorm/blogs.query.repository';
+import BlogEntityTypeOrm from '../../../db/entities/typeorm/blog.entity';
+import { BlogsTypeOrmWriteRepository } from '../../Blogs/repositories/typeorm/blogs.write.repository';
 
 @SkipThrottle()
 @Controller('blogger/blogs')
 export class BloggerBlogsController {
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly blogsWriteRepository: BlogsWriteRepository,
-    private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly blogsWriteRepository: BlogsTypeOrmWriteRepository,
+    private readonly blogsQueryRepository: BlogsTypeOrmQueryRepository,
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly usersQueryRepository: UsersQueryRepository,
   ) {}
 
-  private async checkAccessToBlog(blogId: string, userLogin: string): Promise<BlogDocument | never> {
-    const foundBlog = await this.blogsQueryRepository.findOne(blogId);
+  private async checkAccessToBlog(blogId: string, userLogin: string): Promise<BlogEntityTypeOrm | never> {
+    const foundBlog = await this.blogsQueryRepository.findOneBlog(blogId);
 
-    if (!foundBlog) {
+    if (!foundBlog || foundBlog.length === 0) {
       throw new NotFoundException({});
     }
 
-    if (foundBlog.bloggerInfo?.login !== userLogin) {
+    console.log(foundBlog);
+
+    if (foundBlog[0].user_login !== userLogin) {
       throw new ForbiddenException();
     }
 
-    return foundBlog;
+    return foundBlog[0];
   }
 
   private async checkAccessToBlogAndPost(
@@ -69,7 +74,7 @@ export class BloggerBlogsController {
   ): Promise<BlogDocument | never> {
     console.log(blogId, postId, userLogin);
 
-    const foundBlog = await this.blogsQueryRepository.findOne(blogId);
+    const foundBlog = await this.blogsQueryRepository.findOneBlog(blogId);
     const foundPost = await this.postsQueryRepository.findOne(postId);
 
     if (!foundBlog || !foundPost) {

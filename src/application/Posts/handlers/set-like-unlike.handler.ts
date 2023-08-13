@@ -6,8 +6,8 @@ import { Model } from 'mongoose';
 import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
 import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';
 import { ReactionsWriteRepository } from '../../Reactions/repositories/reactions.write.repository';
-import { PostsWriteRepository } from '../repositories/posts.write.repository';
-import { PostsQueryRepository } from '../repositories/posts.query.repository';
+import { PostsWriteRepository } from '../repositories/mongoose/posts.write.repository';
+import { PostsQueryRepository } from '../repositories/mongoose/posts.query.repository';
 
 export class SetLikeUnlikeForPostCommand {
   constructor(public postId: string, public login: string, public likeStatus: LikeStatuses) {}

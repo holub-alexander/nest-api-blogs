@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { BloggerBlogsController } from './controllers/bloggger-blogs.controller';
-import { BlogsWriteRepository } from '../Blogs/repositories/blogs.write.repository';
+import { BlogsWriteRepository } from '../Blogs/repositories/mongoose/blogs.write.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Blog, BlogEntity } from '../../db/entities/mongoose/blog.entity';
 import { CqrsModule } from '@nestjs/cqrs';
-import { BlogsQueryRepository } from '../Blogs/repositories/blogs.query.repository';
-import { PostsQueryRepository } from '../Posts/repositories/posts.query.repository';
+import { BlogsQueryRepository } from '../Blogs/repositories/mongoose/blogs.query.repository';
+import { PostsQueryRepository } from '../Posts/repositories/mongoose/posts.query.repository';
 import { PostEntity, Post } from '../../db/entities/mongoose/post.entity';
 import { UsersQueryRepository } from '../Users/repositories/mongoose/users.query.repository';
 import { User, UserEntity } from '../../db/entities/mongoose/user.entity';
@@ -22,8 +22,10 @@ import { BanUserQueryRepository } from '../BanUser/repositories/ban-user.query.r
 import { FindAllBannedUsersForBlogHandler } from './handlers/find-all-banned-users-for-blog.handler';
 import { UsersTypeOrmQueryRepository } from '../Users/repositories/typeorm/users.query.repository';
 import { UsersTypeOrmWriteRepository } from '../Users/repositories/typeorm/users.write.repository';
-import { ReactionsQueryRepository } from "../Reactions/repositories/reactions.query.repository";
-import { Reaction, ReactionEntity } from "../../db/entities/mongoose/reaction.entity";
+import { ReactionsQueryRepository } from '../Reactions/repositories/reactions.query.repository';
+import { Reaction, ReactionEntity } from '../../db/entities/mongoose/reaction.entity';
+import { BlogsTypeOrmWriteRepository } from '../Blogs/repositories/typeorm/blogs.write.repository';
+import { BlogsTypeOrmQueryRepository } from '../Blogs/repositories/typeorm/blogs.query.repository';
 
 export const CommandHandlers = [
   FindAllBlogsBloggerHandler,
@@ -48,7 +50,9 @@ export const CommandHandlers = [
   controllers: [BloggerBlogsController, BloggerUsersController],
   providers: [
     BlogsWriteRepository,
+    BlogsTypeOrmWriteRepository,
     BlogsQueryRepository,
+    BlogsTypeOrmQueryRepository,
     PostsQueryRepository,
     UsersQueryRepository,
     UsersTypeOrmQueryRepository,

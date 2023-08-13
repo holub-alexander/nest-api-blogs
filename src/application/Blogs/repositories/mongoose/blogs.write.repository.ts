@@ -2,8 +2,8 @@ import { ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Blog, BlogDocument } from '../../../db/entities/mongoose/blog.entity';
-import { UpdateBlogDto } from '../dto/update.dto';
+import { Blog, BlogDocument } from '../../../../db/entities/mongoose/blog.entity';
+import { UpdateBlogDto } from '../../dto/update.dto';
 
 @Injectable()
 export class BlogsWriteRepository {
