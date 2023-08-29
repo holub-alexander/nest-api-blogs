@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import {
   Body,
   Controller,
@@ -39,6 +37,11 @@ import { FindAllBloggerCommentsCommand } from '../handlers/find-all-blogger-comm
 import { BlogsTypeOrmQueryRepository } from '../../Blogs/repositories/typeorm/blogs.query.repository';
 import BlogEntityTypeOrm from '../../../db/entities/typeorm/blog.entity';
 import { BlogsTypeOrmWriteRepository } from '../../Blogs/repositories/typeorm/blogs.write.repository';
+import { FindAllBlogsCommand } from '../../Blogs/handlers/find-all-blogs.handler';
+import { PostViewModel } from '../../Posts/interfaces';
+import { PostsTypeOrmQueryRepository } from '../../Posts/repositories/typeorm/posts.query.repository';
+import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
+import { FindAllPostsByBlogIdCommand } from '../../Posts/handlers/find-all-posts-for-blog.handler';
 
 @SkipThrottle()
 @Controller('blogger/blogs')
@@ -47,18 +50,16 @@ export class BloggerBlogsController {
     private readonly commandBus: CommandBus,
     private readonly blogsWriteRepository: BlogsTypeOrmWriteRepository,
     private readonly blogsQueryRepository: BlogsTypeOrmQueryRepository,
-    private readonly postsQueryRepository: PostsQueryRepository,
-    private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly postsQueryRepository: PostsTypeOrmQueryRepository,
+    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
   ) {}
 
   private async checkAccessToBlog(blogId: string, userLogin: string): Promise<BlogEntityTypeOrm | never> {
-    const foundBlog = await this.blogsQueryRepository.findOneBlog(blogId);
+    const foundBlog = await this.blogsQueryRepository.findOne(blogId);
 
     if (!foundBlog || foundBlog.length === 0) {
       throw new NotFoundException({});
     }
-
-    console.log(foundBlog);
 
     if (foundBlog[0].user_login !== userLogin) {
       throw new ForbiddenException();
@@ -71,21 +72,19 @@ export class BloggerBlogsController {
     blogId: string,
     postId: string,
     userLogin: string,
-  ): Promise<BlogDocument | never> {
-    console.log(blogId, postId, userLogin);
-
-    const foundBlog = await this.blogsQueryRepository.findOneBlog(blogId);
+  ): Promise<BlogEntityTypeOrm | never> {
+    const foundBlog = await this.blogsQueryRepository.findOne(blogId);
     const foundPost = await this.postsQueryRepository.findOne(postId);
 
-    if (!foundBlog || !foundPost) {
+    if (!foundBlog || foundBlog.length === 0 || !foundPost || foundPost.length === 0) {
       throw new NotFoundException({});
     }
 
-    if (foundBlog.bloggerInfo?.login !== userLogin || foundPost.blog.id.toString() !== foundBlog._id.toString()) {
+    if (foundBlog[0].user_login !== userLogin || foundPost[0].blog_id !== foundBlog[0].id) {
       throw new ForbiddenException();
     }
 
-    return foundBlog;
+    return foundBlog[0];
   }
 
   @Put('/:id')
@@ -134,6 +133,18 @@ export class BloggerBlogsController {
     return this.commandBus.execute(new FindAllBlogsBloggerCommand(queryParams, req.user.login));
   }
 
+  @Get('/:id/posts')
+  @UseGuards(JwtTokenGuard)
+  public async findAllPosts(
+    @Req() req: Request,
+    @Param('id') id: string,
+    @Query() queryParams: PaginationBlogDto,
+  ): Promise<Paginator<PostViewModel[]>> {
+    await this.checkAccessToBlog(id, req.user.login);
+
+    return this.commandBus.execute(new FindAllPostsByBlogIdCommand(queryParams, id));
+  }
+
   @Post('/:id/posts')
   @UseGuards(JwtTokenGuard)
   @HttpCode(201)
@@ -145,7 +156,11 @@ export class BloggerBlogsController {
     const findBlog = await this.checkAccessToBlog(id, req.user.login);
     const user = await this.usersQueryRepository.findByLogin(req.user.login);
 
-    return this.commandBus.execute(new CreatePostCommand(body, findBlog.id.toString(), user!._id));
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return this.commandBus.execute(new CreatePostCommand(body, findBlog.id, user.id));
   }
 
   @Put('/:blogId/posts/:postId')
@@ -182,10 +197,10 @@ export class BloggerBlogsController {
 
     return true;
   }
-
-  @Get('/comments')
-  @UseGuards(JwtTokenGuard)
-  public async findAllBloggerComments(@Query() queryParams: PaginationOptionsDto, @Req() req: Request) {
-    return this.commandBus.execute(new FindAllBloggerCommentsCommand(queryParams, req.user.login));
-  }
+  //
+  // @Get('/comments')
+  // @UseGuards(JwtTokenGuard)
+  // public async findAllBloggerComments(@Query() queryParams: PaginationOptionsDto, @Req() req: Request) {
+  //   return this.commandBus.execute(new FindAllBloggerCommentsCommand(queryParams, req.user.login));
+  // }
 }

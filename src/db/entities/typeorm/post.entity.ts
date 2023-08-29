@@ -1,6 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import BlogEntityTypeOrm from './blog.entity';
 import UserEntityTypeOrm from './user.entity';
+import ReactionEntityTypeOrm from './reaction.entity';
 
 @Entity({ name: 'posts' })
 class PostEntityTypeOrm {
@@ -31,6 +32,8 @@ class PostEntityTypeOrm {
   @Column()
   blog_id: number;
 
+  blog_name: string;
+
   @ManyToOne(() => BlogEntityTypeOrm, (blog) => blog.posts)
   @JoinColumn({ name: 'blog_id' })
   blog: BlogEntityTypeOrm;
@@ -53,6 +56,9 @@ class PostEntityTypeOrm {
   @ManyToOne(() => UserEntityTypeOrm, (user) => user.blogs)
   @JoinColumn({ name: 'user_id' })
   user: UserEntityTypeOrm;
+
+  @OneToMany(() => ReactionEntityTypeOrm, (reaction) => reaction.post)
+  reactions: ReactionEntityTypeOrm[];
 }
 
 export default PostEntityTypeOrm;

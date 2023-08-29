@@ -1,39 +1,35 @@
 import { CommandHandler } from '@nestjs/cqrs';
-import { ObjectId } from 'mongodb';
 import { BanUnbanDto } from '../../../common/dto/ban-unban.dto';
-import { BlogsWriteRepository } from '../../Blogs/repositories/mongoose/blogs.write.repository';
-import { PostsWriteRepository } from '../../Posts/repositories/mongoose/posts.write.repository';
-import { CommentsWriteRepository } from '../../Comments/repositories/comments.write.repository';
-import { BlogsQueryRepository } from '../../Blogs/repositories/mongoose/blogs.query.repository';
+import { BlogsTypeOrmQueryRepository } from '../../Blogs/repositories/typeorm/blogs.query.repository';
+import { BlogsTypeOrmWriteRepository } from '../../Blogs/repositories/typeorm/blogs.write.repository';
 
 export class BanUnbanBlogSuperAdminCommand {
-  constructor(public blogId: ObjectId, public body: BanUnbanDto) {}
+  constructor(public blogId: string, public body: BanUnbanDto) {}
 }
 
 @CommandHandler(BanUnbanBlogSuperAdminCommand)
 export class BanUnbanBlogSuperAdminHandler {
   constructor(
-    private readonly blogsQueryRepository: BlogsQueryRepository,
-    private readonly blogsWriteRepository: BlogsWriteRepository,
-    private readonly postsWriteRepository: PostsWriteRepository,
-    private readonly commentsWriteRepository: CommentsWriteRepository,
+    private readonly blogsQueryRepository: BlogsTypeOrmQueryRepository,
+    private readonly blogsWriteRepository: BlogsTypeOrmWriteRepository,
   ) {}
 
   public async execute(command: BanUnbanBlogSuperAdminCommand) {
-    const blog = await this.blogsQueryRepository.findOne(command.blogId.toString(), true);
-
-    if (!blog) {
+    if (!command.blogId || !Number.isInteger(+command.blogId)) {
       return null;
     }
 
-    if (command.body.isBanned) {
-      await this.blogsWriteRepository.updateBanStatus(command.blogId, new Date(), true);
-    } else {
-      await this.blogsWriteRepository.updateBanStatus(command.blogId, null, false);
+    const blog = await this.blogsQueryRepository.findOne(command.blogId.toString(), true);
+
+    if (!blog || blog.length === 0) {
+      return null;
     }
 
-    await this.postsWriteRepository.updateBanStatusByBlogId(command.blogId, command.body.isBanned);
-    await this.commentsWriteRepository.updateBanStatusByBlogId(command.blogId, command.body.isBanned);
+    await this.blogsWriteRepository.updateBanStatus(
+      blog[0].id,
+      command.body.isBanned ? new Date() : null,
+      command.body.isBanned,
+    );
 
     return true;
   }

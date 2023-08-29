@@ -1,8 +1,9 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
-import { BanUser, BanUserDocument } from '../../../db/entities/mongoose/ban-user.entity';
+
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
+import { BanUser, BanUserDocument } from '../../../../db/entities/mongoose/ban-user.entity';
 
 @Injectable()
 export class BanUserWriteRepository {

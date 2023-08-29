@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ReactionsQueryRepository } from './repositories/reactions.query.repository';
-import { ReactionsWriteRepository } from './repositories/reactions.write.repository';
+import { ReactionsQueryRepository } from './repositories/mongoose/reactions.query.repository';
+import { ReactionsWriteRepository } from './repositories/mongoose/reactions.write.repository';
 import { Reaction, ReactionEntity } from '../../db/entities/mongoose/reaction.entity';
 import { MongooseModule } from '@nestjs/mongoose';
 import { FindAllLikesHandler } from './handlers/find-all-likes.handler';

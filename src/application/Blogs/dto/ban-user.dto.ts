@@ -5,6 +5,6 @@ import { Transform, TransformFnParams } from 'class-transformer';
 export class BanUserForBlogDto extends BanUnbanUserDto {
   @IsNotEmpty()
   @Transform(({ value }: TransformFnParams) => value?.trim())
-  @Length(6, 100)
+  @Length(1, 10)
   blogId: string;
 }

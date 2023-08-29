@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongodb';
-import { Reaction, ReactionDocument } from '../../../db/entities/mongoose/reaction.entity';
+import { Reaction, ReactionDocument } from '../../../../db/entities/mongoose/reaction.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { LikeStatuses } from '../../../common/interfaces';
+import { LikeStatuses } from '../../../../common/interfaces';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

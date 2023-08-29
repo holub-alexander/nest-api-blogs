@@ -1,9 +1,10 @@
 import { CommentDocument } from '../../../db/entities/mongoose/comment.entity';
 import { CommentBloggerViewModel, UserBloggerViewModel } from '../interfaces';
 import { PostDocument } from '../../../db/entities/mongoose/post.entity';
-import { BanUserDocument } from '../../../db/entities/mongoose/ban-user.entity';
-import { ReactionDocument } from "../../../db/entities/mongoose/reaction.entity";
-import { LikeStatuses } from "../../../common/interfaces";
+
+import { ReactionDocument } from '../../../db/entities/mongoose/reaction.entity';
+import { LikeStatuses } from '../../../common/interfaces';
+import BannedUserInBlogEntity from '../../../db/entities/typeorm/banned-user-in-blog.entity';
 
 export class BloggerMapper {
   public static mapCommentBloggerViewModel(
@@ -57,15 +58,15 @@ export class BloggerMapper {
     });
   }
 
-  public static mapUserBloggerViewModel(items: BanUserDocument[]): UserBloggerViewModel[] {
+  public static mapUserBloggerViewModel(items: BannedUserInBlogEntity[]): UserBloggerViewModel[] {
     return items.map((banUser): UserBloggerViewModel => {
       return {
-        id: banUser.user.id.toString(),
-        login: banUser.user.login,
+        id: banUser.user_id.toString(),
+        login: banUser.user_login,
         banInfo: {
-          banDate: banUser.banInfo.banDate,
-          isBanned: banUser.banInfo.isBanned,
-          banReason: banUser.banInfo.banReason,
+          banDate: banUser.created_at.toISOString(),
+          isBanned: banUser.is_banned,
+          banReason: banUser.ban_reason,
         },
       };
     });

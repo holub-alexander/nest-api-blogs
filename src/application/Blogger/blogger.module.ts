@@ -16,16 +16,19 @@ import { CommentEntity, Comment } from '../../db/entities/mongoose/comment.entit
 import { BanUserModule } from '../BanUser/ban-user.module';
 import { BanUser, BanUserEntity } from '../../db/entities/mongoose/ban-user.entity';
 import { BanUnbanUserForBlogHandler } from './handlers/ban-unban-user-for-blog.handler';
-import { BanUserWriteRepository } from '../BanUser/repositories/ban-user.write.repository';
+import { BanUserWriteRepository } from '../BanUser/repositories/mongoose/ban-user.write.repository';
 import { BloggerUsersController } from './controllers/blogger-users.controller';
-import { BanUserQueryRepository } from '../BanUser/repositories/ban-user.query.repository';
+import { BanUserQueryRepository } from '../BanUser/repositories/mongoose/ban-user.query.repository';
 import { FindAllBannedUsersForBlogHandler } from './handlers/find-all-banned-users-for-blog.handler';
 import { UsersTypeOrmQueryRepository } from '../Users/repositories/typeorm/users.query.repository';
 import { UsersTypeOrmWriteRepository } from '../Users/repositories/typeorm/users.write.repository';
-import { ReactionsQueryRepository } from '../Reactions/repositories/reactions.query.repository';
+import { ReactionsQueryRepository } from '../Reactions/repositories/mongoose/reactions.query.repository';
 import { Reaction, ReactionEntity } from '../../db/entities/mongoose/reaction.entity';
 import { BlogsTypeOrmWriteRepository } from '../Blogs/repositories/typeorm/blogs.write.repository';
 import { BlogsTypeOrmQueryRepository } from '../Blogs/repositories/typeorm/blogs.query.repository';
+import { PostsTypeOrmQueryRepository } from '../Posts/repositories/typeorm/posts.query.repository';
+import { BanUserTypeOrmWriteRepository } from '../BanUser/repositories/typeorm/ban-user.write.repository';
+import { BanUserTypeOrmQueryRepository } from '../BanUser/repositories/typeorm/ban-user.query.repository';
 
 export const CommandHandlers = [
   FindAllBlogsBloggerHandler,
@@ -54,11 +57,14 @@ export const CommandHandlers = [
     BlogsQueryRepository,
     BlogsTypeOrmQueryRepository,
     PostsQueryRepository,
+    PostsTypeOrmQueryRepository,
     UsersQueryRepository,
     UsersTypeOrmQueryRepository,
     UsersTypeOrmWriteRepository,
     CommentsQueryRepository,
     BanUserWriteRepository,
+    BanUserTypeOrmWriteRepository,
+    BanUserTypeOrmQueryRepository,
     BanUserQueryRepository,
     ReactionsQueryRepository,
     ...CommandHandlers,

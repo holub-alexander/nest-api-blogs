@@ -19,10 +19,8 @@ const allowedFieldForSorting = {
 };
 
 @Injectable()
-export class BlogsTypeOrmQueryRepository extends Repository<BlogEntityTypeOrm> /*implements Pick<BlogsTypeOrmQueryRepositoryModel, any>*/ {
-  constructor(private readonly dataSource: DataSource) {
-    super(BlogEntityTypeOrm, dataSource.createEntityManager());
-  }
+export class BlogsTypeOrmQueryRepository {
+  constructor(private readonly dataSource: DataSource) {}
 
   public async findAllWithPagination(
     {
@@ -160,7 +158,7 @@ export class BlogsTypeOrmQueryRepository extends Repository<BlogEntityTypeOrm> /
     return new PaginationDto(result, paginationMetaDto);
   }
 
-  public async findOneBlog(blogId: string, isFindBanned = false): Promise<BlogEntityTypeOrm[] | null> {
+  public async findOne(blogId: string, isFindBanned = false): Promise<BlogEntityTypeOrm[] | null> {
     // const isValidId = ObjectId.isValid(blogId);
     //
     // if (isValidId) {

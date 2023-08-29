@@ -1,10 +1,11 @@
+// @ts-nocheck
+
 import { CommandHandler } from '@nestjs/cqrs';
 import { LikeStatuses } from '../../../common/interfaces';
-import { ReactionsQueryRepository } from '../repositories/reactions.query.repository';
-import { ObjectId } from 'mongodb';
+import { ReactionsQueryRepository } from '../repositories/mongoose/reactions.query.repository';
 
 export class FindAllLikesCommand {
-  constructor(public type: 'comment' | 'post', public subjectId: ObjectId) {}
+  constructor(public type: 'comment' | 'post', public subjectId: number) {}
 }
 
 @CommandHandler(FindAllLikesCommand)

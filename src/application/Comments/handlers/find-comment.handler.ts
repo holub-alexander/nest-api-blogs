@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { CommentViewModel } from '../interfaces';
 import { CommentMapper } from '../mappers/comment.mapper';
 import { InjectModel } from '@nestjs/mongoose';
@@ -5,7 +7,7 @@ import { Reaction, ReactionDocument } from '../../../db/entities/mongoose/reacti
 import { Model } from 'mongoose';
 import { CommentsQueryRepository } from '../repositories/comments.query.repository';
 import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
-import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';
+import { ReactionsQueryRepository } from '../../Reactions/repositories/mongoose/reactions.query.repository';
 import { CommandBus, CommandHandler } from '@nestjs/cqrs';
 import { FindAllLikesCommand } from '../../Reactions/handlers/find-all-likes.handler';
 

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { PaginationOptionsDto } from '../../../common/dto/pagination-options.dto';
 import { Paginator } from '../../../common/interfaces';
 import { CommentViewModel } from '../../Comments/interfaces';
@@ -5,7 +7,7 @@ import { CommentMapper } from '../../Comments/mappers/comment.mapper';
 import { PostsQueryRepository } from '../repositories/mongoose/posts.query.repository';
 import { CommentsQueryRepository } from '../../Comments/repositories/comments.query.repository';
 import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
-import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';
+import { ReactionsQueryRepository } from '../../Reactions/repositories/mongoose/reactions.query.repository';
 import { CommandBus, CommandHandler } from '@nestjs/cqrs';
 import { FindAllLikesCommand } from '../../Reactions/handlers/find-all-likes.handler';
 

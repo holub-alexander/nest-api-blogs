@@ -8,7 +8,7 @@ import { PostsQueryRepository } from '../repositories/mongoose/posts.query.repos
 import { CommentsWriteRepository } from '../../Comments/repositories/comments.write.repository';
 import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
 import { CommandHandler } from '@nestjs/cqrs';
-import { BanUserQueryRepository } from '../../BanUser/repositories/ban-user.query.repository';
+import { BanUserQueryRepository } from '../../BanUser/repositories/mongoose/ban-user.query.repository';
 import { ForbiddenException } from '@nestjs/common';
 
 export class CreateCommentForPostCommand {

@@ -11,7 +11,8 @@ define(UserEntityTypeOrm, () => {
   user.password = faker.internet.password({ length: 20 });
   user.email = faker.internet.email();
   user.created_at = new Date(getRandomDateWithTimeZone());
-  user.is_banned = faker.datatype.boolean({ probability: 0.8 });
+  // user.is_banned = faker.datatype.boolean({ probability: 0.8 });
+  user.is_banned = false;
 
   if (user.is_banned) {
     user.ban_reason = faker.lorem.slug(10);

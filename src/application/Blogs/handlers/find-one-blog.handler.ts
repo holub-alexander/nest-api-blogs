@@ -13,7 +13,7 @@ export class FindOneBlogHandler {
   constructor(private readonly blogsQueryRepository: BlogsTypeOrmQueryRepository) {}
 
   public async execute(command: FindOneBlogCommand): Promise<BlogViewModel | null> {
-    const blog = await this.blogsQueryRepository.findOneBlog(command.blogId);
+    const blog = await this.blogsQueryRepository.findOne(command.blogId);
 
     return blog && blog[0] ? BlogsMapper.mapBlogViewModel(blog[0]) : null;
   }

@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import UserEntityTypeOrm from './user.entity';
 import PostEntityTypeOrm from './post.entity';
+import BannedUserInBlogEntity from './banned-user-in-blog.entity';
 
 @Entity({ name: 'blogs' })
 class BlogEntityTypeOrm {
@@ -37,10 +38,8 @@ class BlogEntityTypeOrm {
   @Column()
   user_id: number;
 
-  @Column({ type: 'boolean', default: false })
   user_is_banned: boolean;
 
-  @Column({ type: 'varchar', nullable: false })
   user_login: string;
 
   @ManyToOne(() => UserEntityTypeOrm, (user) => user.blogs)
@@ -51,6 +50,11 @@ class BlogEntityTypeOrm {
     onDelete: 'CASCADE',
   })
   posts: PostEntityTypeOrm[];
+
+  @OneToMany(() => BannedUserInBlogEntity, (bannedUser) => bannedUser.blog, {
+    onDelete: 'CASCADE',
+  })
+  bannedUsers: BannedUserInBlogEntity[];
 
   @Column({ type: 'timestamptz', default: null })
   ban_date: Date | null;

@@ -17,6 +17,7 @@ import { BlogsTypeOrmQueryRepository } from '../Blogs/repositories/typeorm/blogs
 import { getDataSourceToken, getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import BlogEntityTypeOrm from '../../db/entities/typeorm/blog.entity';
 import { DataSource } from 'typeorm';
+import { BlogsTypeOrmWriteRepository } from '../Blogs/repositories/typeorm/blogs.write.repository';
 
 export const CommandHandlers = [FindAllBlogsSuperAdminHandler, BanUnbanBlogSuperAdminHandler];
 
@@ -36,6 +37,7 @@ export const CommandHandlers = [FindAllBlogsSuperAdminHandler, BanUnbanBlogSuper
     BlogsQueryRepository,
     BlogsTypeOrmQueryRepository,
     BlogsWriteRepository,
+    BlogsTypeOrmWriteRepository,
     PostsWriteRepository,
     CommentsWriteRepository,
 

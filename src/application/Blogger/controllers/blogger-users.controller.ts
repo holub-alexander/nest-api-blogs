@@ -23,24 +23,29 @@ import { BlogDocument } from '../../../db/entities/mongoose/blog.entity';
 import { BlogsQueryRepository } from '../../Blogs/repositories/mongoose/blogs.query.repository';
 import { PaginationBannedUsersDto } from '../dto/pagination-banned-users.dto';
 import { FindAllBannedUsersForBlogCommand } from '../handlers/find-all-banned-users-for-blog.handler';
+import { BlogsTypeOrmQueryRepository } from '../../Blogs/repositories/typeorm/blogs.query.repository';
+import BlogEntityTypeOrm from '../../../db/entities/typeorm/blog.entity';
 
 @SkipThrottle()
 @Controller('blogger/users')
 export class BloggerUsersController {
-  constructor(private readonly commandBus: CommandBus, private readonly blogsQueryRepository: BlogsQueryRepository) {}
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly blogsQueryRepository: BlogsTypeOrmQueryRepository,
+  ) {}
 
-  private async checkAccessToBlog(blogId: string, userLogin: string): Promise<BlogDocument | never> {
+  private async checkAccessToBlog(blogId: string, userLogin: string): Promise<BlogEntityTypeOrm | never> {
     const foundBlog = await this.blogsQueryRepository.findOne(blogId);
 
-    if (!foundBlog) {
+    if (!foundBlog || foundBlog.length === 0) {
       throw new NotFoundException({});
     }
 
-    if (foundBlog.bloggerInfo?.login !== userLogin) {
+    if (foundBlog[0].user_login !== userLogin) {
       throw new ForbiddenException();
     }
 
-    return foundBlog;
+    return foundBlog[0];
   }
 
   @Put('/:userId/ban')
@@ -53,20 +58,17 @@ export class BloggerUsersController {
   ) {
     const user = await this.commandBus.execute(new FindOneUserCommand(userId));
 
-    if (!user) {
+    if (!user || user.length === 0) {
       throw new NotFoundException();
     }
 
     const foundBlog = await this.checkAccessToBlog(body.blogId, req.user.login);
-    const res = await this.commandBus.execute(
-      new BanUnbanUserForBlogCommand(user._id, foundBlog._id, user.accountData.login, body),
-    );
 
-    if (!res) {
+    if (!foundBlog) {
       throw new NotFoundException();
     }
 
-    return true;
+    return this.commandBus.execute(new BanUnbanUserForBlogCommand(user.id, foundBlog.id, user.login, body));
   }
 
   @Get('/blog/:blogId')
@@ -82,6 +84,6 @@ export class BloggerUsersController {
       throw new NotFoundException();
     }
 
-    return this.commandBus.execute(new FindAllBannedUsersForBlogCommand(foundBlog._id, queryParams));
+    return this.commandBus.execute(new FindAllBannedUsersForBlogCommand(foundBlog.id, queryParams));
   }
 }

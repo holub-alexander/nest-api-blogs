@@ -1,32 +1,32 @@
 import { NewestLike, PostViewModel } from '../interfaces';
-import { PostDocument } from '../../../db/entities/mongoose/post.entity';
 import { LikeStatuses } from '../../../common/interfaces';
-import { ReactionDocument } from '../../../db/entities/mongoose/reaction.entity';
+import PostEntityTypeOrm from '../../../db/entities/typeorm/post.entity';
+import ReactionEntityTypeOrm from '../../../db/entities/typeorm/reaction.entity';
 
 export class PostsMapper {
-  public static mapNewestLikes(reactions: ReactionDocument[]): NewestLike[] {
+  public static mapNewestLikes(reactions: ReactionEntityTypeOrm[]): NewestLike[] {
     return reactions.map(
       (reaction): NewestLike => ({
-        addedAt: reaction.createdAt,
-        userId: reaction.user.id.toString(),
-        login: reaction.user.login,
+        addedAt: reaction.created_at,
+        userId: reaction.user_id.toString(),
+        login: reaction.user_login,
       }),
     );
   }
 
-  public static mapPostsViewModel(data: PostDocument[], lastReactions: ReactionDocument[]): PostViewModel[] {
+  public static mapPostsViewModel(data: PostEntityTypeOrm[], lastReactions: ReactionEntityTypeOrm[]): PostViewModel[] {
     return data.map(
       (post): PostViewModel => ({
-        id: post._id.toString(),
+        id: post.id.toString(),
         title: post.title,
-        shortDescription: post.shortDescription,
+        shortDescription: post.short_description,
         content: post.content,
-        blogId: post.blog.id.toString(),
-        blogName: post.blog.name,
-        createdAt: post.createdAt,
+        blogId: post.blog_id.toString(),
+        blogName: post.blog_name,
+        createdAt: post.created_at,
         extendedLikesInfo: {
-          dislikesCount: post.likesInfo.dislikesCount,
-          likesCount: post.likesInfo.likesCount,
+          dislikesCount: post.dislikes_count,
+          likesCount: post.likes_count,
           myStatus: LikeStatuses.NONE,
           newestLikes: this.mapNewestLikes(lastReactions),
         },
@@ -35,24 +35,24 @@ export class PostsMapper {
   }
 
   public static mapPostViewModel(
-    post: PostDocument,
-    reaction: ReactionDocument | null,
-    lastReactions: ReactionDocument[] | [],
+    post: PostEntityTypeOrm,
+    reaction: ReactionEntityTypeOrm | null,
+    lastReactions: ReactionEntityTypeOrm[] | [],
     likesCount: number,
     dislikesCount: number,
   ): PostViewModel {
     return {
-      id: post._id.toString(),
+      id: post.id.toString(),
       title: post.title,
-      shortDescription: post.shortDescription,
+      shortDescription: post.short_description,
       content: post.content,
-      blogId: post.blog.id.toString(),
-      blogName: post.blog.name,
-      createdAt: post.createdAt,
+      blogId: post.blog_id.toString(),
+      blogName: post.blog_name,
+      createdAt: post.created_at,
       extendedLikesInfo: {
         likesCount: likesCount,
         dislikesCount: dislikesCount,
-        myStatus: reaction ? reaction.likeStatus : LikeStatuses.NONE,
+        myStatus: reaction ? reaction.like_status : LikeStatuses.NONE,
         newestLikes: this.mapNewestLikes(lastReactions),
       },
     };

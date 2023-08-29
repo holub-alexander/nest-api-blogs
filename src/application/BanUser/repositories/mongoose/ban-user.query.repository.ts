@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { BanUser, BanUserDocument } from '../../../db/entities/mongoose/ban-user.entity';
+import { BanUser, BanUserDocument } from '../../../../db/entities/mongoose/ban-user.entity';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
-import { getObjectToSort } from '../../../common/utils/mongoose/get-object-to-sort';
-import { SortDirections } from '../../../common/interfaces';
-import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
-import { PaginationDto } from '../../../common/dto/pagination.dto';
-import { PaginationBannedUsersDto } from '../../Blogger/dto/pagination-banned-users.dto';
-import { UserBloggerViewModel } from '../../Blogger/interfaces';
+import { getObjectToSort } from '../../../../common/utils/mongoose/get-object-to-sort';
+import { SortDirections } from '../../../../common/interfaces';
+import { PaginationMetaDto } from '../../../../common/dto/pagination-meta.dto';
+import { PaginationDto } from '../../../../common/dto/pagination.dto';
+import { PaginationBannedUsersDto } from '../../../Blogger/dto/pagination-banned-users.dto';
+import { UserBloggerViewModel } from '../../../Blogger/interfaces';
 
 type UserViewFields = {
   [key in keyof UserBloggerViewModel]: string;

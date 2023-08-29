@@ -10,7 +10,7 @@ import { FindOneUserHandler } from './handlers/find-one-user.handler';
 import { BanUnbanUserHandler } from './handlers/ban-unban-user.handler';
 import { CommentsWriteRepository } from '../Comments/repositories/comments.write.repository';
 import { CommentEntity, Comment } from '../../db/entities/mongoose/comment.entity';
-import { ReactionsWriteRepository } from '../Reactions/repositories/reactions.write.repository';
+import { ReactionsWriteRepository } from '../Reactions/repositories/mongoose/reactions.write.repository';
 import { Reaction, ReactionEntity } from '../../db/entities/mongoose/reaction.entity';
 import { SecurityDevicesWriteRepository } from '../Security-Devices/repositories/mongoose/security-devices.write.repository';
 import { PostsWriteRepository } from '../Posts/repositories/mongoose/posts.write.repository';

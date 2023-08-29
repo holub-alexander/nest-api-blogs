@@ -11,7 +11,7 @@ import { CommentViewModel } from '../../Comments/interfaces';
 import { Model } from 'mongoose';
 import { Blog, BlogDocument } from '../../../db/entities/mongoose/blog.entity';
 import { Post, PostDocument } from '../../../db/entities/mongoose/post.entity';
-import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';
+import { ReactionsQueryRepository } from '../../Reactions/repositories/mongoose/reactions.query.repository';
 import { InjectModel } from '@nestjs/mongoose';
 
 export class FindAllBloggerCommentsCommand {

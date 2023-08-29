@@ -110,7 +110,18 @@ export class BlogsTypeOrmWriteRepository {
     await this.BlogModel.updateMany({ 'bloggerInfo.id': userId }, { 'bloggerInfo.isBanned': isBanned });
   }
 
-  public async updateBanStatus(blogId: ObjectId, banDate: Date | null, isBanned: boolean) {
-    await this.BlogModel.updateOne({ _id: blogId }, { 'banInfo.isBanned': isBanned, 'banInfo.banDate': banDate });
+  public async updateBanStatus(blogId: number, banDate: Date | null, isBanned: boolean): Promise<boolean> {
+    // await this.BlogModel.updateOne({ _id: blogId }, { 'banInfo.isBanned': isBanned, 'banInfo.banDate': banDate });
+
+    const result = await this.dataSource.query<[[], number]>(
+      `
+      UPDATE blogs
+      SET is_banned = $2
+      WHERE id = $1;
+    `,
+      [blogId, isBanned],
+    );
+
+    return result[1] > 0;
   }
 }

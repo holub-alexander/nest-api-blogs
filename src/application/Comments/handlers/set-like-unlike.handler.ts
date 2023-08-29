@@ -4,9 +4,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CommentsQueryRepository } from '../repositories/comments.query.repository';
 import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
-import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';
+import { ReactionsQueryRepository } from '../../Reactions/repositories/mongoose/reactions.query.repository';
 import { CommentsWriteRepository } from '../repositories/comments.write.repository';
-import { ReactionsWriteRepository } from '../../Reactions/repositories/reactions.write.repository';
+import { ReactionsWriteRepository } from '../../Reactions/repositories/mongoose/reactions.write.repository';
 import { CommandHandler } from '@nestjs/cqrs';
 
 export class SetLikeUnlikeForCommentCommand {

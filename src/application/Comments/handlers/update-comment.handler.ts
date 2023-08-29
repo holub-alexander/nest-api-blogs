@@ -4,7 +4,7 @@ import { CommentsQueryRepository } from '../repositories/comments.query.reposito
 import { CommentsWriteRepository } from '../repositories/comments.write.repository';
 import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
 import { CommandHandler } from '@nestjs/cqrs';
-import { BanUserQueryRepository } from '../../BanUser/repositories/ban-user.query.repository';
+import { BanUserQueryRepository } from '../../BanUser/repositories/mongoose/ban-user.query.repository';
 
 export class UpdateCommentCommand {
   constructor(public login: string, public body: UpdateCommentForPostDto, public id: string) {}

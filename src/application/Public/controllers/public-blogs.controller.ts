@@ -38,6 +38,6 @@ export class PublicBlogsController {
       throw new NotFoundException({});
     }
 
-    return this.commandBus.execute(new FindAllPostsByBlogIdCommand(queryParams, id, req.user?.login));
+    return this.commandBus.execute(new FindAllPostsByBlogIdCommand(queryParams, findBlog.id, req.user?.login));
   }
 }

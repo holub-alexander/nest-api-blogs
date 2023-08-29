@@ -1,5 +1,5 @@
-import { PostsWriteRepository } from '../repositories/mongoose/posts.write.repository';
 import { CommandHandler } from '@nestjs/cqrs';
+import { PostsTypeOrmWriteRepository } from '../repositories/typeorm/posts.write.repository';
 
 export class DeleteOnePostCommand {
   constructor(public id: string) {}
@@ -7,7 +7,7 @@ export class DeleteOnePostCommand {
 
 @CommandHandler(DeleteOnePostCommand)
 export class DeleteOnePostHandler {
-  constructor(private postsWriteRepository: PostsWriteRepository) {}
+  constructor(private postsWriteRepository: PostsTypeOrmWriteRepository) {}
 
   public async execute(command: DeleteOnePostCommand) {
     return this.postsWriteRepository.deleteOne(command.id);

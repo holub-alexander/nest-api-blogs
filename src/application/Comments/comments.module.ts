@@ -10,11 +10,11 @@ import { UpdateCommentHandler } from './handlers/update-comment.handler';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Reaction, ReactionEntity } from '../../db/entities/mongoose/reaction.entity';
 import { UsersQueryRepository } from '../Users/repositories/mongoose/users.query.repository';
-import { ReactionsQueryRepository } from '../Reactions/repositories/reactions.query.repository';
-import { ReactionsWriteRepository } from '../Reactions/repositories/reactions.write.repository';
+import { ReactionsQueryRepository } from '../Reactions/repositories/mongoose/reactions.query.repository';
+import { ReactionsWriteRepository } from '../Reactions/repositories/mongoose/reactions.write.repository';
 import { User, UserEntity } from '../../db/entities/mongoose/user.entity';
 import { BanUser, BanUserEntity } from '../../db/entities/mongoose/ban-user.entity';
-import { BanUserQueryRepository } from '../BanUser/repositories/ban-user.query.repository';
+import { BanUserQueryRepository } from '../BanUser/repositories/mongoose/ban-user.query.repository';
 
 export const CommandHandlers = [
   FindCommentHandler,

@@ -23,13 +23,7 @@ export class SuperAdminBlogsController {
   @UseGuards(BasicAuthGuard)
   @HttpCode(204)
   public async banUnbanBlog(@Param('blogId') blogId: string, @Body() body: BanUnbanDto) {
-    const isValid = ObjectId.isValid(blogId);
-
-    if (!isValid) {
-      throw new NotFoundException();
-    }
-
-    const res = await this.commandBus.execute(new BanUnbanBlogSuperAdminCommand(new ObjectId(blogId), body));
+    const res = await this.commandBus.execute(new BanUnbanBlogSuperAdminCommand(blogId, body));
 
     if (!res) {
       throw new NotFoundException();

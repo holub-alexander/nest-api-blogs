@@ -10,8 +10,8 @@ import { Blog, BlogEntity } from '../../db/entities/mongoose/blog.entity';
 import { UsersQueryRepository } from '../Users/repositories/mongoose/users.query.repository';
 import { CommentsQueryRepository } from '../Comments/repositories/comments.query.repository';
 import { CommentsWriteRepository } from '../Comments/repositories/comments.write.repository';
-import { ReactionsQueryRepository } from '../Reactions/repositories/reactions.query.repository';
-import { ReactionsWriteRepository } from '../Reactions/repositories/reactions.write.repository';
+import { ReactionsQueryRepository } from '../Reactions/repositories/mongoose/reactions.query.repository';
+import { ReactionsWriteRepository } from '../Reactions/repositories/mongoose/reactions.write.repository';
 import { User, UserEntity } from '../../db/entities/mongoose/user.entity';
 import { FindAllPostsByBlogIdHandler } from './handlers/find-all-posts-for-blog.handler';
 import { FindPostHandler } from './handlers/find-post.handler';
@@ -24,8 +24,12 @@ import { UpdatePostHandler } from './handlers/update-post.handler';
 import { DeleteOnePostHandler } from './handlers/delete-one-post.handler';
 import { FindAllCommentsForPostHandler } from './handlers/find-all-comments-for-post.handler';
 import { CreateCommentForPostHandler } from './handlers/create-comment-for-post.handler';
-import { BanUserQueryRepository } from '../BanUser/repositories/ban-user.query.repository';
+import { BanUserQueryRepository } from '../BanUser/repositories/mongoose/ban-user.query.repository';
 import { BanUser, BanUserEntity } from '../../db/entities/mongoose/ban-user.entity';
+import { PostsTypeOrmQueryRepository } from './repositories/typeorm/posts.query.repository';
+import { ReactionsTypeOrmQueryRepository } from '../Reactions/repositories/typeorm/reactions.query.repository';
+import { BlogsTypeOrmQueryRepository } from '../Blogs/repositories/typeorm/blogs.query.repository';
+import { PostsTypeOrmWriteRepository } from './repositories/typeorm/posts.write.repository';
 
 export const CommandHandler = [
   FindAllPostsHandler,
@@ -55,12 +59,16 @@ export const CommandHandler = [
   providers: [
     IsBlogFound,
     PostsQueryRepository,
+    PostsTypeOrmQueryRepository,
     PostsWriteRepository,
+    PostsTypeOrmWriteRepository,
     CommentsQueryRepository,
     CommentsWriteRepository,
     ReactionsQueryRepository,
+    ReactionsTypeOrmQueryRepository,
     ReactionsWriteRepository,
     BlogsQueryRepository,
+    BlogsTypeOrmQueryRepository,
     UsersQueryRepository,
     BanUserQueryRepository,
     ...CommandHandler,

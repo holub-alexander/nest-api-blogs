@@ -4,8 +4,8 @@ import { CommandHandler } from '@nestjs/cqrs';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
-import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';
-import { ReactionsWriteRepository } from '../../Reactions/repositories/reactions.write.repository';
+import { ReactionsQueryRepository } from '../../Reactions/repositories/mongoose/reactions.query.repository';
+import { ReactionsWriteRepository } from '../../Reactions/repositories/mongoose/reactions.write.repository';
 import { PostsWriteRepository } from '../repositories/mongoose/posts.write.repository';
 import { PostsQueryRepository } from '../repositories/mongoose/posts.query.repository';
 
