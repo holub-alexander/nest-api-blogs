@@ -101,9 +101,12 @@ export class BlogsTypeOrmWriteRepository {
   }
 
   public async deleteMany(): Promise<boolean> {
-    const res = await this.BlogModel.deleteMany({});
+    const result = await this.dataSource.query(`
+      DELETE FROM blogs
+      WHERE id > 0;
+    `);
 
-    return res.deletedCount > 0;
+    return result[1] > 0;
   }
 
   public async updateUserBanStatus(userId: ObjectId, isBanned: boolean) {
@@ -116,10 +119,11 @@ export class BlogsTypeOrmWriteRepository {
     const result = await this.dataSource.query<[[], number]>(
       `
       UPDATE blogs
-      SET is_banned = $2
+      SET is_banned = $3,
+          ban_date = $2
       WHERE id = $1;
     `,
-      [blogId, isBanned],
+      [blogId, banDate, isBanned],
     );
 
     return result[1] > 0;

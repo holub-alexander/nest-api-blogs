@@ -5,8 +5,8 @@ export class BannedUsersInBlogs1693246766276 implements MigrationInterface {
     await queryRunner.query(`
             CREATE TABLE banned_users_in_blogs (
                 id SERIAL PRIMARY KEY,
-                blog_id INTEGER NOT NULL REFERENCES blogs(id),
-                user_id INTEGER NOT NULL REFERENCES users(id),
+                blog_id INTEGER NOT NULL REFERENCES blogs(id) ON DELETE CASCADE,
+                user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE  CASCADE,
                 is_banned BOOLEAN NOT NULL DEFAULT FALSE,
                 ban_reason VARCHAR(200) NOT NULL,
                 created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP

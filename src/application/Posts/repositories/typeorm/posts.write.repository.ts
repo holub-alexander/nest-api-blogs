@@ -111,8 +111,12 @@ export class PostsTypeOrmWriteRepository {
   }
 
   public async deleteMany(): Promise<boolean> {
-    const res = await this.PostModel.deleteMany({});
-    return res.deletedCount > 0;
+    const result = await this.dataSource.query(`
+      DELETE FROM posts
+      WHERE id > 0;
+    `);
+
+    return result[1] > 0;
   }
 
   public async updateUserBanStatus(userId: ObjectId, isBanned: boolean) {

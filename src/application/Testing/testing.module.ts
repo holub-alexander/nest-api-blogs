@@ -15,6 +15,10 @@ import { Post, PostEntity } from '../../db/entities/mongoose/post.entity';
 import { Blog, BlogEntity } from '../../db/entities/mongoose/blog.entity';
 import { UsersTypeOrmWriteRepository } from '../Users/repositories/typeorm/users.write.repository';
 import { SecurityDevicesTypeOrmWriteRepository } from '../Security-Devices/repositories/typeorm/security-devices.write.repository';
+import { BlogsTypeOrmWriteRepository } from '../Blogs/repositories/typeorm/blogs.write.repository';
+import { PostsTypeOrmWriteRepository } from '../Posts/repositories/typeorm/posts.write.repository';
+import { ReactionsTypeOrmWriteRepository } from '../Reactions/repositories/typeorm/reactions.write.repository';
+import { BanUserTypeOrmWriteRepository } from '../BanUser/repositories/typeorm/ban-user.write.repository';
 
 export const CommandHandlers = [DeleteAllHandler];
 
@@ -33,10 +37,14 @@ export const CommandHandlers = [DeleteAllHandler];
   controllers: [],
   providers: [
     BlogsWriteRepository,
+    BlogsTypeOrmWriteRepository,
     PostsWriteRepository,
+    PostsTypeOrmWriteRepository,
     UsersWriteRepository,
     CommentsWriteRepository,
     ReactionsWriteRepository,
+    ReactionsTypeOrmWriteRepository,
+    BanUserTypeOrmWriteRepository,
     UsersQueryRepository,
     UsersTypeOrmWriteRepository,
     SecurityDevicesTypeOrmWriteRepository,

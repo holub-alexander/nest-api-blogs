@@ -13,7 +13,7 @@ export class PostsTable1691913366095 implements MigrationInterface {
                 is_banned BOOLEAN DEFAULT FALSE NOT NULL,
                 likes_count INTEGER DEFAULT 0 NOT NULL,
                 dislikes_count INTEGER DEFAULT 0 NOT NULL,
-                user_id INTEGER REFERENCES users(id) NOT NULL
+                user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL
             )
         `);
   }

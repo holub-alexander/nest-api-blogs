@@ -17,7 +17,7 @@ export class SuperAdminMapper {
         },
         banInfo: {
           isBanned: blog.is_banned,
-          banDate: blog.ban_date ? blog.ban_date.toISOString() : new Date().toISOString(),
+          banDate: blog.ban_date ? blog.ban_date.toISOString() : null,
         },
       }),
     );

@@ -88,7 +88,7 @@ export class BlogsTypeOrmQueryRepository {
     }
 
     let query = `
-      SELECT blogs.*, users.login AS user_login, users.is_banned AS user_is_banned FROM blogs
+      SELECT blogs.*, users.login AS user_login, users.is_banned AS user_is_banned, users.ban_date AS user_ban_date FROM blogs
       JOIN users ON users.id = blogs.user_id
     `;
 

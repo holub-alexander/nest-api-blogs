@@ -38,4 +38,13 @@ export class BanUserTypeOrmWriteRepository {
 
     return result[1] > 0;
   }
+
+  public async deleteMany(): Promise<boolean> {
+    const result = await this.dataSource.query(`
+      DELETE FROM banned_users_in_blogs
+      WHERE id > 0;
+    `);
+
+    return result[1] > 0;
+  }
 }

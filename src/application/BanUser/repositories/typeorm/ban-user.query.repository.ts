@@ -9,7 +9,7 @@ import { getObjectToSort } from '../../../../common/utils/get-object-to-sort';
 
 const allowedFieldForSorting = {
   id: 'id',
-  login: 'login',
+  login: 'user_login',
   isBanned: 'is_banned',
   banDate: 'created_at',
   banReason: 'ban_reason',
@@ -104,7 +104,7 @@ export class BanUserTypeOrmQueryRepository {
 
     if (sorting) {
       query += `
-      ORDER BY banned_users.${sorting.field} ${sorting.direction}
+      ORDER BY ${sorting.field} ${sorting.direction}
       `;
     }
 

@@ -4,10 +4,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { LikeStatuses } from '../../../../common/interfaces';
 import { Injectable } from '@nestjs/common';
+import { DataSource } from 'typeorm';
 
 @Injectable()
-export class ReactionsWriteRepository {
-  constructor(@InjectModel(Reaction.name) private readonly ReactionModel: Model<ReactionDocument>) {}
+export class ReactionsTypeOrmWriteRepository {
+  constructor(
+    @InjectModel(Reaction.name) private readonly ReactionModel: Model<ReactionDocument>,
+    private readonly dataSource: DataSource,
+  ) {}
 
   public async save(reaction: ReactionDocument): Promise<ReactionDocument> {
     return reaction.save();
@@ -20,8 +24,12 @@ export class ReactionsWriteRepository {
   }
 
   public async deleteMany(): Promise<boolean> {
-    const res = await this.ReactionModel.deleteMany({});
-    return res.deletedCount > 0;
+    const result = await this.dataSource.query(`
+      DELETE FROM reactions
+      WHERE id > 0;
+    `);
+
+    return result[1] > 0;
   }
 
   public async updateUserBanStatus(userId: ObjectId, isBanned: boolean) {
