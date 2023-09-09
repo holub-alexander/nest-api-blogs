@@ -1,8 +1,8 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { CommandHandler } from '@nestjs/cqrs';
-import { CommentsQueryRepository } from '../repositories/comments.query.repository';
-import { CommentsWriteRepository } from '../repositories/comments.write.repository';
-import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
+import { CommentsTypeOrmQueryRepository } from '../repositories/typeorm/comments.query.repository';
+import { CommentsTypeOrmWriteRepository } from '../repositories/typeorm/comments.write.repository';
+import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
 
 export class DeleteOneCommentCommand {
   constructor(public login: string, public id: string) {}
@@ -11,24 +11,24 @@ export class DeleteOneCommentCommand {
 @CommandHandler(DeleteOneCommentCommand)
 export class DeleteOneCommentHandler {
   constructor(
-    private readonly commentsQueryRepository: CommentsQueryRepository,
-    private readonly commentsWriteRepository: CommentsWriteRepository,
-    private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly commentsQueryRepository: CommentsTypeOrmQueryRepository,
+    private readonly commentsWriteRepository: CommentsTypeOrmWriteRepository,
+    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
   ) {}
 
   public async execute(command: DeleteOneCommentCommand) {
     const user = await this.usersQueryRepository.findByLogin(command.login);
-    const comment = await this.commentsQueryRepository.find(command.id);
+    const comment = await this.commentsQueryRepository.findOne(command.id, null);
 
-    if (!user || !comment) {
+    if (!user || !comment || comment.length === 0) {
       throw new NotFoundException();
     }
 
-    if (user.accountData.login !== comment.commentatorInfo.login) {
+    if (user.id !== comment[0].user_id) {
       throw new ForbiddenException();
     }
 
-    const deleteComment = await this.commentsWriteRepository.deleteById(command.id);
+    const deleteComment = await this.commentsWriteRepository.deleteById(comment[0].id, user.id);
 
     if (!deleteComment) {
       throw new NotFoundException();

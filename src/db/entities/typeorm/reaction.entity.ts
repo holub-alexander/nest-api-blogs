@@ -22,13 +22,13 @@ class ReactionEntityTypeOrm {
   @JoinColumn({ name: 'comment_id' })
   comment: CommentEntityTypeOrm;
 
-  comment_id: number;
+  comment_id: number | null;
 
   @ManyToOne(() => PostEntityTypeOrm, (post) => post.reactions)
   @JoinColumn({ name: 'post_id' })
   post: PostEntityTypeOrm;
 
-  post_id: number;
+  post_id: number | null;
 
   @ManyToOne(() => UserEntityTypeOrm, (user) => user.reactions)
   @JoinColumn({ name: 'user_id' })

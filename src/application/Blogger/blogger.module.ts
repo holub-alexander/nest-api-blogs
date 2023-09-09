@@ -11,7 +11,7 @@ import { UsersQueryRepository } from '../Users/repositories/mongoose/users.query
 import { User, UserEntity } from '../../db/entities/mongoose/user.entity';
 import { FindAllBlogsBloggerHandler } from './handlers/find-all-blogs.handler';
 import { FindAllBloggerCommentsHandler } from './handlers/find-all-blogger-comments.handler';
-import { CommentsQueryRepository } from '../Comments/repositories/comments.query.repository';
+import { CommentsQueryRepository } from '../Comments/repositories/mongoose/comments.query.repository';
 import { CommentEntity, Comment } from '../../db/entities/mongoose/comment.entity';
 import { BanUserModule } from '../BanUser/ban-user.module';
 import { BanUser, BanUserEntity } from '../../db/entities/mongoose/ban-user.entity';

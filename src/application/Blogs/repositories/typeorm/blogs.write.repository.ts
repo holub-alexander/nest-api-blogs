@@ -1,10 +1,4 @@
-// @ts-nocheck
-
-import { ObjectId } from 'mongodb';
-import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Blog, BlogDocument } from '../../../../db/entities/mongoose/blog.entity';
 import { UpdateBlogDto } from '../../dto/update.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
@@ -107,10 +101,6 @@ export class BlogsTypeOrmWriteRepository {
     `);
 
     return result[1] > 0;
-  }
-
-  public async updateUserBanStatus(userId: ObjectId, isBanned: boolean) {
-    await this.BlogModel.updateMany({ 'bloggerInfo.id': userId }, { 'bloggerInfo.isBanned': isBanned });
   }
 
   public async updateBanStatus(blogId: number, banDate: Date | null, isBanned: boolean): Promise<boolean> {

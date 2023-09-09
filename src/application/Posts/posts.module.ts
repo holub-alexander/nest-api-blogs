@@ -8,8 +8,8 @@ import { Reaction, ReactionEntity } from '../../db/entities/mongoose/reaction.en
 import { BlogsQueryRepository } from '../Blogs/repositories/mongoose/blogs.query.repository';
 import { Blog, BlogEntity } from '../../db/entities/mongoose/blog.entity';
 import { UsersQueryRepository } from '../Users/repositories/mongoose/users.query.repository';
-import { CommentsQueryRepository } from '../Comments/repositories/comments.query.repository';
-import { CommentsWriteRepository } from '../Comments/repositories/comments.write.repository';
+import { CommentsQueryRepository } from '../Comments/repositories/mongoose/comments.query.repository';
+import { CommentsWriteRepository } from '../Comments/repositories/mongoose/comments.write.repository';
 import { ReactionsQueryRepository } from '../Reactions/repositories/mongoose/reactions.query.repository';
 import { ReactionsWriteRepository } from '../Reactions/repositories/mongoose/reactions.write.repository';
 import { User, UserEntity } from '../../db/entities/mongoose/user.entity';
@@ -30,6 +30,11 @@ import { PostsTypeOrmQueryRepository } from './repositories/typeorm/posts.query.
 import { ReactionsTypeOrmQueryRepository } from '../Reactions/repositories/typeorm/reactions.query.repository';
 import { BlogsTypeOrmQueryRepository } from '../Blogs/repositories/typeorm/blogs.query.repository';
 import { PostsTypeOrmWriteRepository } from './repositories/typeorm/posts.write.repository';
+import { UsersTypeOrmQueryRepository } from '../Users/repositories/typeorm/users.query.repository';
+import { CommentsTypeOrmQueryRepository } from '../Comments/repositories/typeorm/comments.query.repository';
+import { CommentsTypeOrmWriteRepository } from '../Comments/repositories/typeorm/comments.write.repository';
+import { ReactionsTypeOrmWriteRepository } from '../Reactions/repositories/typeorm/reactions.write.repository';
+import { BanUserTypeOrmQueryRepository } from '../BanUser/repositories/typeorm/ban-user.query.repository';
 
 export const CommandHandler = [
   FindAllPostsHandler,
@@ -70,7 +75,13 @@ export const CommandHandler = [
     BlogsQueryRepository,
     BlogsTypeOrmQueryRepository,
     UsersQueryRepository,
+    UsersTypeOrmQueryRepository,
     BanUserQueryRepository,
+    CommentsTypeOrmQueryRepository,
+    CommentsTypeOrmWriteRepository,
+    ReactionsTypeOrmQueryRepository,
+    ReactionsTypeOrmWriteRepository,
+    BanUserTypeOrmQueryRepository,
     ...CommandHandler,
   ],
 })

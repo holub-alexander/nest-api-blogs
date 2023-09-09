@@ -5,7 +5,11 @@ export class CommentsTable1692429687398 implements MigrationInterface {
     await queryRunner.query(`
             CREATE TABLE comments (
                 id SERIAL PRIMARY KEY,
-                title VARCHAR(100)
+                user_id INTEGER REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+                blog_id INTEGER REFERENCES blogs(id) ON DELETE CASCADE NOT NULL,
+                post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE NOT NULL,
+                created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                content VARCHAR(200)
             )
         `);
   }

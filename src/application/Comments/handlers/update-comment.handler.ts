@@ -1,10 +1,10 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { UpdateCommentForPostDto } from '../dto/update.dto';
-import { CommentsQueryRepository } from '../repositories/comments.query.repository';
-import { CommentsWriteRepository } from '../repositories/comments.write.repository';
-import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
 import { CommandHandler } from '@nestjs/cqrs';
-import { BanUserQueryRepository } from '../../BanUser/repositories/mongoose/ban-user.query.repository';
+import { CommentsTypeOrmQueryRepository } from '../repositories/typeorm/comments.query.repository';
+import { CommentsTypeOrmWriteRepository } from '../repositories/typeorm/comments.write.repository';
+import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
+import { BanUserTypeOrmQueryRepository } from '../../BanUser/repositories/typeorm/ban-user.query.repository';
 
 export class UpdateCommentCommand {
   constructor(public login: string, public body: UpdateCommentForPostDto, public id: string) {}
@@ -13,23 +13,32 @@ export class UpdateCommentCommand {
 @CommandHandler(UpdateCommentCommand)
 export class UpdateCommentHandler {
   constructor(
-    private readonly commentsQueryRepository: CommentsQueryRepository,
-    private readonly commentsWriteRepository: CommentsWriteRepository,
-    private readonly usersQueryRepository: UsersQueryRepository,
-    private readonly banUserQueryRepository: BanUserQueryRepository,
+    private readonly commentsQueryRepository: CommentsTypeOrmQueryRepository,
+    private readonly commentsWriteRepository: CommentsTypeOrmWriteRepository,
+    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
+    private readonly banUserQueryRepository: BanUserTypeOrmQueryRepository,
   ) {}
 
   public async execute(command: UpdateCommentCommand) {
-    const comment = await this.commentsQueryRepository.find(command.id);
     const user = await this.usersQueryRepository.findByLogin(command.login);
 
-    if (!user || !comment) {
+    if (!user) {
       throw new NotFoundException();
     }
 
-    const bannedUserFound = await this.banUserQueryRepository.findBanForBlog(user._id, comment.blogId);
+    const comment = await this.commentsQueryRepository.findOne(command.id, user.id);
 
-    if (user.accountData.login !== comment.commentatorInfo.login || bannedUserFound) {
+    if (!comment || comment.length === 0) {
+      throw new NotFoundException();
+    }
+
+    // const bannedUserFound = await this.banUserQueryRepository.findBanForBlog(user._id, comment.blogId);
+
+    // if (user.accountData.login !== comment.commentatorInfo.login || bannedUserFound) {
+    //   throw new ForbiddenException();
+    // }
+
+    if (user.login !== comment[0].user_login) {
       throw new ForbiddenException();
     }
 

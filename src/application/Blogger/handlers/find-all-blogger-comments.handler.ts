@@ -2,7 +2,7 @@ import { CommandHandler } from '@nestjs/cqrs';
 import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
 import { OnModuleInit, UnauthorizedException } from '@nestjs/common';
 import { PostsQueryRepository } from '../../Posts/repositories/mongoose/posts.query.repository';
-import { CommentsQueryRepository } from '../../Comments/repositories/comments.query.repository';
+import { CommentsQueryRepository } from '../../Comments/repositories/mongoose/comments.query.repository';
 import { PaginationBlogDto } from '../../Blogs/dto/pagination-blog.dto';
 import { BloggerMapper } from '../mappers/blogger.mapper';
 import { Paginator } from '../../../common/interfaces';

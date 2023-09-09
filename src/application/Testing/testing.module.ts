@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { BlogsWriteRepository } from '../Blogs/repositories/mongoose/blogs.write.repository';
 import { PostsWriteRepository } from '../Posts/repositories/mongoose/posts.write.repository';
 import { UsersWriteRepository } from '../Users/repositories/mongoose/users.write.repository';
-import { CommentsWriteRepository } from '../Comments/repositories/comments.write.repository';
+import { CommentsWriteRepository } from '../Comments/repositories/mongoose/comments.write.repository';
 import { ReactionsWriteRepository } from '../Reactions/repositories/mongoose/reactions.write.repository';
 import { DeleteAllHandler } from './handlers/delete-all.handler';
 import { CqrsModule } from '@nestjs/cqrs';

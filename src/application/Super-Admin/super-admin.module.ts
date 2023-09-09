@@ -11,7 +11,7 @@ import { Post, PostEntity } from '../../db/entities/mongoose/post.entity';
 import { Comment, CommentEntity } from '../../db/entities/mongoose/comment.entity';
 import { BlogsWriteRepository } from '../Blogs/repositories/mongoose/blogs.write.repository';
 import { PostsWriteRepository } from '../Posts/repositories/mongoose/posts.write.repository';
-import { CommentsWriteRepository } from '../Comments/repositories/comments.write.repository';
+import { CommentsWriteRepository } from '../Comments/repositories/mongoose/comments.write.repository';
 import { UsersModule } from '../Users/users.module';
 import { BlogsTypeOrmQueryRepository } from '../Blogs/repositories/typeorm/blogs.query.repository';
 import { getDataSourceToken, getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';

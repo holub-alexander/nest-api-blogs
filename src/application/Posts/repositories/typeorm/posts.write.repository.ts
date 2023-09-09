@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongodb';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
@@ -6,7 +5,6 @@ import { UpdatePostDto } from '../../dto/update.dto';
 import { Post, PostDocument } from '../../../../db/entities/mongoose/post.entity';
 import PostEntityTypeOrm from '../../../../db/entities/typeorm/post.entity';
 import { DataSource } from 'typeorm';
-import UserEntityTypeOrm from '../../../../db/entities/typeorm/user.entity';
 
 @Injectable()
 export class PostsTypeOrmWriteRepository {
@@ -119,11 +117,11 @@ export class PostsTypeOrmWriteRepository {
     return result[1] > 0;
   }
 
-  public async updateUserBanStatus(userId: ObjectId, isBanned: boolean) {
-    await this.PostModel.updateMany({ 'userInfo.id': userId }, { 'userInfo.isBanned': isBanned });
-  }
-
-  public async updateBanStatusByBlogId(blogId: ObjectId, isBanned: boolean) {
-    await this.PostModel.updateOne({ 'blog.id': blogId }, { isBanned });
-  }
+  // public async updateUserBanStatus(userId: ObjectId, isBanned: boolean) {
+  //   await this.PostModel.updateMany({ 'userInfo.id': userId }, { 'userInfo.isBanned': isBanned });
+  // }
+  //
+  // public async updateBanStatusByBlogId(blogId: ObjectId, isBanned: boolean) {
+  //   await this.PostModel.updateOne({ 'blog.id': blogId }, { isBanned });
+  // }
 }

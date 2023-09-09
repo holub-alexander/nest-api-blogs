@@ -1,59 +1,46 @@
 import { LikeStatuses } from '../../../common/interfaces';
-import { CommentDocument } from '../../../db/entities/mongoose/comment.entity';
-import { Reaction, ReactionDocument } from '../../../db/entities/mongoose/reaction.entity';
 import { CommentViewModel } from '../interfaces';
+import CommentEntityTypeOrm from '../../../db/entities/typeorm/comment.entity';
+import ReactionEntityTypeOrm from '../../../db/entities/typeorm/reaction.entity';
 
 export class CommentMapper {
-  public static mapCommentsViewModel(
-    comments: CommentDocument[],
-    reactions: ReactionDocument[] | null,
-    allReactions: { likesCount: number; dislikesCount: number }[],
-  ): CommentViewModel[] {
-    return comments.map((comment, index) => {
-      if (!reactions) {
-        return this.mapCommentViewModel(
-          comment,
-          null,
-          allReactions[index].likesCount,
-          allReactions[index].dislikesCount,
-        );
-      }
-
-      const foundReactionIndex = reactions.findIndex(
-        (reaction) => reaction.type === 'comment' && reaction.subjectId.toString() === comment._id.toString(),
-      );
-
-      if (foundReactionIndex > -1) {
-        return this.mapCommentViewModel(
-          comment,
-          reactions[foundReactionIndex],
-          allReactions[index].likesCount,
-          allReactions[index].dislikesCount,
-        );
-      }
-
-      return this.mapCommentViewModel(comment, null, allReactions[index].likesCount, allReactions[index].dislikesCount);
+  public static mapCommentsViewModel(comments: CommentEntityTypeOrm[]): CommentViewModel[] {
+    return comments.map((comment) => {
+      return {
+        id: comment.id.toString(),
+        content: comment.content,
+        commentatorInfo: {
+          userId: comment.user_id.toString(),
+          userLogin: comment.user_login,
+        },
+        createdAt: comment.created_at.toISOString(),
+        likesInfo: {
+          likesCount: +comment.likes_count,
+          dislikesCount: +comment.dislikes_count,
+          myStatus: comment.like_status || LikeStatuses.NONE,
+        },
+      };
     });
   }
 
   public static mapCommentViewModel(
-    comment: CommentDocument,
-    reaction: Reaction | null,
+    comment: CommentEntityTypeOrm,
+    reaction: ReactionEntityTypeOrm | null,
     likesCount: number,
     dislikesCount: number,
   ): CommentViewModel {
     return {
-      id: comment._id.toString(),
+      id: comment.id.toString(),
       content: comment.content,
       commentatorInfo: {
-        userId: comment.commentatorInfo.id.toString(),
-        userLogin: comment.commentatorInfo.login,
+        userId: comment.user_id.toString(),
+        userLogin: comment.user_login,
       },
-      createdAt: comment.createdAt,
+      createdAt: comment.created_at.toISOString(),
       likesInfo: {
-        likesCount: likesCount,
-        dislikesCount: dislikesCount,
-        myStatus: reaction ? reaction.likeStatus : LikeStatuses.NONE,
+        likesCount: +likesCount,
+        dislikesCount: +dislikesCount,
+        myStatus: reaction ? reaction.like_status : LikeStatuses.NONE,
       },
     };
   }

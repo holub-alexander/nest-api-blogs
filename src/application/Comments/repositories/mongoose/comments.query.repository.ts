@@ -1,12 +1,12 @@
 import { ObjectId } from 'mongodb';
 import mongoose, { Model } from 'mongoose';
-import { PaginationOptionsDto } from '../../../common/dto/pagination-options.dto';
-import { SortDirections } from '../../../common/interfaces';
+import { PaginationOptionsDto } from '../../../../common/dto/pagination-options.dto';
+import { SortDirections } from '../../../../common/interfaces';
 import { InjectModel } from '@nestjs/mongoose';
-import { CommentDocument, Comment } from '../../../db/entities/mongoose/comment.entity';
-import { PaginationDto } from '../../../common/dto/pagination.dto';
-import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
-import { getObjectToSort } from '../../../common/utils/mongoose/get-object-to-sort';
+import { CommentDocument, Comment } from '../../../../db/entities/mongoose/comment.entity';
+import { PaginationDto } from '../../../../common/dto/pagination.dto';
+import { PaginationMetaDto } from '../../../../common/dto/pagination-meta.dto';
+import { getObjectToSort } from '../../../../common/utils/mongoose/get-object-to-sort';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

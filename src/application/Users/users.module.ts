@@ -8,7 +8,7 @@ import { CreateUserHandler } from './handlers/create-user.handler';
 import { DeleteUserHandler } from './handlers/delete-user.handler';
 import { FindOneUserHandler } from './handlers/find-one-user.handler';
 import { BanUnbanUserHandler } from './handlers/ban-unban-user.handler';
-import { CommentsWriteRepository } from '../Comments/repositories/comments.write.repository';
+import { CommentsWriteRepository } from '../Comments/repositories/mongoose/comments.write.repository';
 import { CommentEntity, Comment } from '../../db/entities/mongoose/comment.entity';
 import { ReactionsWriteRepository } from '../Reactions/repositories/mongoose/reactions.write.repository';
 import { Reaction, ReactionEntity } from '../../db/entities/mongoose/reaction.entity';
