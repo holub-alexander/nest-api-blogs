@@ -9,5 +9,5 @@ export interface BanUserInfoViewModel {
 export type UserViewModel = Omit<CreateUserDto, 'password'> & {
   id: string;
   createdAt: string;
-  banInfo: BanUserInfoViewModel;
+  // banInfo: BanUserInfoViewModel;
 };

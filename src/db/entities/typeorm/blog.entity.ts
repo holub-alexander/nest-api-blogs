@@ -36,7 +36,7 @@ class BlogEntityTypeOrm {
   is_membership: boolean;
 
   @Column()
-  user_id: number;
+  user_id: number | null;
 
   user_is_banned: boolean;
 

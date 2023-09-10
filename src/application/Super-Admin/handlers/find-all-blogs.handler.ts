@@ -16,8 +16,6 @@ export class FindAllBlogsSuperAdminHandler {
   public async execute(command: FindAllBlogsSuperAdminCommand): Promise<Paginator<BlogViewModelSuperAdmin[]>> {
     const res = await this.blogsQueryRepository.findAllWithPagination(command.paginationSortBlogDto, null, true);
 
-    console.log('res', res.items[0]);
-
     return {
       ...res.meta,
       items: SuperAdminMapper.mapBlogsViewModel(res.items),

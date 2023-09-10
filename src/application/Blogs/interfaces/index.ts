@@ -15,9 +15,9 @@ export interface BlogViewModelSuperAdmin extends CreateBlogDto {
   id: string;
   createdAt: string | Date;
   isMembership: boolean;
-  blogOwnerInfo: {
-    userId: string;
-    userLogin: string;
-  };
-  banInfo: BanBlogInfoViewModel;
+  // blogOwnerInfo: {
+  //   userId: string;
+  //   userLogin: string;
+  // };
+  // banInfo: BanBlogInfoViewModel;
 }

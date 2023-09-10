@@ -14,12 +14,16 @@ import { PostsWriteRepository } from '../Posts/repositories/mongoose/posts.write
 import { CommentsWriteRepository } from '../Comments/repositories/mongoose/comments.write.repository';
 import { UsersModule } from '../Users/users.module';
 import { BlogsTypeOrmQueryRepository } from '../Blogs/repositories/typeorm/blogs.query.repository';
-import { getDataSourceToken, getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import BlogEntityTypeOrm from '../../db/entities/typeorm/blog.entity';
-import { DataSource } from 'typeorm';
 import { BlogsTypeOrmWriteRepository } from '../Blogs/repositories/typeorm/blogs.write.repository';
+import { CreateBlogSuperAdminHandler } from './handlers/create-blog-super-admin.handler';
 
-export const CommandHandlers = [FindAllBlogsSuperAdminHandler, BanUnbanBlogSuperAdminHandler];
+export const CommandHandlers = [
+  FindAllBlogsSuperAdminHandler,
+  BanUnbanBlogSuperAdminHandler,
+  CreateBlogSuperAdminHandler,
+];
 
 @Module({
   imports: [
