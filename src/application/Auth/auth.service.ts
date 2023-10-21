@@ -61,7 +61,7 @@ export class AuthService {
     const user = await this.usersQueryRepository.findByLoginOrEmail(body.loginOrEmail);
     const isCorrectCredentials = await this.checkCredentials(body);
 
-    if (!isCorrectCredentials || !user || user.is_banned) {
+    if (!isCorrectCredentials || !user) {
       return null;
     }
 
@@ -112,9 +112,6 @@ export class AuthService {
     userData.email = body.email;
     userData.password = passwordHash;
     userData.created_at = new Date();
-    userData.is_banned = false;
-    userData.ban_reason = null;
-    userData.ban_date = null;
     userData.confirmation_code = uuidv4();
     userData.expiration_date = add(new Date(), {
       hours: 1,

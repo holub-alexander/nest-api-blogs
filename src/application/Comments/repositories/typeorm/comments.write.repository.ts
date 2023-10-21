@@ -50,17 +50,8 @@ export class CommentsTypeOrmWriteRepository {
       `
       DELETE FROM comments
       WHERE id = $1
-        AND (
-          (
-            SELECT COUNT(*)
-            FROM banned_users_in_blogs AS banned_users
-            WHERE banned_users.blog_id = comments.blog_id
-              AND banned_users.user_id = $2
-              AND (banned_users.is_banned = TRUE OR banned_users.is_banned IS NULL)
-          ) = 0
-        );
     `,
-      [id, userId],
+      [id],
     );
 
     return result[1] > 0;

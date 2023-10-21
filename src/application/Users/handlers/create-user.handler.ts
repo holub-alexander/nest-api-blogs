@@ -37,9 +37,6 @@ export class CreateUserHandler {
     createUserData.login = login;
     createUserData.password = passwordHash;
     createUserData.created_at = new Date();
-    createUserData.is_banned = false;
-    createUserData.ban_reason = null;
-    createUserData.ban_date = null;
     createUserData.confirmation_code = null;
     createUserData.expiration_date = null;
     createUserData.is_confirmed = true;

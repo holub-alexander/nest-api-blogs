@@ -38,6 +38,7 @@ export class UsersQueryRepository {
     sortBy = '',
     searchLoginTerm = '',
     searchEmailTerm = '',
+    // @ts-ignore
     banStatus = BanStatuses.All,
   }: PaginationUsersDto): Promise<PaginationDto<UserDocument>> {
     const sorting = getObjectToSort({ sortBy, sortDirection, field: getFieldToSort(sortBy), getField: getFieldToSort });

@@ -40,27 +40,22 @@ export class CommentsTypeOrmQueryRepository {
 
     const params: (string | number)[] = [commentId];
 
-    let mainSelect = `
+    const mainSelect = `
        SELECT comments.*,
        users.login AS user_login,
-       users.is_banned AS user_is_banned,
     `;
 
-    let mainQuery = `
+    const mainQuery = `
         (SELECT COUNT(*)
          FROM reactions
-         JOIN users ON users.id = reactions.user_id
          WHERE comment_id = comments.id
-           AND users.is_banned = FALSE
            AND TYPE = 'comment'
            AND comment_id = comments.id
            AND like_status = 'Like' ) AS likes_count,
       
         (SELECT COUNT(*)
          FROM reactions
-         JOIN users ON users.id = reactions.user_id
          WHERE comment_id = comments.id
-           AND users.is_banned = FALSE
            AND TYPE = 'comment'
            AND comment_id = comments.id
            AND like_status = 'Dislike' ) AS dislikes_count
@@ -70,18 +65,9 @@ export class CommentsTypeOrmQueryRepository {
       JOIN blogs ON blogs.id = comments.blog_id
     `;
 
-    let mainWhere = `
-      WHERE users.is_banned = FALSE
-        AND blogs.is_banned = FALSE
-        AND comments.id = $${params.length}
+    const mainWhere = `
+      WHERE comments.id = $${params.length}
     `;
-
-    if (userId) {
-      mainSelect += 'banned_users.blog_id AS banned_user_blog_id,';
-      params.push(userId);
-      mainQuery += `LEFT JOIN banned_users_in_blogs AS banned_users ON banned_users.blog_id = comments.blog_id AND banned_users.user_id = $${params.length}`;
-      mainWhere += `AND (banned_users.is_banned = FALSE OR banned_users.is_banned IS NULL);`;
-    }
 
     return this.dataSource.query(mainSelect + mainQuery + mainWhere, params);
   }
@@ -118,14 +104,11 @@ export class CommentsTypeOrmQueryRepository {
     let query = `
       SELECT comments.*,
       users.login AS user_login,
-      users.is_banned AS user_is_banned,
-      banned_users.blog_id AS banned_user_blog_id,
       
       (SELECT COUNT(*)
          FROM reactions
          JOIN users ON users.id = reactions.user_id
          WHERE comment_id = comments.id
-           AND users.is_banned = FALSE
            AND TYPE = 'comment'
            AND comment_id = comments.id
            AND like_status = 'Like' ) AS likes_count,
@@ -134,7 +117,6 @@ export class CommentsTypeOrmQueryRepository {
          FROM reactions
          JOIN users ON users.id = reactions.user_id
          WHERE comment_id = comments.id
-           AND users.is_banned = FALSE
            AND TYPE = 'comment'
            AND comment_id = comments.id
            AND like_status = 'Dislike' ) AS dislikes_count,
@@ -146,12 +128,8 @@ export class CommentsTypeOrmQueryRepository {
         JOIN users ON users.id = comments.user_id
         JOIN blogs ON blogs.id = comments.blog_id
         LEFT JOIN reactions ON reactions.comment_id = comments.id AND reactions.user_id = $4
-        LEFT JOIN banned_users_in_blogs AS banned_users ON banned_users.blog_id = comments.blog_id AND banned_users.user_id = comments.user_id
         
-        WHERE users.is_banned = FALSE
-          AND blogs.is_banned = FALSE
-          AND comments.post_id = $3
-          AND (banned_users.is_banned = FALSE OR banned_users.is_banned IS NULL)
+        WHERE comments.post_id = $3
     `;
 
     const totalCountQuery = `
@@ -160,12 +138,8 @@ export class CommentsTypeOrmQueryRepository {
       JOIN users ON users.id = comments.user_id
       JOIN blogs ON blogs.id = comments.blog_id
       LEFT JOIN reactions ON reactions.comment_id = comments.id AND reactions.user_id = $2
-      LEFT JOIN banned_users_in_blogs AS banned_users ON banned_users.blog_id = comments.blog_id AND banned_users.user_id = comments.user_id
       
-      WHERE users.is_banned = FALSE
-        AND blogs.is_banned = FALSE
-        AND comments.post_id = $1
-        AND (banned_users.is_banned = FALSE OR banned_users.is_banned IS NULL)
+      WHERE comments.post_id = $1
     `;
 
     if (sorting) {

@@ -1,21 +1,19 @@
 import { PaginationOptionsDto } from '../../../common/dto/pagination-options.dto';
 import { Paginator } from '../../../common/interfaces';
 import { PostViewModel } from '../interfaces';
-import { ObjectId } from 'mongodb';
 import { Post, PostDocument } from '../../../db/entities/mongoose/post.entity';
 import { Reaction, ReactionDocument } from '../../../db/entities/mongoose/reaction.entity';
 import { PostsMapper } from '../mappers/posts.mapper';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Comment, CommentDocument } from '../../../db/entities/mongoose/comment.entity';
-import { UsersQueryRepository } from '../../Users/repositories/mongoose/users.query.repository';
-import { ReactionsQueryRepository } from '../../Reactions/repositories/mongoose/reactions.query.repository';
 import { CommandBus, CommandHandler } from '@nestjs/cqrs';
-import { FindAllLikesCommand } from '../../Reactions/handlers/find-all-likes.handler';
 import PostEntityTypeOrm from '../../../db/entities/typeorm/post.entity';
 import ReactionEntityTypeOrm from '../../../db/entities/typeorm/reaction.entity';
 import { PostsTypeOrmQueryRepository } from '../repositories/typeorm/posts.query.repository';
 import { NotFoundException } from '@nestjs/common';
+import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
+import { ReactionsTypeOrmQueryRepository } from '../../Reactions/repositories/typeorm/reactions.query.repository';
 
 export class FindAllPostsByBlogIdCommand {
   constructor(public paginationOptions: PaginationOptionsDto, public id: string, public userLogin = '') {}
@@ -29,8 +27,8 @@ export class FindAllPostsByBlogIdHandler {
     @InjectModel(Reaction.name) private readonly ReactionModel: Model<ReactionDocument>,
     private readonly commandBus: CommandBus,
     private readonly postsQueryRepository: PostsTypeOrmQueryRepository,
-    private readonly usersQueryRepository: UsersQueryRepository,
-    private readonly reactionsQueryRepository: ReactionsQueryRepository,
+    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
+    private readonly reactionsQueryRepository: ReactionsTypeOrmQueryRepository,
   ) {}
 
   private formatPosts(items: PostEntityTypeOrm[], reactions: ReactionEntityTypeOrm[] | null): Promise<PostViewModel>[] {
@@ -56,7 +54,29 @@ export class FindAllPostsByBlogIdHandler {
       //   );
       // }
 
-      return PostsMapper.mapPostViewModel(post, null, [], 0, 0);
+      // return PostsMapper.mapPostViewModel(post, null, [], 0, 0);
+
+      const lastReactions = await this.reactionsQueryRepository.findLatestReactionsForPost(post.id, 3);
+
+      if (!reactions || !lastReactions) {
+        return PostsMapper.mapPostViewModel(post, null, lastReactions, post.likes_count, post.dislikes_count);
+      }
+
+      const foundReactionIndex = reactions.findIndex(
+        (reaction) => reaction?.post_id?.toString() === post.id.toString(),
+      );
+
+      if (foundReactionIndex > -1) {
+        return PostsMapper.mapPostViewModel(
+          post,
+          reactions[foundReactionIndex],
+          lastReactions,
+          post.likes_count,
+          post.dislikes_count,
+        );
+      }
+
+      return PostsMapper.mapPostViewModel(post, null, lastReactions, post.likes_count, post.dislikes_count);
     });
   }
 
@@ -84,6 +104,28 @@ export class FindAllPostsByBlogIdHandler {
     //     items: await Promise.all(this.formatPosts(items, reactions)),
     //   };
     // }
+
+    if (userLogin) {
+      const user = await this.usersQueryRepository.findByLogin(userLogin);
+
+      if (!user) {
+        return {
+          ...meta,
+          items: await Promise.all(this.formatPosts(items, null)),
+        };
+      }
+
+      const reactions = await this.reactionsQueryRepository.findReactionsByIds(
+        items.map((post) => post.id),
+        user.id,
+        'post',
+      );
+
+      return {
+        ...meta,
+        items: await Promise.all(this.formatPosts(items, reactions)),
+      };
+    }
 
     return {
       ...meta,

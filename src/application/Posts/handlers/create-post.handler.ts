@@ -1,9 +1,4 @@
 import { PostViewModel } from '../interfaces';
-import { InjectModel } from '@nestjs/mongoose';
-import { Post, PostDocument } from '../../../db/entities/mongoose/post.entity';
-import { Model } from 'mongoose';
-import { PostsWriteRepository } from '../repositories/mongoose/posts.write.repository';
-import { BlogsQueryRepository } from '../../Blogs/repositories/mongoose/blogs.query.repository';
 import { CreatePostDto } from '../dto/create.dto';
 import { PostsMapper } from '../mappers/posts.mapper';
 import { CommandHandler } from '@nestjs/cqrs';
@@ -12,7 +7,7 @@ import { BlogsTypeOrmQueryRepository } from '../../Blogs/repositories/typeorm/bl
 import PostEntityTypeOrm from '../../../db/entities/typeorm/post.entity';
 
 export class CreatePostCommand {
-  constructor(public body: CreatePostDto, public blogId: number, public userId: number) {}
+  constructor(public body: CreatePostDto, public blogId: number) {}
 }
 
 @CommandHandler(CreatePostCommand)
@@ -53,10 +48,6 @@ export class CreatePostHandler {
       newPost.content = command.body.content;
       newPost.blog_id = command.blogId;
       newPost.created_at = new Date();
-      newPost.is_banned = false;
-      newPost.likes_count = 0;
-      newPost.dislikes_count = 0;
-      newPost.user_id = command.userId;
 
       const post = await this.postsWriteRepository.create(newPost);
 

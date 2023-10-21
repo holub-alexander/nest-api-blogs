@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { BanStatuses, SortDirections } from '../../../../common/interfaces';
+import { SortDirections } from '../../../../common/interfaces';
 import { PaginationDto } from '../../../../common/dto/pagination.dto';
 import { getObjectToSort } from '../../../../common/utils/get-object-to-sort';
 import { PaginationMetaDto } from '../../../../common/dto/pagination-meta.dto';
@@ -26,7 +26,6 @@ export class UsersTypeOrmQueryRepository {
     sortBy = '',
     searchLoginTerm = '',
     searchEmailTerm = '',
-    banStatus = BanStatuses.All,
   }: PaginationUsersDto): Promise<PaginationDto<UserEntityTypeOrm>> {
     const sorting = getObjectToSort({ sortBy, sortDirection, allowedFieldForSorting });
 
@@ -35,11 +34,9 @@ export class UsersTypeOrmQueryRepository {
 
     const queryParams: (number | string | boolean)[] = [pageSizeValue, pageNumberFormat];
     const conditions: string[] = [];
-    let bannedQuery = '';
 
     const totalQueryParams: (number | string | boolean)[] = [];
     const totalQueryConditions: string[] = [];
-    let totalBannedQuery = '';
 
     if (searchLoginTerm && searchLoginTerm.trim() !== '') {
       queryParams.push(`%${searchLoginTerm}%`);
@@ -65,30 +62,9 @@ export class UsersTypeOrmQueryRepository {
       SELECT COUNT(*) FROM users
     `;
 
-    if (banStatus === BanStatuses.Banned || banStatus === BanStatuses.NotBanned) {
-      queryParams.push(`${BanStatuses.Banned === banStatus}`);
-      bannedQuery += 'is_banned = $' + queryParams.length;
-
-      totalQueryParams.push(`${BanStatuses.Banned === banStatus}`);
-      totalBannedQuery += 'is_banned = $' + totalQueryParams.length;
-    }
-
     if (conditions.length > 0) {
       query += ' WHERE (' + conditions.join(' OR ') + ')';
-
-      if (bannedQuery) {
-        query += ' AND ' + bannedQuery;
-      }
-
       totalCountQuery += ' WHERE (' + totalQueryConditions.join(' OR ') + ')';
-
-      if (totalBannedQuery) {
-        totalCountQuery += ' AND ' + totalBannedQuery;
-      }
-    } else if (bannedQuery) {
-      query += ` WHERE ${bannedQuery}`;
-
-      totalCountQuery += ` WHERE ${totalBannedQuery}`;
     }
 
     if (sorting) {

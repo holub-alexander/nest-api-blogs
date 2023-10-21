@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { BloggerBlogsController } from './controllers/bloggger-blogs.controller';
+import { SuperAdminBlogsController } from '../Super-Admin/controllers/super-admin-blogs.controller';
 import { BlogsWriteRepository } from '../Blogs/repositories/mongoose/blogs.write.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Blog, BlogEntity } from '../../db/entities/mongoose/blog.entity';
@@ -50,7 +50,7 @@ export const CommandHandlers = [
       { name: BanUser.name, schema: BanUserEntity },
     ]),
   ],
-  controllers: [BloggerBlogsController, BloggerUsersController],
+  controllers: [SuperAdminBlogsController, BloggerUsersController],
   providers: [
     BlogsWriteRepository,
     BlogsTypeOrmWriteRepository,

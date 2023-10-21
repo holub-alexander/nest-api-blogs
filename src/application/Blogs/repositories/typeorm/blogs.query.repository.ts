@@ -73,11 +73,9 @@ export class BlogsTypeOrmQueryRepository {
 
     const queryParams: (number | string | boolean)[] = [pageSizeValue, pageNumberFormat];
     const conditions: string[] = [];
-    let bannedQuery = '';
 
     const totalQueryParams: (number | string | boolean)[] = [];
     const totalQueryConditions: string[] = [];
-    let totalBannedQuery = '';
 
     if (searchNameTerm && searchNameTerm.trim() !== '') {
       queryParams.push(`%${searchNameTerm}%`);
@@ -88,51 +86,16 @@ export class BlogsTypeOrmQueryRepository {
     }
 
     let query = `
-      SELECT blogs.*, users.login AS user_login, users.is_banned AS user_is_banned, users.ban_date AS user_ban_date FROM blogs
-      JOIN users ON users.id = blogs.user_id
+      SELECT blogs.* FROM blogs
     `;
 
     let totalCountQuery = `
       SELECT COUNT(*) FROM blogs
-      JOIN users ON users.id = blogs.user_id
     `;
-
-    if (!isShowAllBlogs) {
-      queryParams.push(false);
-      bannedQuery += 'blogs.is_banned = $' + queryParams.length;
-      queryParams.push(false);
-      bannedQuery += ' AND users.is_banned = $' + queryParams.length;
-
-      totalQueryParams.push(false);
-      totalBannedQuery += 'blogs.is_banned = $' + totalQueryParams.length;
-      totalQueryParams.push(false);
-      totalBannedQuery += ' AND users.is_banned = $' + totalQueryParams.length;
-    }
-
-    if (userId) {
-      queryParams.push(userId);
-      bannedQuery += ' AND user_id = $' + queryParams.length;
-
-      totalQueryParams.push(userId);
-      totalBannedQuery += ' AND user_id = $' + totalQueryParams.length;
-    }
 
     if (conditions.length > 0) {
       query += ' WHERE (' + conditions.join(' OR ') + ')';
-
-      if (bannedQuery) {
-        query += ' AND ' + bannedQuery;
-      }
-
       totalCountQuery += ' WHERE (' + totalQueryConditions.join(' OR ') + ')';
-
-      if (totalBannedQuery) {
-        totalCountQuery += ' AND ' + totalBannedQuery;
-      }
-    } else if (bannedQuery) {
-      query += ` WHERE ${bannedQuery}`;
-
-      totalCountQuery += ` WHERE ${totalBannedQuery}`;
     }
 
     if (sorting) {
@@ -184,23 +147,12 @@ export class BlogsTypeOrmQueryRepository {
       return null;
     }
 
-    if (!isFindBanned) {
-      return this.dataSource.query<BlogEntityTypeOrm[]>(
-        `
-        SELECT blogs.*, users.login AS user_login, users.is_banned AS user_is_banned FROM blogs
-        JOIN users ON users.id = blogs.user_id
-        WHERE users.is_banned = $1 AND blogs.is_banned = $2 AND blogs.id = $3
-      `,
-        [false, false, blogId],
-      );
-    } else {
-      return this.dataSource.query<BlogEntityTypeOrm[]>(
-        `
+    return this.dataSource.query<BlogEntityTypeOrm[]>(
+      `
         SELECT * FROM blogs
         WHERE id = $1
       `,
-        [blogId],
-      );
-    }
+      [blogId],
+    );
   }
 }

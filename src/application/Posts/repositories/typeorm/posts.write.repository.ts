@@ -26,17 +26,12 @@ export class PostsTypeOrmWriteRepository {
             short_description,
             content,
             blog_id,
-            created_at,
-            is_banned,
-            likes_count,
-            dislikes_count,
-            user_id
+            created_at
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        VALUES ($1, $2, $3, $4, $5)
         RETURNING *
       ) 
-      SELECT inserted_post.*, users.id AS user_id, users.is_banned AS user_is_banned, blogs.name AS blog_name FROM inserted_post
-      JOIN users ON users.id = inserted_post.user_id
+      SELECT inserted_post.*, blogs.name AS blog_name FROM inserted_post
       JOIN blogs ON blogs.id = inserted_post.blog_id;
     `,
       [
@@ -45,10 +40,6 @@ export class PostsTypeOrmWriteRepository {
         createdPost.content,
         createdPost.blog_id,
         createdPost.created_at,
-        createdPost.is_banned,
-        createdPost.likes_count,
-        createdPost.dislikes_count,
-        createdPost.user_id,
       ],
     );
 

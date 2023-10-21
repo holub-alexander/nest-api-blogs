@@ -25,7 +25,7 @@ export class JwtTokenGuard implements CanActivate {
 
       const user = await this.usersQueryRepository.findByLogin(payload.login);
 
-      if (!user || user.is_banned) {
+      if (!user) {
         throw new UnauthorizedException();
       }
 

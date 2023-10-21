@@ -15,15 +15,12 @@ export class UsersTypeOrmWriteRepository {
         login,
         password,
         created_at,
-        is_banned,
-        ban_reason,
-        ban_date,
         confirmation_code,
         expiration_date,
         is_confirmed,
         recovery_code
      )
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
      RETURNING *;
     `,
       [
@@ -31,9 +28,6 @@ export class UsersTypeOrmWriteRepository {
         createUserDto.login,
         createUserDto.password,
         createUserDto.created_at,
-        createUserDto.is_banned,
-        createUserDto.ban_reason,
-        createUserDto.ban_date,
         createUserDto.confirmation_code,
         createUserDto.expiration_date,
         createUserDto.is_confirmed,

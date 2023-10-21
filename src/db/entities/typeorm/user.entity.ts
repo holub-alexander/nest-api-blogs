@@ -1,9 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import DeviceEntityTypeOrm from './device.entity';
-import BlogEntityTypeOrm from './blog.entity';
-import PostEntityTypeOrm from './post.entity';
 import ReactionEntityTypeOrm from './reaction.entity';
-import BannedUserInBlogEntity from './banned-user-in-blog.entity';
 
 @Entity({ name: 'users' })
 class UserEntityTypeOrm {
@@ -24,15 +21,6 @@ class UserEntityTypeOrm {
 
   @Column({ type: 'timestamptz', nullable: false })
   created_at: Date;
-
-  @Column({ type: 'boolean', default: false })
-  is_banned: boolean;
-
-  @Column({ type: 'varchar', length: 1000, default: null })
-  ban_reason: string | null;
-
-  @Column({ type: 'timestamptz', default: null })
-  ban_date: string | null;
 
   /**
    * EmailConfirmation
@@ -61,36 +49,12 @@ class UserEntityTypeOrm {
   refresh_tokens_meta: DeviceEntityTypeOrm[];
 
   /**
-   * Relation to blogs
-   * */
-  @OneToMany(() => BlogEntityTypeOrm, (blog) => blog.user, {
-    onDelete: 'CASCADE',
-  })
-  blogs: BlogEntityTypeOrm[];
-
-  /**
-   * Relation to posts
-   * */
-  @OneToMany(() => PostEntityTypeOrm, (post) => post.user, {
-    onDelete: 'CASCADE',
-  })
-  posts: PostEntityTypeOrm[];
-
-  /**
    * Relation to reactions
    * */
   @OneToMany(() => ReactionEntityTypeOrm, (reaction) => reaction.user, {
     onDelete: 'CASCADE',
   })
   reactions: ReactionEntityTypeOrm[];
-
-  /**
-   * Relation to banned users for blogs
-   * */
-  @OneToMany(() => BannedUserInBlogEntity, (bannedUser) => bannedUser.user, {
-    onDelete: 'CASCADE',
-  })
-  bannedUsers: BannedUserInBlogEntity[];
 }
 
 export default UserEntityTypeOrm;

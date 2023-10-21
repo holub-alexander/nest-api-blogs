@@ -53,8 +53,6 @@ export class PostsTypeOrmQueryRepository {
     //
     // return new PaginationDto(items, paginationMetaDto);
 
-    console.log('blogId', blogId);
-
     const sorting = getObjectToSort({ sortBy, sortDirection, allowedFieldForSorting });
 
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
@@ -65,36 +63,38 @@ export class PostsTypeOrmQueryRepository {
     const whereConditionsTotal: string[] = [];
     const totalQueryParams: (number | string | boolean)[] = [];
 
-    queryParams.push(false);
-    whereConditions.push('users.is_banned = $' + queryParams.length);
-    queryParams.push(false);
-    whereConditions.push(' AND blogs.is_banned = $' + queryParams.length);
-
-    totalQueryParams.push(false);
-    whereConditionsTotal.push('users.is_banned = $' + totalQueryParams.length);
-    totalQueryParams.push(false);
-    whereConditionsTotal.push(' AND blogs.is_banned = $' + totalQueryParams.length);
-
     if (blogId) {
       queryParams.push(blogId);
-      whereConditions.push(' AND blogs.id = $' + queryParams.length);
+      whereConditions.push('blogs.id = $' + queryParams.length);
 
       totalQueryParams.push(blogId);
-      whereConditionsTotal.push(' AND blogs.id = $' + totalQueryParams.length);
+      whereConditionsTotal.push('blogs.id = $' + totalQueryParams.length);
     }
 
     let query = `
-      SELECT posts.*, users.id AS user_id, users.is_banned AS user_is_banned, blogs.name AS blog_name FROM posts
-      JOIN users ON users.id = posts.user_id
+      SELECT posts.*, 
+      (SELECT COUNT(*)
+         FROM reactions
+         WHERE post_id = posts.id
+           AND TYPE = 'post'
+           AND post_id = posts.id
+           AND like_status = 'Like' ) AS likes_count,
+      (SELECT COUNT(*)
+         FROM reactions
+         WHERE post_id = posts.id
+           AND TYPE = 'post'
+           AND post_id = posts.id
+           AND like_status = 'Dislike' ) AS dislikes_count,
+      blogs.name AS blog_name FROM posts
+      
       JOIN blogs ON blogs.id = posts.blog_id
-      WHERE ${whereConditions.join('')}
+      ${whereConditions.length > 0 ? `WHERE ${whereConditions.join('')}` : ''}
     `;
 
     const totalCountQuery = `
       SELECT COUNT(*) FROM posts
-      JOIN users ON users.id = posts.user_id
       JOIN blogs ON blogs.id = posts.blog_id
-      WHERE ${whereConditionsTotal.join('')}
+      ${whereConditionsTotal.length > 0 ? `WHERE ${whereConditionsTotal.join('')}` : ''}
     `;
 
     if (sorting) {
@@ -167,10 +167,25 @@ export class PostsTypeOrmQueryRepository {
 
     return this.dataSource.query(
       `
-      SELECT posts.*, users.id AS user_id, users.is_banned AS user_is_banned, blogs.name AS blog_name FROM posts
-      JOIN users ON users.id = posts.user_id
+       SELECT posts.*, blogs.name AS blog_name,
+       
+       (SELECT COUNT(*)
+         FROM reactions
+         WHERE post_id = posts.id
+           AND TYPE = 'post'
+           AND post_id = posts.id
+           AND like_status = 'Like' ) AS likes_count,
+      
+        (SELECT COUNT(*)
+         FROM reactions
+         WHERE post_id = posts.id
+           AND TYPE = 'post'
+           AND post_id = posts.id
+           AND like_status = 'Dislike' ) AS dislikes_count
+           
+      FROM posts
       JOIN blogs ON blogs.id = posts.blog_id
-      WHERE users.is_banned = false AND blogs.is_banned = false AND posts.id = $1;
+      WHERE posts.id = $1;
     `,
       [postId],
     );

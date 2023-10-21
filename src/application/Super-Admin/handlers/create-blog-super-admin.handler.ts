@@ -26,9 +26,6 @@ export class CreateBlogSuperAdminHandler {
     blog.website_url = command.body.websiteUrl;
     blog.created_at = new Date();
     blog.is_membership = false;
-    blog.ban_date = null;
-    blog.is_banned = false;
-    blog.user_id = null;
 
     const createdBlog = await this.blogsWriteRepository.create(blog);
 

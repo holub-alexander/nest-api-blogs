@@ -10,7 +10,6 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { PublicModule } from './application/Public/public.module';
 import { SuperAdminModule } from './application/Super-Admin/super-admin.module';
 import { APP_GUARD } from '@nestjs/core';
-import { BloggerModule } from './application/Blogger/blogger.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import typeorm from './config/typeorm';
 
@@ -63,7 +62,6 @@ import typeorm from './config/typeorm';
       signOptions: { expiresIn: '10m' },
     }),
 
-    BloggerModule,
     PublicModule,
     SuperAdminModule,
   ],

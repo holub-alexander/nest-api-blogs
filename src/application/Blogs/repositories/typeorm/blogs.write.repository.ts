@@ -17,12 +17,9 @@ export class BlogsTypeOrmWriteRepository {
         description,
         website_url,
         created_at,
-        is_membership,
-        user_id,
-        ban_date,
-        is_banned
+        is_membership
      )
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+     VALUES ($1, $2, $3, $4, $5)
      RETURNING *;
     `,
       [
@@ -31,9 +28,6 @@ export class BlogsTypeOrmWriteRepository {
         createdBlog.website_url,
         createdBlog.created_at,
         createdBlog.is_membership,
-        createdBlog.user_id,
-        createdBlog.ban_date,
-        createdBlog.is_banned,
       ],
     );
 

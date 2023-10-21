@@ -25,8 +25,8 @@ export class PostsMapper {
         blogName: post.blog_name,
         createdAt: post.created_at,
         extendedLikesInfo: {
-          dislikesCount: post.dislikes_count,
-          likesCount: post.likes_count,
+          dislikesCount: +post.dislikes_count,
+          likesCount: +post.likes_count,
           myStatus: LikeStatuses.NONE,
           newestLikes: this.mapNewestLikes(lastReactions),
         },
@@ -50,8 +50,8 @@ export class PostsMapper {
       blogName: post.blog_name,
       createdAt: post.created_at,
       extendedLikesInfo: {
-        likesCount: likesCount,
-        dislikesCount: dislikesCount,
+        dislikesCount: +dislikesCount,
+        likesCount: +likesCount,
         myStatus: reaction ? reaction.like_status : LikeStatuses.NONE,
         newestLikes: this.mapNewestLikes(lastReactions),
       },

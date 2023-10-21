@@ -16,9 +16,9 @@ class BannedUserInBlogEntity {
   /**
    * Relation to blogs
    * */
-  @ManyToOne(() => BlogEntityTypeOrm, (blog) => blog.bannedUsers)
-  @JoinColumn({ name: 'blog_id' })
-  blog: BlogEntityTypeOrm;
+  // @ManyToOne(() => BlogEntityTypeOrm, (blog) => blog.bannedUsers)
+  // @JoinColumn({ name: 'blog_id' })
+  // blog: BlogEntityTypeOrm;
 
   @Column()
   blog_id: number;
@@ -26,9 +26,9 @@ class BannedUserInBlogEntity {
   /**
    * Relation to users
    * */
-  @ManyToOne(() => UserEntityTypeOrm, (user) => user.bannedUsers)
-  @JoinColumn({ name: 'user_id' })
-  user: UserEntityTypeOrm;
+  // @ManyToOne(() => UserEntityTypeOrm, (user) => user.bannedUsers)
+  // @JoinColumn({ name: 'user_id' })
+  // user: UserEntityTypeOrm;
 
   @Column()
   user_id: number;

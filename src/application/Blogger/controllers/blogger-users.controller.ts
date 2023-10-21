@@ -1,26 +1,11 @@
 import { SkipThrottle } from '@nestjs/throttler';
-import {
-  Body,
-  Controller,
-  ForbiddenException,
-  Get,
-  HttpCode,
-  NotFoundException,
-  Param,
-  Put,
-  Query,
-  Req,
-  UnauthorizedException,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, NotFoundException, Param, Put, Query, Req, UseGuards } from '@nestjs/common';
 import { BanUserForBlogDto } from '../../Blogs/dto/ban-user.dto';
 import { CommandBus } from '@nestjs/cqrs';
 import { BanUnbanUserForBlogCommand } from '../handlers/ban-unban-user-for-blog.handler';
 import { FindOneUserCommand } from '../../Users/handlers/find-one-user.handler';
 import { JwtTokenGuard } from '../../Auth/guards/jwt-token.guard';
 import { Request } from 'express';
-import { BlogDocument } from '../../../db/entities/mongoose/blog.entity';
-import { BlogsQueryRepository } from '../../Blogs/repositories/mongoose/blogs.query.repository';
 import { PaginationBannedUsersDto } from '../dto/pagination-banned-users.dto';
 import { FindAllBannedUsersForBlogCommand } from '../handlers/find-all-banned-users-for-blog.handler';
 import { BlogsTypeOrmQueryRepository } from '../../Blogs/repositories/typeorm/blogs.query.repository';
@@ -41,9 +26,9 @@ export class BloggerUsersController {
       throw new NotFoundException({});
     }
 
-    if (foundBlog[0].user_login !== userLogin) {
-      throw new ForbiddenException();
-    }
+    // if (foundBlog[0].user_login !== userLogin) {
+    //   throw new ForbiddenException();
+    // }
 
     return foundBlog[0];
   }

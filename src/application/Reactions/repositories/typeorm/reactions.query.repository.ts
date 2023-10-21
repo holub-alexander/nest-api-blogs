@@ -56,6 +56,28 @@ export class ReactionsTypeOrmQueryRepository {
   //   });
   // }
 
+  public async findReactionsByIds(
+    ids: (number | string)[],
+    userId: number,
+    type: 'comment' | 'post',
+  ): Promise<ReactionEntityTypeOrm[]> {
+    // return this.ReactionModel.find<ReactionDocument>({
+    //   type,
+    //   'user.id': userId,
+    //   'user.isBanned': false,
+    //   subjectId: { $in: ids },
+    // });
+
+    return this.dataSource.query<ReactionEntityTypeOrm[]>(
+      `
+      SELECT reactions.*, users.login as user_login FROM reactions
+      JOIN users ON users.id = reactions.user_id
+      WHERE post_id = ANY($1) AND user_id = $2 AND type = $3
+    `,
+      [ids, userId, type],
+    );
+  }
+
   // public async findReactionsBySubjectId(type: 'post' | 'comment', subjectId: ObjectId): Promise<ReactionDocument[]> {
   //   return this.ReactionModel.find<ReactionDocument>({
   //     type,
@@ -64,19 +86,21 @@ export class ReactionsTypeOrmQueryRepository {
   //   });
   // }
 
-  public async findLatestReactionsForPost(postId: number, limit: number): Promise<ReactionEntityTypeOrm[] | null> {
+  public async findLatestReactionsForPost(postId: number, limit: number): Promise<ReactionEntityTypeOrm[]> {
     // return this.ReactionModel.find({ subjectId: postId, likeStatus: LikeStatuses.LIKE, 'user.isBanned': false })
     //   .sort({ createdAt: 'desc' })
     //   .limit(limit);
 
     if (!postId || !Number.isInteger(+postId)) {
-      return null;
+      return [];
     }
 
     return this.dataSource.query<ReactionEntityTypeOrm[]>(
       `
-      SELECT * FROM reactions
-      WHERE post_id = $1
+      SELECT reactions.*, users.login as user_login FROM reactions
+      JOIN users ON users.id = reactions.user_id
+      WHERE post_id = $1 AND like_status = 'Like'
+      ORDER BY reactions.created_at DESC
       LIMIT $2;
     `,
       [postId, limit],
