@@ -1,18 +1,11 @@
-import { ObjectId } from 'mongodb';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { User, UserDocument } from '../../../../db/entities/mongoose/user.entity';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import DeviceEntityTypeOrm from '../../../../db/entities/typeorm/device.entity';
+import DeviceEntityTypeOrm from '../../../db/entities/typeorm/device.entity';
 
 @Injectable()
-export class SecurityDevicesTypeOrmWriteRepository {
-  constructor(
-    @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
-    @InjectDataSource() private dataSource: DataSource,
-  ) {}
+export class SecurityDevicesWriteRepository {
+  constructor(@InjectDataSource() private dataSource: DataSource) {}
 
   public async create(device: DeviceEntityTypeOrm): Promise<boolean> {
     const result = await this.dataSource.query<DeviceEntityTypeOrm>(
@@ -22,8 +15,6 @@ export class SecurityDevicesTypeOrmWriteRepository {
     `,
       [device.user_id, device.ip, device.title, device.device_id, device.issued_at, device.expiration_date],
     );
-
-    console.log('SecurityDevicesWriteRepository', 'create', result);
 
     return Boolean(result);
   }
@@ -59,8 +50,6 @@ export class SecurityDevicesTypeOrmWriteRepository {
       [deviceId],
     );
 
-    console.log(result);
-
     return result[1] > 0;
   }
 
@@ -76,8 +65,6 @@ export class SecurityDevicesTypeOrmWriteRepository {
     `,
       [userId, activeDeviceId],
     );
-
-    console.log(result);
 
     return result[1] > 0;
   }

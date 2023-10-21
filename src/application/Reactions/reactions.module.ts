@@ -1,15 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ReactionsQueryRepository } from './repositories/mongoose/reactions.query.repository';
-import { ReactionsWriteRepository } from './repositories/mongoose/reactions.write.repository';
-import { Reaction, ReactionEntity } from '../../db/entities/mongoose/reaction.entity';
-import { MongooseModule } from '@nestjs/mongoose';
-import { FindAllLikesHandler } from './handlers/find-all-likes.handler';
-
-export const commandHandlers = [FindAllLikesHandler];
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: Reaction.name, schema: ReactionEntity }])],
   controllers: [],
-  providers: [ReactionsQueryRepository, ReactionsWriteRepository, ...commandHandlers],
+  providers: [],
 })
 export class ReactionsModule {}

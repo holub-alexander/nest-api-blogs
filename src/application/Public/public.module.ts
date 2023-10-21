@@ -1,18 +1,12 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { BlogsModule } from '../Blogs/blogs.module';
-import { MongooseModule } from '@nestjs/mongoose';
 import { PublicBlogsController } from './controllers/public-blogs.controller';
 import { PublicPostsController } from './controllers/public-posts.controller';
 import { PostsModule } from '../Posts/posts.module';
-import { UsersQueryRepository } from '../Users/repositories/mongoose/users.query.repository';
-import { RefreshTokenEntity, RefreshTokensMeta, User, UserEntity } from '../../db/entities/mongoose/user.entity';
 import { CommentsModule } from '../Comments/comments.module';
 import { PublicCommentsController } from './controllers/public-comments.controller';
-import { SecurityDevicesQueryRepository } from '../Security-Devices/repositories/mongoose/security-devices.query.repository';
-import { SecurityDevicesWriteRepository } from '../Security-Devices/repositories/mongoose/security-devices.write.repository';
 import { PublicSecurityDevicesController } from './controllers/public-security-devices.controller';
-import { UsersWriteRepository } from '../Users/repositories/mongoose/users.write.repository';
 import { MailService } from '../Mail/mail.service';
 import { PublicAuthController } from './controllers/public-auth.controller';
 import { SecurityDevicesService } from '../Security-Devices/security-devices.service';
@@ -20,24 +14,13 @@ import { AuthService } from '../Auth/auth.service';
 import { TestingModule } from '../Testing/testing.module';
 import { PublicTestingController } from './controllers/public-testing.controller';
 import { ReactionsModule } from '../Reactions/reactions.module';
-import { UsersTypeOrmQueryRepository } from '../Users/repositories/typeorm/users.query.repository';
-import { UsersTypeOrmWriteRepository } from '../Users/repositories/typeorm/users.write.repository';
-import { SecurityDevicesTypeOrmWriteRepository } from '../Security-Devices/repositories/typeorm/security-devices.write.repository';
-import { SecurityDevicesTypeOrmQueryRepository } from '../Security-Devices/repositories/typeorm/security-devices.query.repository';
+import { UsersQueryRepository } from '../Users/repositories/users.query.repository';
+import { UsersWriteRepository } from '../Users/repositories/users.write.repository';
+import { SecurityDevicesWriteRepository } from '../Security-Devices/repositories/security-devices.write.repository';
+import { SecurityDevicesQueryRepository } from '../Security-Devices/repositories/security-devices.query.repository';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      { name: User.name, schema: UserEntity },
-      { name: RefreshTokensMeta.name, schema: RefreshTokenEntity },
-    ]),
-    CqrsModule,
-    BlogsModule,
-    PostsModule,
-    CommentsModule,
-    ReactionsModule,
-    TestingModule,
-  ],
+  imports: [CqrsModule, BlogsModule, PostsModule, CommentsModule, ReactionsModule, TestingModule],
   controllers: [
     PublicBlogsController,
     PublicPostsController,
@@ -47,12 +30,8 @@ import { SecurityDevicesTypeOrmQueryRepository } from '../Security-Devices/repos
     PublicTestingController,
   ],
   providers: [
-    SecurityDevicesQueryRepository,
     SecurityDevicesWriteRepository,
-    SecurityDevicesTypeOrmWriteRepository,
-    SecurityDevicesTypeOrmQueryRepository,
-    UsersTypeOrmQueryRepository,
-    UsersTypeOrmWriteRepository,
+    SecurityDevicesQueryRepository,
     UsersQueryRepository,
     UsersWriteRepository,
     SecurityDevicesService,

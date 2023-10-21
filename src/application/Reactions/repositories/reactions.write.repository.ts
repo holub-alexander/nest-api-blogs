@@ -1,22 +1,11 @@
-import { ObjectId } from 'mongodb';
-import { Reaction, ReactionDocument } from '../../../../db/entities/mongoose/reaction.entity';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { LikeStatuses } from '../../../../common/interfaces';
+import { LikeStatuses } from '../../../common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-import ReactionEntityTypeOrm from '../../../../db/entities/typeorm/reaction.entity';
+import ReactionEntityTypeOrm from '../../../db/entities/typeorm/reaction.entity';
 
 @Injectable()
-export class ReactionsTypeOrmWriteRepository {
-  constructor(
-    @InjectModel(Reaction.name) private readonly ReactionModel: Model<ReactionDocument>,
-    private readonly dataSource: DataSource,
-  ) {}
-
-  // public async save(reaction: ReactionDocument): Promise<ReactionDocument> {
-  //   return reaction.save();
-  // }
+export class ReactionsWriteRepository {
+  constructor(private readonly dataSource: DataSource) {}
 
   public async create(reaction: ReactionEntityTypeOrm): Promise<ReactionEntityTypeOrm | null> {
     const result = await this.dataSource.query(
@@ -41,10 +30,6 @@ export class ReactionsTypeOrmWriteRepository {
   }
 
   public async updateLikeStatus(reactionId: number, likeStatus: LikeStatuses): Promise<boolean> {
-    // await this.ReactionModel.updateOne({ _id: reactionId }, { likeStatus });
-    //
-    // return true;
-
     const res = await this.dataSource.query<[ReactionEntityTypeOrm[], number]>(
       `
       UPDATE reactions
@@ -65,8 +50,4 @@ export class ReactionsTypeOrmWriteRepository {
 
     return result[1] > 0;
   }
-
-  // public async updateUserBanStatus(userId: ObjectId, isBanned: boolean) {
-  //   await this.ReactionModel.updateMany({ 'user.id': userId }, { 'user.isBanned': isBanned });
-  // }
 }

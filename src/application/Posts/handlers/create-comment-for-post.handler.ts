@@ -1,15 +1,12 @@
 import { CreateCommentForPostDto } from '../../Comments/dto/create.dto';
 import { CommentViewModel } from '../../Comments/interfaces';
 import { CommentMapper } from '../../Comments/mappers/comment.mapper';
-import { InjectModel } from '@nestjs/mongoose';
-import { Comment, CommentDocument } from '../../../db/entities/mongoose/comment.entity';
-import { Model } from 'mongoose';
 import { CommandHandler } from '@nestjs/cqrs';
 import { ForbiddenException } from '@nestjs/common';
-import { PostsTypeOrmQueryRepository } from '../repositories/typeorm/posts.query.repository';
-import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
+import { PostsQueryRepository } from '../repositories/posts.query.repository';
+import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
 import { BanUserTypeOrmQueryRepository } from '../../BanUser/repositories/typeorm/ban-user.query.repository';
-import { CommentsTypeOrmWriteRepository } from '../../Comments/repositories/typeorm/comments.write.repository';
+import { CommentsWriteRepository } from '../../Comments/repositories/comments.write.repository';
 import CommentEntityTypeOrm from '../../../db/entities/typeorm/comment.entity';
 
 export class CreateCommentForPostCommand {
@@ -19,10 +16,9 @@ export class CreateCommentForPostCommand {
 @CommandHandler(CreateCommentForPostCommand)
 export class CreateCommentForPostHandler {
   constructor(
-    @InjectModel(Comment.name) private readonly CommentModel: Model<CommentDocument>,
-    private readonly postsQueryRepository: PostsTypeOrmQueryRepository,
-    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
-    private readonly commentsWriteRepository: CommentsTypeOrmWriteRepository,
+    private readonly postsQueryRepository: PostsQueryRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly commentsWriteRepository: CommentsWriteRepository,
     private readonly banUserQueryRepository: BanUserTypeOrmQueryRepository,
   ) {}
 

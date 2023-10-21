@@ -3,7 +3,7 @@ import { Paginator } from '../../../common/interfaces';
 import { BlogViewModel } from '../interfaces';
 import { BlogsMapper } from '../mappers/blogs.mapper';
 import { CommandHandler } from '@nestjs/cqrs';
-import { BlogsTypeOrmQueryRepository } from '../repositories/typeorm/blogs.query.repository';
+import { BlogsQueryRepository } from '../repositories/blogs.query.repository';
 
 export class FindAllBlogsCommand {
   constructor(public paginationSortBlogDto: PaginationBlogDto) {}
@@ -11,7 +11,7 @@ export class FindAllBlogsCommand {
 
 @CommandHandler(FindAllBlogsCommand)
 export class FindAllBlogsHandler {
-  constructor(private readonly blogsQueryRepository: BlogsTypeOrmQueryRepository) {}
+  constructor(private readonly blogsQueryRepository: BlogsQueryRepository) {}
 
   public async execute(command: FindAllBlogsCommand): Promise<Paginator<BlogViewModel[]>> {
     const res = await this.blogsQueryRepository.findAllWithPagination(command.paginationSortBlogDto);

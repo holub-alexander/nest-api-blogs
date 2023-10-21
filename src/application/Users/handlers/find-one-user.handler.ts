@@ -1,5 +1,5 @@
 import { CommandHandler } from '@nestjs/cqrs';
-import { UsersTypeOrmQueryRepository } from '../repositories/typeorm/users.query.repository';
+import { UsersQueryRepository } from '../repositories/users.query.repository';
 
 export class FindOneUserCommand {
   constructor(public userId: string) {}
@@ -7,7 +7,7 @@ export class FindOneUserCommand {
 
 @CommandHandler(FindOneUserCommand)
 export class FindOneUserHandler {
-  constructor(private usersQueryRepository: UsersTypeOrmQueryRepository) {}
+  constructor(private usersQueryRepository: UsersQueryRepository) {}
 
   public async execute(command: FindOneUserCommand) {
     return this.usersQueryRepository.findUserById(command.userId);

@@ -1,13 +1,9 @@
-import { BlogsWriteRepository } from '../../Blogs/repositories/mongoose/blogs.write.repository';
-import { PostsWriteRepository } from '../../Posts/repositories/mongoose/posts.write.repository';
-import { CommentsWriteRepository } from '../../Comments/repositories/mongoose/comments.write.repository';
-import { ReactionsWriteRepository } from '../../Reactions/repositories/mongoose/reactions.write.repository';
 import { CommandHandler } from '@nestjs/cqrs';
-import { UsersTypeOrmWriteRepository } from '../../Users/repositories/typeorm/users.write.repository';
-import { SecurityDevicesTypeOrmWriteRepository } from '../../Security-Devices/repositories/typeorm/security-devices.write.repository';
-import { BlogsTypeOrmWriteRepository } from '../../Blogs/repositories/typeorm/blogs.write.repository';
-import { PostsTypeOrmWriteRepository } from '../../Posts/repositories/typeorm/posts.write.repository';
-import { ReactionsTypeOrmWriteRepository } from '../../Reactions/repositories/typeorm/reactions.write.repository';
+import { UsersWriteRepository } from '../../Users/repositories/users.write.repository';
+import { SecurityDevicesWriteRepository } from '../../Security-Devices/repositories/security-devices.write.repository';
+import { BlogsWriteRepository } from '../../Blogs/repositories/blogs.write.repository';
+import { PostsWriteRepository } from '../../Posts/repositories/posts.write.repository';
+import { ReactionsWriteRepository } from '../../Reactions/repositories/reactions.write.repository';
 import { BanUserTypeOrmWriteRepository } from '../../BanUser/repositories/typeorm/ban-user.write.repository';
 
 export class DeleteAllCommand {}
@@ -15,12 +11,12 @@ export class DeleteAllCommand {}
 @CommandHandler(DeleteAllCommand)
 export class DeleteAllHandler {
   constructor(
-    private readonly blogsWriteRepository: BlogsTypeOrmWriteRepository,
-    private readonly postsWriteRepository: PostsTypeOrmWriteRepository,
-    private readonly usersWriteRepository: UsersTypeOrmWriteRepository,
-    private readonly securityDevicesWriteRepository: SecurityDevicesTypeOrmWriteRepository,
+    private readonly blogsWriteRepository: BlogsWriteRepository,
+    private readonly postsWriteRepository: PostsWriteRepository,
+    private readonly usersWriteRepository: UsersWriteRepository,
+    private readonly securityDevicesWriteRepository: SecurityDevicesWriteRepository,
     // private readonly commentsWriteRepository: CommentsWriteRepository,
-    private readonly reactionsWriteRepository: ReactionsTypeOrmWriteRepository,
+    private readonly reactionsWriteRepository: ReactionsWriteRepository,
     private readonly banUserTypeOrmWriteRepository: BanUserTypeOrmWriteRepository,
   ) {}
 

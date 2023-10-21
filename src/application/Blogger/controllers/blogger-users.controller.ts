@@ -8,16 +8,13 @@ import { JwtTokenGuard } from '../../Auth/guards/jwt-token.guard';
 import { Request } from 'express';
 import { PaginationBannedUsersDto } from '../dto/pagination-banned-users.dto';
 import { FindAllBannedUsersForBlogCommand } from '../handlers/find-all-banned-users-for-blog.handler';
-import { BlogsTypeOrmQueryRepository } from '../../Blogs/repositories/typeorm/blogs.query.repository';
+import { BlogsQueryRepository } from '../../Blogs/repositories/blogs.query.repository';
 import BlogEntityTypeOrm from '../../../db/entities/typeorm/blog.entity';
 
 @SkipThrottle()
 @Controller('blogger/users')
 export class BloggerUsersController {
-  constructor(
-    private readonly commandBus: CommandBus,
-    private readonly blogsQueryRepository: BlogsTypeOrmQueryRepository,
-  ) {}
+  constructor(private readonly commandBus: CommandBus, private readonly blogsQueryRepository: BlogsQueryRepository) {}
 
   private async checkAccessToBlog(blogId: string, userLogin: string): Promise<BlogEntityTypeOrm | never> {
     const foundBlog = await this.blogsQueryRepository.findOne(blogId);

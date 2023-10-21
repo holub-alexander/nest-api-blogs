@@ -1,13 +1,10 @@
-import { Reaction, ReactionDocument } from '../../../db/entities/mongoose/reaction.entity';
 import { LikeStatuses } from '../../../common/interfaces';
 import { CommandHandler } from '@nestjs/cqrs';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { PostsTypeOrmQueryRepository } from '../repositories/typeorm/posts.query.repository';
-import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
-import { PostsTypeOrmWriteRepository } from '../repositories/typeorm/posts.write.repository';
-import { ReactionsTypeOrmQueryRepository } from '../../Reactions/repositories/typeorm/reactions.query.repository';
-import { ReactionsTypeOrmWriteRepository } from '../../Reactions/repositories/typeorm/reactions.write.repository';
+import { PostsQueryRepository } from '../repositories/posts.query.repository';
+import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
+import { PostsWriteRepository } from '../repositories/posts.write.repository';
+import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';
+import { ReactionsWriteRepository } from '../../Reactions/repositories/reactions.write.repository';
 import ReactionEntityTypeOrm from '../../../db/entities/typeorm/reaction.entity';
 
 export class SetLikeUnlikeForPostCommand {
@@ -17,12 +14,11 @@ export class SetLikeUnlikeForPostCommand {
 @CommandHandler(SetLikeUnlikeForPostCommand)
 export class SetLikeUnlikeForPostHandler {
   constructor(
-    @InjectModel(Reaction.name) private readonly ReactionModel: Model<ReactionDocument>,
-    private readonly postsQueryRepository: PostsTypeOrmQueryRepository,
-    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
-    private readonly postsWriteRepository: PostsTypeOrmWriteRepository,
-    private readonly reactionsQueryRepository: ReactionsTypeOrmQueryRepository,
-    private readonly reactionsWriteRepository: ReactionsTypeOrmWriteRepository,
+    private readonly postsQueryRepository: PostsQueryRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly postsWriteRepository: PostsWriteRepository,
+    private readonly reactionsQueryRepository: ReactionsQueryRepository,
+    private readonly reactionsWriteRepository: ReactionsWriteRepository,
   ) {}
 
   public async execute({
@@ -65,36 +61,5 @@ export class SetLikeUnlikeForPostHandler {
     await this.reactionsWriteRepository.create(newReaction);
 
     return newReaction;
-
-    //
-    // if (!reaction && likeStatus === LikeStatuses.NONE) {
-    //   return null;
-    // }
-    //
-    // if (reaction) {
-    //   const res = await this.reactionsWriteRepository.updateLikeStatus(reaction._id, likeStatus);
-    //
-    //   if (res) {
-    //     return reaction;
-    //   }
-    //
-    //   return null;
-    // }
-    //
-    // const reactionDTO = new this.ReactionModel<Reaction>({
-    //   type: 'post',
-    //   subjectId: post._id,
-    //   user: {
-    //     id: user._id,
-    //     login: user.accountData.login,
-    //     isBanned: false,
-    //   },
-    //   createdAt: new Date(),
-    //   likeStatus,
-    // });
-    //
-    // await this.reactionsWriteRepository.save(reactionDTO);
-    //
-    // return reactionDTO;
   }
 }

@@ -14,17 +14,17 @@ import { DeviceViewModel } from '../../Security-Devices/interfaces';
 import { SecurityMapper } from '../../../common/mappers/typeorm/security-devices.mapper';
 import { SkipThrottle } from '@nestjs/throttler';
 import { RefreshTokenGuard } from '../../Auth/guards/refresh-token.guard';
-import { SecurityDevicesTypeOrmQueryRepository } from '../../Security-Devices/repositories/typeorm/security-devices.query.repository';
-import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
-import { SecurityDevicesTypeOrmWriteRepository } from '../../Security-Devices/repositories/typeorm/security-devices.write.repository';
+import { SecurityDevicesQueryRepository } from '../../Security-Devices/repositories/security-devices.query.repository';
+import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
+import { SecurityDevicesWriteRepository } from '../../Security-Devices/repositories/security-devices.write.repository';
 
 @SkipThrottle()
 @Controller('security/devices')
 export class PublicSecurityDevicesController {
   constructor(
-    private readonly securityQueryRepository: SecurityDevicesTypeOrmQueryRepository,
-    private readonly securityWriteRepository: SecurityDevicesTypeOrmWriteRepository,
-    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
+    private readonly securityQueryRepository: SecurityDevicesQueryRepository,
+    private readonly securityWriteRepository: SecurityDevicesWriteRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
   ) {}
 
   @Get()

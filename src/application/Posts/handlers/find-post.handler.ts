@@ -1,9 +1,9 @@
 import { PostViewModel } from '../interfaces';
 import { PostsMapper } from '../mappers/posts.mapper';
 import { CommandBus, CommandHandler } from '@nestjs/cqrs';
-import { PostsTypeOrmQueryRepository } from '../repositories/typeorm/posts.query.repository';
-import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
-import { ReactionsTypeOrmQueryRepository } from '../../Reactions/repositories/typeorm/reactions.query.repository';
+import { PostsQueryRepository } from '../repositories/posts.query.repository';
+import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
+import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';
 
 export class FindPostCommand {
   constructor(public postId: string, public userLogin = '') {}
@@ -13,9 +13,9 @@ export class FindPostCommand {
 export class FindPostHandler {
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly postsQueryRepository: PostsTypeOrmQueryRepository,
-    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
-    private readonly reactionsQueryRepository: ReactionsTypeOrmQueryRepository,
+    private readonly postsQueryRepository: PostsQueryRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly reactionsQueryRepository: ReactionsQueryRepository,
   ) {}
 
   public async execute({ postId, userLogin }: FindPostCommand): Promise<PostViewModel | null> {
@@ -46,18 +46,5 @@ export class FindPostHandler {
     } else {
       return PostsMapper.mapPostViewModel(post[0], null, latestLikes, post[0].likes_count, post[0].dislikes_count);
     }
-
-    // console.log('POST', post);
-    // const lastReactions = await this.reactionsQueryRepository.findLatestReactionsForPost(post._id, 3);
-    // const { likesCount, dislikesCount } = await this.commandBus.execute(new FindAllLikesCommand('post', post._id));
-
-    // if (userLogin) {
-    //   const user = await this.usersQueryRepository.findByLogin(userLogin);
-    //   const reaction = await this.reactionsQueryRepository.findReactionById(post._id, user!._id, 'post');
-    //
-    //   return PostsMapper.mapPostViewModel(post, reaction, lastReactions, likesCount, dislikesCount);
-    // }
-
-    // return PostsMapper.mapPostViewModel(post[0], null, lastReactions, likesCount, dislikesCount);
   }
 }

@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { UpdateBlogDto } from '../../dto/update.dto';
+import { UpdateBlogDto } from '../dto/update.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import UserEntityTypeOrm from '../../../../db/entities/typeorm/user.entity';
-import BlogEntityTypeOrm from '../../../../db/entities/typeorm/blog.entity';
+import UserEntityTypeOrm from '../../../db/entities/typeorm/user.entity';
+import BlogEntityTypeOrm from '../../../db/entities/typeorm/blog.entity';
 
 @Injectable()
-export class BlogsTypeOrmWriteRepository {
+export class BlogsWriteRepository {
   constructor(@InjectDataSource() private dataSource: DataSource) {}
 
   public async create(createdBlog: BlogEntityTypeOrm): Promise<BlogEntityTypeOrm | null> {
@@ -35,15 +35,6 @@ export class BlogsTypeOrmWriteRepository {
   }
 
   public async deleteOne(blogId: string): Promise<boolean> {
-    // const isValidId = ObjectId.isValid(blogId);
-    //
-    // if (isValidId) {
-    //   const res = await this.BlogModel.deleteOne({ _id: new ObjectId(blogId) });
-    //   return res.deletedCount > 0;
-    // }
-    //
-    // return false;
-
     if (!blogId || !Number.isInteger(+blogId)) {
       return false;
     }
@@ -60,15 +51,6 @@ export class BlogsTypeOrmWriteRepository {
   }
 
   public async updateOne(blogId: string, data: UpdateBlogDto): Promise<boolean> {
-    // const isValidId = ObjectId.isValid(blogId);
-    //
-    // if (isValidId) {
-    //   const res = await this.BlogModel.updateOne({ _id: new ObjectId(blogId) }, { $set: data });
-    //   return res.modifiedCount > 0;
-    // }
-    //
-    // return false;
-
     if (!blogId || !Number.isInteger(+blogId)) {
       return false;
     }
@@ -98,8 +80,6 @@ export class BlogsTypeOrmWriteRepository {
   }
 
   public async updateBanStatus(blogId: number, banDate: Date | null, isBanned: boolean): Promise<boolean> {
-    // await this.BlogModel.updateOne({ _id: blogId }, { 'banInfo.isBanned': isBanned, 'banInfo.banDate': banDate });
-
     const result = await this.dataSource.query<[[], number]>(
       `
       UPDATE blogs

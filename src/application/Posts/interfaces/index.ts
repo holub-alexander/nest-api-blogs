@@ -1,4 +1,3 @@
-import { CreatePostDto } from '../dto/create.dto';
 import { LikeStatuses } from '../../../common/interfaces';
 
 export interface LikesInfoViewModel {

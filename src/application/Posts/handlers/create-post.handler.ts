@@ -2,8 +2,8 @@ import { PostViewModel } from '../interfaces';
 import { CreatePostDto } from '../dto/create.dto';
 import { PostsMapper } from '../mappers/posts.mapper';
 import { CommandHandler } from '@nestjs/cqrs';
-import { PostsTypeOrmWriteRepository } from '../repositories/typeorm/posts.write.repository';
-import { BlogsTypeOrmQueryRepository } from '../../Blogs/repositories/typeorm/blogs.query.repository';
+import { PostsWriteRepository } from '../repositories/posts.write.repository';
+import { BlogsQueryRepository } from '../../Blogs/repositories/blogs.query.repository';
 import PostEntityTypeOrm from '../../../db/entities/typeorm/post.entity';
 
 export class CreatePostCommand {
@@ -13,34 +13,14 @@ export class CreatePostCommand {
 @CommandHandler(CreatePostCommand)
 export class CreatePostHandler {
   constructor(
-    private readonly postsWriteRepository: PostsTypeOrmWriteRepository,
-    private readonly blogsQueryRepository: BlogsTypeOrmQueryRepository,
+    private readonly postsWriteRepository: PostsWriteRepository,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
   ) {}
 
   public async execute(command: CreatePostCommand): Promise<PostViewModel | null> {
     const findBlog = await this.blogsQueryRepository.findOne(command.blogId.toString());
 
     if (findBlog && findBlog.length > 0) {
-      // const newPost = new this.PostModel<Post>({
-      //   title: command.body.title,
-      //   shortDescription: command.body.shortDescription,
-      //   content: command.body.content,
-      //   createdAt: new Date(),
-      //   isBanned: false,
-      //   blog: {
-      //     id: findBlog._id,
-      //     name: findBlog.name,
-      //   },
-      //   userInfo: {
-      //     id: command.userId,
-      //     isBanned: false,
-      //   },
-      //   likesInfo: {
-      //     likesCount: 0,
-      //     dislikesCount: 0,
-      //   },
-      // });
-
       const newPost = new PostEntityTypeOrm();
 
       newPost.title = command.body.title;

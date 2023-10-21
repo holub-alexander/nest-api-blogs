@@ -23,12 +23,11 @@ import { CreatePostCommand } from '../../Posts/handlers/create-post.handler';
 import { UpdatePostDto } from '../../Posts/dto/update.dto';
 import { UpdatePostCommand } from '../../Posts/handlers/update-post.handler';
 import { DeleteOnePostCommand } from '../../Posts/handlers/delete-one-post.handler';
-import { BlogsTypeOrmQueryRepository } from '../../Blogs/repositories/typeorm/blogs.query.repository';
+import { BlogsQueryRepository } from '../../Blogs/repositories/blogs.query.repository';
 import BlogEntityTypeOrm from '../../../db/entities/typeorm/blog.entity';
-import { BlogsTypeOrmWriteRepository } from '../../Blogs/repositories/typeorm/blogs.write.repository';
+import { BlogsWriteRepository } from '../../Blogs/repositories/blogs.write.repository';
 import { PostViewModel } from '../../Posts/interfaces';
-import { PostsTypeOrmQueryRepository } from '../../Posts/repositories/typeorm/posts.query.repository';
-import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
+import { PostsQueryRepository } from '../../Posts/repositories/posts.query.repository';
 import { FindAllPostsByBlogIdCommand } from '../../Posts/handlers/find-all-posts-for-blog.handler';
 import { BasicAuthGuard } from '../../Auth/guards/basic-auth.guard';
 import { BlogViewModelSuperAdmin } from '../../Blogs/interfaces';
@@ -41,10 +40,9 @@ import { CreateBlogSuperAdminCommand } from '../handlers/create-blog-super-admin
 export class SuperAdminBlogsController {
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly blogsWriteRepository: BlogsTypeOrmWriteRepository,
-    private readonly blogsQueryRepository: BlogsTypeOrmQueryRepository,
-    private readonly postsQueryRepository: PostsTypeOrmQueryRepository,
-    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
+    private readonly blogsWriteRepository: BlogsWriteRepository,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly postsQueryRepository: PostsQueryRepository,
   ) {}
 
   private async checkAccessToBlog(blogId: string, userLogin: string): Promise<BlogEntityTypeOrm | never> {
@@ -53,10 +51,6 @@ export class SuperAdminBlogsController {
     if (!foundBlog || foundBlog.length === 0) {
       throw new NotFoundException({});
     }
-
-    // if (foundBlog[0].user_login !== userLogin) {
-    //   throw new ForbiddenException();
-    // }
 
     return foundBlog[0];
   }
@@ -72,10 +66,6 @@ export class SuperAdminBlogsController {
     if (!foundBlog || foundBlog.length === 0 || !foundPost || foundPost.length === 0) {
       throw new NotFoundException({});
     }
-
-    // if (foundBlog[0].user_login !== userLogin || foundPost[0].blog_id !== foundBlog[0].id) {
-    //   throw new ForbiddenException();
-    // }
 
     return foundBlog[0];
   }
@@ -97,8 +87,6 @@ export class SuperAdminBlogsController {
   @UseGuards(BasicAuthGuard)
   @HttpCode(204)
   public async updateOne(@Param('id') id: string, @Body() body: UpdateBlogDto, @Req() req: Request) {
-    // await this.checkAccessToBlog(id, req.user.login);
-
     const isUpdated = await this.blogsWriteRepository.updateOne(id, body);
 
     if (!isUpdated) {
@@ -112,8 +100,6 @@ export class SuperAdminBlogsController {
   @UseGuards(BasicAuthGuard)
   @HttpCode(204)
   public async deleteOne(@Param('id') id: string, @Req() req: Request) {
-    // await this.checkAccessToBlog(id, req.user.login);
-
     const isDeleted = await this.blogsWriteRepository.deleteOne(id);
 
     if (!isDeleted) {
@@ -130,8 +116,6 @@ export class SuperAdminBlogsController {
     @Param('id') id: string,
     @Query() queryParams: PaginationBlogDto,
   ): Promise<Paginator<PostViewModel[]>> {
-    // await this.checkAccessToBlog(id, req.user.login);
-
     return this.commandBus.execute(new FindAllPostsByBlogIdCommand(queryParams, id));
   }
 
@@ -143,8 +127,6 @@ export class SuperAdminBlogsController {
     @Body() body: CreatePostFromBlog,
     @Req() req: Request,
   ) {
-    // const findBlog = await this.checkAccessToBlog(id, req.user.login);
-
     const foundBlog = await this.blogsQueryRepository.findOne(id);
 
     if (!foundBlog || foundBlog.length === 0) {
@@ -163,8 +145,6 @@ export class SuperAdminBlogsController {
     @Body() body: UpdatePostDto,
     @Req() req: Request,
   ) {
-    // await this.checkAccessToBlogAndPost(blogId, postId, req.user.login);
-
     const foundBlog = await this.blogsQueryRepository.findOne(blogId);
 
     if (!foundBlog || foundBlog.length === 0) {
@@ -184,8 +164,6 @@ export class SuperAdminBlogsController {
   @UseGuards(BasicAuthGuard)
   @HttpCode(204)
   public async deleteOnePost(@Param('blogId') blogId: string, @Param('postId') postId: string, @Req() req: Request) {
-    // await this.checkAccessToBlogAndPost(blogId, postId, req.user.login);
-
     const foundBlog = await this.blogsQueryRepository.findOne(blogId);
 
     if (!foundBlog || foundBlog.length === 0) {
@@ -200,11 +178,4 @@ export class SuperAdminBlogsController {
 
     return true;
   }
-
-  //
-  // @Get('/comments')
-  // @UseGuards(JwtTokenGuard)
-  // public async findAllBloggerComments(@Query() queryParams: PaginationOptionsDto, @Req() req: Request) {
-  //   return this.commandBus.execute(new FindAllBloggerCommentsCommand(queryParams, req.user.login));
-  // }
 }

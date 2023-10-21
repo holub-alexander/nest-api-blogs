@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { UpdateCommentForPostDto } from '../../dto/update.dto';
-import CommentEntityTypeOrm from '../../../../db/entities/typeorm/comment.entity';
+import { UpdateCommentForPostDto } from '../dto/update.dto';
+import CommentEntityTypeOrm from '../../../db/entities/typeorm/comment.entity';
 import { DataSource } from 'typeorm';
 
 @Injectable()
-export class CommentsTypeOrmWriteRepository {
+export class CommentsWriteRepository {
   constructor(private readonly dataSource: DataSource) {}
 
   public async create(createdComment: CommentEntityTypeOrm): Promise<CommentEntityTypeOrm | null> {
@@ -37,15 +37,6 @@ export class CommentsTypeOrmWriteRepository {
   }
 
   public async deleteById(id: number, userId: number): Promise<boolean> {
-    // const isValidId = ObjectId.isValid(id);
-    //
-    // if (!isValidId) {
-    //   return false;
-    // }
-    //
-    // const res = await this.CommentModel.deleteOne({ _id: new ObjectId(id) });
-    // return res.deletedCount > 0;
-
     const result = await this.dataSource.query<[CommentEntityTypeOrm, number]>(
       `
       DELETE FROM comments
@@ -58,15 +49,6 @@ export class CommentsTypeOrmWriteRepository {
   }
 
   public async updateById(commentId: string, body: UpdateCommentForPostDto): Promise<boolean> {
-    // const isValidId = ObjectId.isValid(id);
-    //
-    // if (!isValidId) {
-    //   return false;
-    // }
-    //
-    // const res = await this.CommentModel.updateOne({ _id: new ObjectId(id) }, { $set: body });
-    // return res.modifiedCount > 0;
-
     if (!commentId || !Number.isInteger(+commentId)) {
       return false;
     }
@@ -85,9 +67,6 @@ export class CommentsTypeOrmWriteRepository {
   }
 
   public async deleteMany(): Promise<boolean> {
-    // const res = await this.CommentModel.deleteMany({});
-    // return res.deletedCount > 0;
-
     const result = await this.dataSource.query(`
       DELETE FROM comments
       WHERE id > 0;
@@ -95,12 +74,4 @@ export class CommentsTypeOrmWriteRepository {
 
     return result[1] > 0;
   }
-
-  // public async updateUserBanStatus(userId: ObjectId, isBanned: boolean) {
-  //   await this.CommentModel.updateMany({ 'commentatorInfo.id': userId }, { 'commentatorInfo.isBanned': isBanned });
-  // }
-  //
-  // public async updateBanStatusByBlogId(blogId: ObjectId, isBanned: boolean) {
-  //   await this.CommentModel.updateOne({ blogId }, { isBanned });
-  // }
 }

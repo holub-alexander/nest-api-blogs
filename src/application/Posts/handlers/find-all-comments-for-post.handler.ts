@@ -3,11 +3,9 @@ import { Paginator } from '../../../common/interfaces';
 import { CommentViewModel } from '../../Comments/interfaces';
 import { CommentMapper } from '../../Comments/mappers/comment.mapper';
 import { CommandBus, CommandHandler } from '@nestjs/cqrs';
-import { FindAllLikesCommand } from '../../Reactions/handlers/find-all-likes.handler';
-import { PostsTypeOrmQueryRepository } from '../repositories/typeorm/posts.query.repository';
-import { CommentsTypeOrmQueryRepository } from '../../Comments/repositories/typeorm/comments.query.repository';
-import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
-import { ReactionsTypeOrmQueryRepository } from '../../Reactions/repositories/typeorm/reactions.query.repository';
+import { PostsQueryRepository } from '../repositories/posts.query.repository';
+import { CommentsQueryRepository } from '../../Comments/repositories/comments.query.repository';
+import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
 
 export class FindAllCommentsForPostCommand {
   constructor(public pagination: PaginationOptionsDto, public postId: string, public userLogin: string | null) {}
@@ -17,10 +15,9 @@ export class FindAllCommentsForPostCommand {
 export class FindAllCommentsForPostHandler {
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly postsQueryRepository: PostsTypeOrmQueryRepository,
-    private readonly commentsQueryRepository: CommentsTypeOrmQueryRepository,
-    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
-    private readonly reactionsQueryRepository: ReactionsTypeOrmQueryRepository,
+    private readonly postsQueryRepository: PostsQueryRepository,
+    private readonly commentsQueryRepository: CommentsQueryRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
   ) {}
 
   public async execute({
@@ -55,30 +52,5 @@ export class FindAllCommentsForPostHandler {
       ...meta,
       items: CommentMapper.mapCommentsViewModel(items),
     };
-
-    // const subject = await Promise.all(
-    //   items.map((reaction) => {
-    //     return this.commandBus.execute(new FindAllLikesCommand('comment', reaction._id));
-    //   }),
-    // );
-    //
-    // if (userLogin) {
-    //   const user = await this.usersQueryRepository.findByLogin(userLogin);
-    //   const reactions = await this.reactionsQueryRepository.findReactionsByIds(
-    //     items.map((comment) => comment._id),
-    //     user!._id,
-    //     'comment',
-    //   );
-    //
-    //   return {
-    //     ...meta,
-    //     items: CommentMapper.mapCommentsViewModel(items, reactions, subject),
-    //   };
-    // }
-    //
-    // return {
-    //   ...meta,
-    //   items: CommentMapper.mapCommentsViewModel(items, null, subject),
-    // };
   }
 }

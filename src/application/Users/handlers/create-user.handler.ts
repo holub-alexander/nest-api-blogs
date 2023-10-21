@@ -6,8 +6,8 @@ import bcrypt from 'bcrypt';
 import { generateHash } from '../../../common/utils/generate-hash';
 import { UsersMapper } from '../mappers/users.mapper';
 import UserEntityTypeOrm from '../../../db/entities/typeorm/user.entity';
-import { UsersTypeOrmQueryRepository } from '../repositories/typeorm/users.query.repository';
-import { UsersTypeOrmWriteRepository } from '../repositories/typeorm/users.write.repository';
+import { UsersQueryRepository } from '../repositories/users.query.repository';
+import { UsersWriteRepository } from '../repositories/users.write.repository';
 
 export class CreateUserCommand {
   constructor(public body: CreateUserDto) {}
@@ -16,8 +16,8 @@ export class CreateUserCommand {
 @CommandHandler(CreateUserCommand)
 export class CreateUserHandler {
   constructor(
-    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
-    private readonly usersWriteRepository: UsersTypeOrmWriteRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly usersWriteRepository: UsersWriteRepository,
   ) {}
 
   public async execute(command: CreateUserCommand): Promise<UserViewModel | null | never> {
@@ -41,27 +41,6 @@ export class CreateUserHandler {
     createUserData.expiration_date = null;
     createUserData.is_confirmed = true;
     createUserData.recovery_code = null;
-
-    // const createUserData = new this.UserModel<User>({
-    //   accountData: {
-    //     email,
-    //     login,
-    //     password: passwordHash,
-    //     createdAt: new Date().toISOString(),
-    //     isBanned: false,
-    //     banReason: null,
-    //     banDate: null,
-    //   },
-    //   emailConfirmation: {
-    //     confirmationCode: null,
-    //     expirationDate: null,
-    //     isConfirmed: true,
-    //   },
-    //   passwordRecovery: {
-    //     recoveryCode: null,
-    //   },
-    //   refreshTokensMeta: [],
-    // });
 
     const newUser = await this.usersWriteRepository.create(createUserData);
 

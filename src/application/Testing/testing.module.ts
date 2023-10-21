@@ -1,23 +1,17 @@
 import { Module } from '@nestjs/common';
-import { BlogsWriteRepository } from '../Blogs/repositories/mongoose/blogs.write.repository';
-import { PostsWriteRepository } from '../Posts/repositories/mongoose/posts.write.repository';
-import { UsersWriteRepository } from '../Users/repositories/mongoose/users.write.repository';
-import { CommentsWriteRepository } from '../Comments/repositories/mongoose/comments.write.repository';
-import { ReactionsWriteRepository } from '../Reactions/repositories/mongoose/reactions.write.repository';
 import { DeleteAllHandler } from './handlers/delete-all.handler';
 import { CqrsModule } from '@nestjs/cqrs';
-import { UsersQueryRepository } from '../Users/repositories/mongoose/users.query.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RefreshTokenEntity, RefreshTokensMeta, User, UserEntity } from '../../db/entities/mongoose/user.entity';
 import { Reaction, ReactionEntity } from '../../db/entities/mongoose/reaction.entity';
 import { CommentEntity, Comment } from '../../db/entities/mongoose/comment.entity';
 import { Post, PostEntity } from '../../db/entities/mongoose/post.entity';
 import { Blog, BlogEntity } from '../../db/entities/mongoose/blog.entity';
-import { UsersTypeOrmWriteRepository } from '../Users/repositories/typeorm/users.write.repository';
-import { SecurityDevicesTypeOrmWriteRepository } from '../Security-Devices/repositories/typeorm/security-devices.write.repository';
-import { BlogsTypeOrmWriteRepository } from '../Blogs/repositories/typeorm/blogs.write.repository';
-import { PostsTypeOrmWriteRepository } from '../Posts/repositories/typeorm/posts.write.repository';
-import { ReactionsTypeOrmWriteRepository } from '../Reactions/repositories/typeorm/reactions.write.repository';
+import { UsersWriteRepository } from '../Users/repositories/users.write.repository';
+import { SecurityDevicesWriteRepository } from '../Security-Devices/repositories/security-devices.write.repository';
+import { BlogsWriteRepository } from '../Blogs/repositories/blogs.write.repository';
+import { PostsWriteRepository } from '../Posts/repositories/posts.write.repository';
+import { ReactionsWriteRepository } from '../Reactions/repositories/reactions.write.repository';
 import { BanUserTypeOrmWriteRepository } from '../BanUser/repositories/typeorm/ban-user.write.repository';
 
 export const CommandHandlers = [DeleteAllHandler];
@@ -37,17 +31,11 @@ export const CommandHandlers = [DeleteAllHandler];
   controllers: [],
   providers: [
     BlogsWriteRepository,
-    BlogsTypeOrmWriteRepository,
     PostsWriteRepository,
-    PostsTypeOrmWriteRepository,
-    UsersWriteRepository,
-    CommentsWriteRepository,
     ReactionsWriteRepository,
-    ReactionsTypeOrmWriteRepository,
     BanUserTypeOrmWriteRepository,
-    UsersQueryRepository,
-    UsersTypeOrmWriteRepository,
-    SecurityDevicesTypeOrmWriteRepository,
+    UsersWriteRepository,
+    SecurityDevicesWriteRepository,
     ...CommandHandlers,
   ],
 })

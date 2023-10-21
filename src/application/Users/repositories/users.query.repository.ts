@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { SortDirections } from '../../../../common/interfaces';
-import { PaginationDto } from '../../../../common/dto/pagination.dto';
-import { getObjectToSort } from '../../../../common/utils/get-object-to-sort';
-import { PaginationMetaDto } from '../../../../common/dto/pagination-meta.dto';
-import { PaginationUsersDto } from '../../dto/pagination-users.dto';
+import { SortDirections } from '../../../common/interfaces';
+import { PaginationDto } from '../../../common/dto/pagination.dto';
+import { getObjectToSort } from '../../../common/utils/get-object-to-sort';
+import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
+import { PaginationUsersDto } from '../dto/pagination-users.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import UserEntityTypeOrm from '../../../../db/entities/typeorm/user.entity';
+import UserEntityTypeOrm from '../../../db/entities/typeorm/user.entity';
 
 const allowedFieldForSorting = {
   id: 'id',
@@ -16,7 +16,7 @@ const allowedFieldForSorting = {
 };
 
 @Injectable()
-export class UsersTypeOrmQueryRepository {
+export class UsersQueryRepository {
   constructor(@InjectDataSource() private dataSource: DataSource) {}
 
   public async findAll({

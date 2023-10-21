@@ -1,15 +1,15 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserRefreshTokenPayload } from '../interfaces';
-import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
-import { SecurityDevicesTypeOrmQueryRepository } from '../../Security-Devices/repositories/typeorm/security-devices.query.repository';
+import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
+import { SecurityDevicesQueryRepository } from '../../Security-Devices/repositories/security-devices.query.repository';
 
 @Injectable()
 export class RefreshTokenGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly securityDevicesQueryRepository: SecurityDevicesTypeOrmQueryRepository,
-    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
+    private readonly securityDevicesQueryRepository: SecurityDevicesQueryRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
   ) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean | never> {

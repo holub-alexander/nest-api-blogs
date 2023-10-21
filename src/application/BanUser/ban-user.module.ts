@@ -1,11 +1,8 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { BanUser, BanUserEntity } from '../../db/entities/mongoose/ban-user.entity';
-import { BanUserWriteRepository } from './repositories/mongoose/ban-user.write.repository';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: BanUser.name, schema: BanUserEntity }])],
-  providers: [BanUserWriteRepository],
+  imports: [],
+  providers: [],
   controllers: [],
 })
 export class BanUserModule {}

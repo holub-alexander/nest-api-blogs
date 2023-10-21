@@ -1,6 +1,6 @@
 import { CommandHandler } from '@nestjs/cqrs';
 import { BanUserForBlogDto } from '../../Blogs/dto/ban-user.dto';
-import { BlogsTypeOrmQueryRepository } from '../../Blogs/repositories/typeorm/blogs.query.repository';
+import { BlogsQueryRepository } from '../../Blogs/repositories/blogs.query.repository';
 import { BanUserTypeOrmQueryRepository } from '../../BanUser/repositories/typeorm/ban-user.query.repository';
 import BannedUserInBlogEntity from '../../../db/entities/typeorm/banned-user-in-blog.entity';
 import { BanUserTypeOrmWriteRepository } from '../../BanUser/repositories/typeorm/ban-user.write.repository';
@@ -12,7 +12,7 @@ export class BanUnbanUserForBlogCommand {
 @CommandHandler(BanUnbanUserForBlogCommand)
 export class BanUnbanUserForBlogHandler {
   constructor(
-    private readonly blogsQueryRepository: BlogsTypeOrmQueryRepository,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
     private readonly banUserWriteRepository: BanUserTypeOrmWriteRepository,
     private readonly banUserQueryRepository: BanUserTypeOrmQueryRepository,
   ) {}

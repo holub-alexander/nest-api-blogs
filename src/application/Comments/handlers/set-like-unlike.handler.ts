@@ -1,10 +1,10 @@
 import { LikeStatuses } from '../../../common/interfaces';
 import { CommandHandler } from '@nestjs/cqrs';
-import { CommentsTypeOrmQueryRepository } from '../repositories/typeorm/comments.query.repository';
-import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
-import { CommentsTypeOrmWriteRepository } from '../repositories/typeorm/comments.write.repository';
-import { ReactionsTypeOrmQueryRepository } from '../../Reactions/repositories/typeorm/reactions.query.repository';
-import { ReactionsTypeOrmWriteRepository } from '../../Reactions/repositories/typeorm/reactions.write.repository';
+import { CommentsQueryRepository } from '../repositories/comments.query.repository';
+import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
+import { CommentsWriteRepository } from '../repositories/comments.write.repository';
+import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';
+import { ReactionsWriteRepository } from '../../Reactions/repositories/reactions.write.repository';
 import ReactionEntityTypeOrm from '../../../db/entities/typeorm/reaction.entity';
 
 export class SetLikeUnlikeForCommentCommand {
@@ -14,11 +14,11 @@ export class SetLikeUnlikeForCommentCommand {
 @CommandHandler(SetLikeUnlikeForCommentCommand)
 export class SetLikeUnlikeForCommentHandler {
   constructor(
-    private readonly commentsQueryRepository: CommentsTypeOrmQueryRepository,
-    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
-    private readonly commentsWriteRepository: CommentsTypeOrmWriteRepository,
-    private readonly reactionsQueryRepository: ReactionsTypeOrmQueryRepository,
-    private readonly reactionsWriteRepository: ReactionsTypeOrmWriteRepository,
+    private readonly commentsQueryRepository: CommentsQueryRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly commentsWriteRepository: CommentsWriteRepository,
+    private readonly reactionsQueryRepository: ReactionsQueryRepository,
+    private readonly reactionsWriteRepository: ReactionsWriteRepository,
   ) {}
 
   public async execute({
@@ -48,20 +48,6 @@ export class SetLikeUnlikeForCommentHandler {
 
       return null;
     }
-
-    // const newReaction = new this.ReactionModel<Reaction>({
-    //   type: 'comment',
-    //   subjectId: comment._id,
-    //   user: {
-    //     id: user._id,
-    //     login: user.accountData.login,
-    //     isBanned: false,
-    //   },
-    //   createdAt: new Date(),
-    //   likeStatus,
-    // });
-    //
-    // await this.reactionsWriteRepository.save(newReaction);
 
     const newReaction = new ReactionEntityTypeOrm();
 

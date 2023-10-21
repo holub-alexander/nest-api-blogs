@@ -1,8 +1,8 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { CommandHandler } from '@nestjs/cqrs';
-import { CommentsTypeOrmQueryRepository } from '../repositories/typeorm/comments.query.repository';
-import { CommentsTypeOrmWriteRepository } from '../repositories/typeorm/comments.write.repository';
-import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
+import { CommentsQueryRepository } from '../repositories/comments.query.repository';
+import { CommentsWriteRepository } from '../repositories/comments.write.repository';
+import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
 
 export class DeleteOneCommentCommand {
   constructor(public login: string, public id: string) {}
@@ -11,9 +11,9 @@ export class DeleteOneCommentCommand {
 @CommandHandler(DeleteOneCommentCommand)
 export class DeleteOneCommentHandler {
   constructor(
-    private readonly commentsQueryRepository: CommentsTypeOrmQueryRepository,
-    private readonly commentsWriteRepository: CommentsTypeOrmWriteRepository,
-    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
+    private readonly commentsQueryRepository: CommentsQueryRepository,
+    private readonly commentsWriteRepository: CommentsWriteRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
   ) {}
 
   public async execute(command: DeleteOneCommentCommand) {

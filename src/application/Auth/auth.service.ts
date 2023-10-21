@@ -18,18 +18,18 @@ import { SecurityDevicesService } from '../Security-Devices/security-devices.ser
 import { CreateUserDto } from '../Users/dto/create.dto';
 import config from '../../config/config';
 import UserEntityTypeOrm from '../../db/entities/typeorm/user.entity';
-import { UsersTypeOrmQueryRepository } from '../Users/repositories/typeorm/users.query.repository';
-import { UsersTypeOrmWriteRepository } from '../Users/repositories/typeorm/users.write.repository';
-import { SecurityDevicesTypeOrmWriteRepository } from '../Security-Devices/repositories/typeorm/security-devices.write.repository';
-import { SecurityDevicesTypeOrmQueryRepository } from '../Security-Devices/repositories/typeorm/security-devices.query.repository';
+import { UsersQueryRepository } from '../Users/repositories/users.query.repository';
+import { UsersWriteRepository } from '../Users/repositories/users.write.repository';
+import { SecurityDevicesWriteRepository } from '../Security-Devices/repositories/security-devices.write.repository';
+import { SecurityDevicesQueryRepository } from '../Security-Devices/repositories/security-devices.query.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
-    private readonly usersWriteRepository: UsersTypeOrmWriteRepository,
-    private readonly securityDevicesWriteRepository: SecurityDevicesTypeOrmWriteRepository,
-    private readonly securityDevicesQueryRepository: SecurityDevicesTypeOrmQueryRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly usersWriteRepository: UsersWriteRepository,
+    private readonly securityDevicesWriteRepository: SecurityDevicesWriteRepository,
+    private readonly securityDevicesQueryRepository: SecurityDevicesQueryRepository,
     private readonly securityDevicesService: SecurityDevicesService,
     private readonly mailService: MailService,
     private readonly jwtService: JwtService,
@@ -105,7 +105,6 @@ export class AuthService {
     }
 
     const passwordHash = await getPasswordHash(body.password);
-
     const userData = new UserEntityTypeOrm();
 
     userData.login = body.login;
@@ -118,29 +117,6 @@ export class AuthService {
     });
     userData.is_confirmed = false;
     userData.recovery_code = null;
-
-    // const userData = new this.UserModel<User>({
-    //   accountData: {
-    //     login: body.login,
-    //     email: body.email,
-    //     password: passwordHash,
-    //     createdAt: new Date().toISOString(),
-    //     isBanned: false,
-    //     banReason: null,
-    //     banDate: null,
-    //   },
-    //   emailConfirmation: {
-    //     confirmationCode: uuidv4(),
-    //     expirationDate: add(new Date(), {
-    //       hours: 1,
-    //     }),
-    //     isConfirmed: false,
-    //   },
-    //   passwordRecovery: {
-    //     recoveryCode: null,
-    //   },
-    //   refreshTokensMeta: [],
-    // });
 
     const createdUser = await this.usersWriteRepository.create(userData);
 

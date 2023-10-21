@@ -1,9 +1,9 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { UpdateCommentForPostDto } from '../dto/update.dto';
 import { CommandHandler } from '@nestjs/cqrs';
-import { CommentsTypeOrmQueryRepository } from '../repositories/typeorm/comments.query.repository';
-import { CommentsTypeOrmWriteRepository } from '../repositories/typeorm/comments.write.repository';
-import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
+import { CommentsQueryRepository } from '../repositories/comments.query.repository';
+import { CommentsWriteRepository } from '../repositories/comments.write.repository';
+import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
 import { BanUserTypeOrmQueryRepository } from '../../BanUser/repositories/typeorm/ban-user.query.repository';
 
 export class UpdateCommentCommand {
@@ -13,9 +13,9 @@ export class UpdateCommentCommand {
 @CommandHandler(UpdateCommentCommand)
 export class UpdateCommentHandler {
   constructor(
-    private readonly commentsQueryRepository: CommentsTypeOrmQueryRepository,
-    private readonly commentsWriteRepository: CommentsTypeOrmWriteRepository,
-    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
+    private readonly commentsQueryRepository: CommentsQueryRepository,
+    private readonly commentsWriteRepository: CommentsWriteRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
     private readonly banUserQueryRepository: BanUserTypeOrmQueryRepository,
   ) {}
 
@@ -31,12 +31,6 @@ export class UpdateCommentHandler {
     if (!comment || comment.length === 0) {
       throw new NotFoundException();
     }
-
-    // const bannedUserFound = await this.banUserQueryRepository.findBanForBlog(user._id, comment.blogId);
-
-    // if (user.accountData.login !== comment.commentatorInfo.login || bannedUserFound) {
-    //   throw new ForbiddenException();
-    // }
 
     if (user.login !== comment[0].user_login) {
       throw new ForbiddenException();

@@ -18,6 +18,6 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "typeRoots": ["./global", "./node_modules/@types"],
+    "typeRoots": ["./global", "./node_modules/@types"]
   }
 }

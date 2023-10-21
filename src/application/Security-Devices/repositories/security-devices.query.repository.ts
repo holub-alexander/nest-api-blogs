@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import DeviceEntityTypeOrm from '../../../../db/entities/typeorm/device.entity';
+import DeviceEntityTypeOrm from '../../../db/entities/typeorm/device.entity';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 
 @Injectable()
-export class SecurityDevicesTypeOrmQueryRepository {
+export class SecurityDevicesQueryRepository {
   constructor(@InjectDataSource() private dataSource: DataSource) {}
 
   public async findDeviceById(deviceId: string): Promise<DeviceEntityTypeOrm> {

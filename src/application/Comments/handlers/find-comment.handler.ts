@@ -1,10 +1,9 @@
 import { CommentViewModel } from '../interfaces';
 import { CommentMapper } from '../mappers/comment.mapper';
 import { CommandBus, CommandHandler } from '@nestjs/cqrs';
-import { FindAllLikesCommand } from '../../Reactions/handlers/find-all-likes.handler';
-import { CommentsTypeOrmQueryRepository } from '../repositories/typeorm/comments.query.repository';
-import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
-import { ReactionsTypeOrmQueryRepository } from '../../Reactions/repositories/typeorm/reactions.query.repository';
+import { CommentsQueryRepository } from '../repositories/comments.query.repository';
+import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
+import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';
 
 export class FindCommentCommand {
   constructor(public commentId: string, public userLogin: string | null) {}
@@ -14,14 +13,12 @@ export class FindCommentCommand {
 export class FindCommentHandler {
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly commentsQueryRepository: CommentsTypeOrmQueryRepository,
-    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
-    private readonly reactionsQueryRepository: ReactionsTypeOrmQueryRepository,
+    private readonly commentsQueryRepository: CommentsQueryRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
+    private readonly reactionsQueryRepository: ReactionsQueryRepository,
   ) {}
 
   public async execute(command: FindCommentCommand): Promise<CommentViewModel | null> {
-    console.log('command.userLogin', command.userLogin);
-
     if (command.userLogin) {
       const user = await this.usersQueryRepository.findByLogin(command.userLogin);
 
@@ -46,24 +43,11 @@ export class FindCommentHandler {
     } else {
       const comment = await this.commentsQueryRepository.findOne(command.commentId, null);
 
-      console.log('comment', comment);
-
       if (!comment || comment.length === 0) {
         return null;
       }
 
       return CommentMapper.mapCommentViewModel(comment[0], null, comment[0].likes_count, comment[0].dislikes_count);
     }
-
-    // const { likesCount, dislikesCount } = await this.commandBus.execute(
-    //   new FindAllLikesCommand('comment', comment._id),
-    // );
-    //
-    // if (command.userLogin) {
-    //   const user = await this.usersQueryRepository.findByLogin(command.userLogin);
-    //   const reaction = await this.reactionsQueryRepository.findReactionById(comment._id, user!._id, 'comment');
-    //
-    //   return CommentMapper.mapCommentViewModel(comment, reaction, likesCount, dislikesCount);
-    // }
   }
 }

@@ -1,14 +1,11 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
+import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
 
 @Injectable()
 export class JwtTokenOptionalGuard implements CanActivate {
-  constructor(
-    private readonly jwtService: JwtService,
-    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
-  ) {}
+  constructor(private readonly jwtService: JwtService, private readonly usersQueryRepository: UsersQueryRepository) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();

@@ -1,13 +1,11 @@
-import { ObjectId } from 'mongodb';
-import { PaginationOptionsDto } from '../../../../common/dto/pagination-options.dto';
-import { SortDirections } from '../../../../common/interfaces';
-import { CommentDocument } from '../../../../db/entities/mongoose/comment.entity';
-import { PaginationDto } from '../../../../common/dto/pagination.dto';
-import { PaginationMetaDto } from '../../../../common/dto/pagination-meta.dto';
-import { getObjectToSort } from '../../../../common/utils/get-object-to-sort';
+import { PaginationOptionsDto } from '../../../common/dto/pagination-options.dto';
+import { SortDirections } from '../../../common/interfaces';
+import { PaginationDto } from '../../../common/dto/pagination.dto';
+import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
+import { getObjectToSort } from '../../../common/utils/get-object-to-sort';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-import CommentEntityTypeOrm from '../../../../db/entities/typeorm/comment.entity';
+import CommentEntityTypeOrm from '../../../db/entities/typeorm/comment.entity';
 
 const allowedFieldForSorting = {
   id: 'id',
@@ -18,22 +16,10 @@ const allowedFieldForSorting = {
 };
 
 @Injectable()
-export class CommentsTypeOrmQueryRepository {
+export class CommentsQueryRepository {
   constructor(private readonly dataSource: DataSource) {}
 
   public async findOne(commentId: string, userId: number | null): Promise<CommentEntityTypeOrm[] | null> {
-    // const isValidId = ObjectId.isValid(commentId);
-    //
-    // if (isValidId) {
-    //   return this.CommentModel.findOne<CommentDocument>({
-    //     _id: new ObjectId(commentId),
-    //     'commentatorInfo.isBanned': false,
-    //     isBanned: false,
-    //   });
-    // }
-    //
-    // return null;
-
     if (!commentId || !Number.isInteger(+commentId)) {
       return null;
     }
@@ -77,23 +63,6 @@ export class CommentsTypeOrmQueryRepository {
     postId: number,
     userId: number | null,
   ): Promise<PaginationDto<CommentEntityTypeOrm>> {
-    // const sorting = getObjectToSort({ sortBy, sortDirection });
-    // const pageSizeValue = pageSize < 1 ? 1 : pageSize;
-    // const filter = { postId: new mongoose.Types.ObjectId(postId), 'commentatorInfo.isBanned': false, isBanned: false };
-    //
-    // const totalCount = await this.CommentModel.countDocuments(filter);
-    // const items = await this.CommentModel.find<CommentDocument>(filter)
-    //   .skip((+pageNumber - 1) * +pageSizeValue)
-    //   .limit(+pageSizeValue)
-    //   .sort(sorting);
-    //
-    // const paginationMetaDto = new PaginationMetaDto({
-    //   paginationOptionsDto: { pageSize, pageNumber, sortBy, sortDirection },
-    //   totalCount,
-    // });
-    //
-    // return new PaginationDto(items, paginationMetaDto);
-
     const sorting = getObjectToSort({ sortBy, sortDirection, allowedFieldForSorting });
 
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
@@ -163,36 +132,5 @@ export class CommentsTypeOrmQueryRepository {
     });
 
     return new PaginationDto(result, paginationMetaDto);
-  }
-
-  public async findAllByPostsIds(
-    { pageSize = 10, pageNumber = 1, sortDirection = SortDirections.DESC, sortBy = '' }: PaginationOptionsDto,
-    postsIds: ObjectId[],
-    userId: ObjectId,
-  ) {
-    // @ts-ignore
-    const sorting = getObjectToSort({ sortBy, sortDirection });
-    const pageSizeValue = pageSize < 1 ? 1 : pageSize;
-    const filter = {
-      postId: { $in: postsIds },
-      'commentatorInfo.id': { $ne: userId },
-      'commentatorInfo.isBanned': false,
-      isBanned: false,
-    };
-
-    // @ts-ignore
-    const totalCount = await this.CommentModel.countDocuments(filter);
-    // @ts-ignore
-    const items = await this.CommentModel.find<CommentDocument>(filter)
-      .skip((+pageNumber - 1) * +pageSizeValue)
-      .limit(+pageSizeValue)
-      .sort(sorting);
-
-    const paginationMetaDto = new PaginationMetaDto({
-      paginationOptionsDto: { pageSize, pageNumber, sortBy, sortDirection },
-      totalCount,
-    });
-
-    return new PaginationDto(items, paginationMetaDto);
   }
 }

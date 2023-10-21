@@ -1,7 +1,7 @@
 import { CommandHandler } from '@nestjs/cqrs';
 import { BanUnbanDto } from '../../../common/dto/ban-unban.dto';
-import { BlogsTypeOrmQueryRepository } from '../../Blogs/repositories/typeorm/blogs.query.repository';
-import { BlogsTypeOrmWriteRepository } from '../../Blogs/repositories/typeorm/blogs.write.repository';
+import { BlogsQueryRepository } from '../../Blogs/repositories/blogs.query.repository';
+import { BlogsWriteRepository } from '../../Blogs/repositories/blogs.write.repository';
 
 export class BanUnbanBlogSuperAdminCommand {
   constructor(public blogId: string, public body: BanUnbanDto) {}
@@ -10,8 +10,8 @@ export class BanUnbanBlogSuperAdminCommand {
 @CommandHandler(BanUnbanBlogSuperAdminCommand)
 export class BanUnbanBlogSuperAdminHandler {
   constructor(
-    private readonly blogsQueryRepository: BlogsTypeOrmQueryRepository,
-    private readonly blogsWriteRepository: BlogsTypeOrmWriteRepository,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly blogsWriteRepository: BlogsWriteRepository,
   ) {}
 
   public async execute(command: BanUnbanBlogSuperAdminCommand) {

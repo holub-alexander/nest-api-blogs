@@ -3,9 +3,9 @@ import { BlogViewModel } from '../interfaces';
 import { BlogsMapper } from '../mappers/blogs.mapper';
 import { CommandHandler } from '@nestjs/cqrs';
 import { UnauthorizedException } from '@nestjs/common';
-import { UsersTypeOrmQueryRepository } from '../../Users/repositories/typeorm/users.query.repository';
-import { BlogsTypeOrmQueryRepository } from '../repositories/typeorm/blogs.query.repository';
-import { BlogsTypeOrmWriteRepository } from '../repositories/typeorm/blogs.write.repository';
+import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
+import { BlogsQueryRepository } from '../repositories/blogs.query.repository';
+import { BlogsWriteRepository } from '../repositories/blogs.write.repository';
 import BlogEntityTypeOrm from '../../../db/entities/typeorm/blog.entity';
 
 export class CreateBlogCommand {
@@ -15,9 +15,9 @@ export class CreateBlogCommand {
 @CommandHandler(CreateBlogCommand)
 export class CreateBlogHandler {
   constructor(
-    private readonly blogsQueryRepository: BlogsTypeOrmQueryRepository,
-    private readonly blogsWriteRepository: BlogsTypeOrmWriteRepository,
-    private readonly usersQueryRepository: UsersTypeOrmQueryRepository,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly blogsWriteRepository: BlogsWriteRepository,
+    private readonly usersQueryRepository: UsersQueryRepository,
   ) {}
 
   public async execute(command: CreateBlogCommand): Promise<BlogViewModel | null> {

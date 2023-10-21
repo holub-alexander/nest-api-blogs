@@ -1,15 +1,12 @@
-import { ObjectId } from 'mongodb';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { SortDirections } from '../../../../common/interfaces';
-import { PaginationDto } from '../../../../common/dto/pagination.dto';
-import { PaginationOptionsDto } from '../../../../common/dto/pagination-options.dto';
-import { PaginationMetaDto } from '../../../../common/dto/pagination-meta.dto';
-import { Post, PostDocument } from '../../../../db/entities/mongoose/post.entity';
-import { getObjectToSort } from '../../../../common/utils/get-object-to-sort';
+import { SortDirections } from '../../../common/interfaces';
+import { PaginationDto } from '../../../common/dto/pagination.dto';
+import { PaginationOptionsDto } from '../../../common/dto/pagination-options.dto';
+import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
+
+import { getObjectToSort } from '../../../common/utils/get-object-to-sort';
 import { DataSource } from 'typeorm';
-import PostEntityTypeOrm from '../../../../db/entities/typeorm/post.entity';
+import PostEntityTypeOrm from '../../../db/entities/typeorm/post.entity';
 
 const allowedFieldForSorting = {
   id: 'id',
@@ -22,37 +19,13 @@ const allowedFieldForSorting = {
 };
 
 @Injectable()
-export class PostsTypeOrmQueryRepository {
-  constructor(
-    @InjectModel(Post.name) private readonly PostModel: Model<PostDocument>,
-    private readonly dataSource: DataSource,
-  ) {}
-
-  public async findAllByUserId(userId: ObjectId) {
-    return this.PostModel.find({ 'userInfo.id': userId });
-  }
+export class PostsQueryRepository {
+  constructor(private readonly dataSource: DataSource) {}
 
   public async findAllWithPagination(
     { pageSize = 10, pageNumber = 1, sortDirection = SortDirections.DESC, sortBy = '' }: PaginationOptionsDto,
     blogId: number | null = null,
   ): Promise<PaginationDto<PostEntityTypeOrm>> {
-    // const sorting = getObjectToSort({ sortBy, sortDirection, field: getFieldToSort(sortBy) });
-    // const filter = { 'userInfo.isBanned': false, isBanned: false };
-    // const pageSizeValue = pageSize < 1 ? 1 : pageSize;
-    //
-    // const totalCount = await this.PostModel.countDocuments(filter);
-    // const items = await this.PostModel.find<PostDocument>(filter)
-    //   .skip((+pageNumber - 1) * +pageSizeValue)
-    //   .limit(+pageSizeValue)
-    //   .sort(sorting);
-    //
-    // const paginationMetaDto = new PaginationMetaDto({
-    //   paginationOptionsDto: { pageSize, pageNumber, sortBy, sortDirection },
-    //   totalCount,
-    // });
-    //
-    // return new PaginationDto(items, paginationMetaDto);
-
     const sorting = getObjectToSort({ sortBy, sortDirection, allowedFieldForSorting });
 
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
@@ -124,43 +97,10 @@ export class PostsTypeOrmQueryRepository {
     paginationOptions: PaginationOptionsDto,
     id: number,
   ): Promise<PaginationDto<PostEntityTypeOrm>> {
-    // const sorting = getObjectToSort({ sortBy, sortDirection });
-    // const filter = { 'blog.id': id, 'userInfo.isBanned': false, isBanned: false };
-    // const pageSizeValue = pageSize < 1 ? 1 : pageSize;
-    //
-    // const totalCount = await this.PostModel.find(filter).countDocuments({});
-    // const items = await this.PostModel.find<PostDocument>(filter)
-    //   .skip((+pageNumber - 1) * +pageSizeValue)
-    //   .limit(+pageSizeValue)
-    //   .sort(sorting);
-    //
-    // const paginationMetaDto = new PaginationMetaDto({
-    //   paginationOptionsDto: { pageSize, pageNumber, sortBy, sortDirection },
-    //   totalCount,
-    // });
-    //
-    // return new PaginationDto(items, paginationMetaDto);
-
     return this.findAllWithPagination(paginationOptions, id);
   }
 
   public async findOne(postId: string): Promise<PostEntityTypeOrm[] | null> {
-    // const isValidId = ObjectId.isValid(postId);
-    //
-    // if (isValidId) {
-    //   const data = await this.PostModel.findOne({
-    //     _id: new ObjectId(postId),
-    //     'userInfo.isBanned': false,
-    //     isBanned: false,
-    //   });
-    //
-    //   if (data) {
-    //     return data;
-    //   }
-    // }
-    //
-    // return null;
-
     if (!postId || !Number.isInteger(+postId)) {
       return null;
     }

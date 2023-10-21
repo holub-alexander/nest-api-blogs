@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import UserEntityTypeOrm from '../../../../db/entities/typeorm/user.entity';
+import UserEntityTypeOrm from '../../../db/entities/typeorm/user.entity';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 
 @Injectable()
-export class UsersTypeOrmWriteRepository {
+export class UsersWriteRepository {
   constructor(@InjectDataSource() private dataSource: DataSource) {}
 
   public async create(createUserDto: UserEntityTypeOrm): Promise<UserEntityTypeOrm | null> {
