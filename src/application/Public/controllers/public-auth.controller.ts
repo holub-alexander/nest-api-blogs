@@ -111,8 +111,6 @@ export class PublicAuthController {
       throw new UnauthorizedException();
     }
 
-    console.log('reqeq.cookies.refreshToken');
-
     const newTokens = await this.authService.updateTokens(req.userRefreshTokenPayload);
 
     if (!newTokens) {
@@ -132,8 +130,6 @@ export class PublicAuthController {
   @Post('/logout')
   @HttpCode(204)
   public async logout(@Req() req: Request) {
-    console.log('req', req.cookies.refreshToken);
-
     if (!req.cookies.refreshToken) {
       throw new UnauthorizedException();
     }

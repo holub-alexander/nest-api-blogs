@@ -14,6 +14,8 @@ import { BanUserTypeOrmWriteRepository } from '../BanUser/repositories/typeorm/b
 import { BanUserTypeOrmQueryRepository } from '../BanUser/repositories/typeorm/ban-user.query.repository';
 import { SuperAdminUsersController } from './controllers/super-admin-users.controller';
 import { UsersModule } from '../Users/users.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import UserEntity from '../../db/entities/typeorm/user.entity';
 
 export const CommandHandlers = [
   FindAllBlogsSuperAdminHandler,
@@ -22,7 +24,7 @@ export const CommandHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule, UsersModule, BanUserModule],
+  imports: [CqrsModule, UsersModule, BanUserModule, TypeOrmModule.forFeature([UserEntity])],
   controllers: [SuperAdminBlogsController, SuperAdminUsersController],
   providers: [
     BlogsWriteRepository,

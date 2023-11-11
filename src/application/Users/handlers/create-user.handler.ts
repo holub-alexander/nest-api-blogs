@@ -5,7 +5,6 @@ import { BadRequestException } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 import { generateHash } from '../../../common/utils/generate-hash';
 import { UsersMapper } from '../mappers/users.mapper';
-import UserEntityTypeOrm from '../../../db/entities/typeorm/user.entity';
 import { UsersQueryRepository } from '../repositories/users.query.repository';
 import { UsersWriteRepository } from '../repositories/users.write.repository';
 
@@ -31,7 +30,7 @@ export class CreateUserHandler {
     const passwordSalt = await bcrypt.genSalt(10);
     const passwordHash = await generateHash(password, passwordSalt);
 
-    const createUserData = new UserEntityTypeOrm();
+    const createUserData = this.usersWriteRepository.create();
 
     createUserData.email = email;
     createUserData.login = login;
@@ -42,7 +41,7 @@ export class CreateUserHandler {
     createUserData.is_confirmed = true;
     createUserData.recovery_code = null;
 
-    const newUser = await this.usersWriteRepository.create(createUserData);
+    const newUser = await this.usersWriteRepository.save(createUserData);
 
     return newUser ? UsersMapper.mapCreatedUserViewModel(newUser) : null;
   }

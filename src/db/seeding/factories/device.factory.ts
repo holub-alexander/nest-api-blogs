@@ -2,10 +2,10 @@ import { define } from 'typeorm-seeding';
 
 import { faker } from '@faker-js/faker';
 import { getRandomDateWithTimeZone } from '../../../common/utils/get-random-date-with-time-zone';
-import DeviceEntityTypeOrm from '../../entities/typeorm/device.entity';
+import DeviceEntity from '../../entities/typeorm/device.entity';
 
-define(DeviceEntityTypeOrm, () => {
-  const device = new DeviceEntityTypeOrm();
+define(DeviceEntity, () => {
+  const device = new DeviceEntity();
 
   device.ip = faker.internet.ip();
   device.title = faker.internet.userAgent();

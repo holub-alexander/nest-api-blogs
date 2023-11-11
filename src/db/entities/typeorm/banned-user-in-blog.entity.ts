@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import UserEntityTypeOrm from './user.entity';
+import UserEntity from './user.entity';
 import PostEntityTypeOrm from './post.entity';
 import BlogEntityTypeOrm from './blog.entity';
 
@@ -26,9 +26,9 @@ class BannedUserInBlogEntity {
   /**
    * Relation to users
    * */
-  // @ManyToOne(() => UserEntityTypeOrm, (user) => user.bannedUsers)
+  // @ManyToOne(() => UserEntity, (user) => user.bannedUsers)
   // @JoinColumn({ name: 'user_id' })
-  // user: UserEntityTypeOrm;
+  // user: UserEntity;
 
   @Column()
   user_id: number;

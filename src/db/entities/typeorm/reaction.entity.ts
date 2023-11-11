@@ -1,6 +1,6 @@
 import { LikeStatuses } from '../../../common/interfaces';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import UserEntityTypeOrm from './user.entity';
+import UserEntity from './user.entity';
 import PostEntityTypeOrm from './post.entity';
 import CommentEntityTypeOrm from './comment.entity';
 
@@ -30,9 +30,9 @@ class ReactionEntityTypeOrm {
 
   post_id: number | null;
 
-  @ManyToOne(() => UserEntityTypeOrm, (user) => user.reactions)
+  @ManyToOne(() => UserEntity, (user) => user.reactions)
   @JoinColumn({ name: 'user_id' })
-  user: UserEntityTypeOrm;
+  user: UserEntity;
 
   user_id: number;
 

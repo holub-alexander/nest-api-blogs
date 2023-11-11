@@ -18,9 +18,20 @@ import { UsersQueryRepository } from '../Users/repositories/users.query.reposito
 import { UsersWriteRepository } from '../Users/repositories/users.write.repository';
 import { SecurityDevicesWriteRepository } from '../Security-Devices/repositories/security-devices.write.repository';
 import { SecurityDevicesQueryRepository } from '../Security-Devices/repositories/security-devices.query.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import UserEntity from '../../db/entities/typeorm/user.entity';
+import DeviceEntity from '../../db/entities/typeorm/device.entity';
 
 @Module({
-  imports: [CqrsModule, BlogsModule, PostsModule, CommentsModule, ReactionsModule, TestingModule],
+  imports: [
+    CqrsModule,
+    BlogsModule,
+    PostsModule,
+    CommentsModule,
+    ReactionsModule,
+    TestingModule,
+    TypeOrmModule.forFeature([UserEntity, DeviceEntity]),
+  ],
   controllers: [
     PublicBlogsController,
     PublicPostsController,

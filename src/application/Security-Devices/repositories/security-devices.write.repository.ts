@@ -1,22 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { InjectDataSource } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
-import DeviceEntityTypeOrm from '../../../db/entities/typeorm/device.entity';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
+import DeviceEntity from '../../../db/entities/typeorm/device.entity';
 
 @Injectable()
 export class SecurityDevicesWriteRepository {
-  constructor(@InjectDataSource() private dataSource: DataSource) {}
+  constructor(
+    @InjectDataSource() private dataSource: DataSource,
+    @InjectRepository(DeviceEntity) private readonly securityDevicesRepository: Repository<DeviceEntity>,
+  ) {}
 
-  public async create(device: DeviceEntityTypeOrm): Promise<boolean> {
-    const result = await this.dataSource.query<DeviceEntityTypeOrm>(
-      `
-      INSERT INTO devices (user_id, ip, title, device_id, issued_at, expiration_date)
-      VALUES ($1, $2, $3, $4, $5, $6);
-    `,
-      [device.user_id, device.ip, device.title, device.device_id, device.issued_at, device.expiration_date],
-    );
+  public async create() {
+    return this.securityDevicesRepository.create();
+  }
 
-    return Boolean(result);
+  public async save(device: DeviceEntity): Promise<DeviceEntity | null> {
+    return this.securityDevicesRepository.save(device);
   }
 
   public async updateDeviceRefreshToken({
@@ -28,29 +27,18 @@ export class SecurityDevicesWriteRepository {
     expirationDate: Date;
     newIssuedAt: Date;
   }) {
-    const result = await this.dataSource.query<[DeviceEntityTypeOrm[], number]>(
-      `
-      UPDATE devices
-      SET expiration_date = $2,
-          issued_at = $3
-      WHERE device_id = $1;
-    `,
-      [deviceId, expirationDate, newIssuedAt],
+    const res = await this.securityDevicesRepository.update(
+      { device_id: deviceId },
+      { expiration_date: expirationDate, issued_at: newIssuedAt },
     );
 
-    return result[1] > 0;
+    return !res.affected ? false : res.affected > 0;
   }
 
   public async deleteDeviceSessionById(deviceId: string): Promise<boolean> {
-    const result = await this.dataSource.query<[[], number]>(
-      `
-      DELETE FROM devices
-      WHERE device_id = $1;
-    `,
-      [deviceId],
-    );
+    const res = await this.securityDevicesRepository.delete({ device_id: deviceId });
 
-    return result[1] > 0;
+    return !res.affected ? false : res.affected > 0;
   }
 
   public async deleteAllDeviceSessions(userId: string, activeDeviceId: string): Promise<boolean> {
@@ -58,15 +46,13 @@ export class SecurityDevicesWriteRepository {
       return false;
     }
 
-    const result = await this.dataSource.query<[[], number]>(
-      `
-      DELETE FROM devices
-      WHERE user_id = $1 AND device_id != $2
-    `,
-      [userId, activeDeviceId],
-    );
+    const res = await this.securityDevicesRepository
+      .createQueryBuilder()
+      .delete()
+      .where('user_id = :userId AND device_id != :activeDeviceId', { userId, activeDeviceId })
+      .execute();
 
-    return result[1] > 0;
+    return !res.affected ? false : res.affected > 0;
   }
 
   public async deleteAllDevicesByUserId(userId: string): Promise<boolean> {
@@ -74,15 +60,9 @@ export class SecurityDevicesWriteRepository {
       return false;
     }
 
-    const result = await this.dataSource.query<[[], number]>(
-      `
-      DELETE FROM devices
-      WHERE user_id = $1;
-    `,
-      [userId],
-    );
+    const res = await this.securityDevicesRepository.delete({ user_id: +userId });
 
-    return result[1] > 0;
+    return !res.affected ? false : res.affected > 0;
   }
 
   public async deleteMany() {}

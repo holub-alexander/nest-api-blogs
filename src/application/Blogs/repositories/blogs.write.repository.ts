@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UpdateBlogDto } from '../dto/update.dto';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import UserEntityTypeOrm from '../../../db/entities/typeorm/user.entity';
+import UserEntity from '../../../db/entities/typeorm/user.entity';
 import BlogEntityTypeOrm from '../../../db/entities/typeorm/blog.entity';
 
 @Injectable()
@@ -39,7 +39,7 @@ export class BlogsWriteRepository {
       return false;
     }
 
-    const result = await this.dataSource.query<[UserEntityTypeOrm, number]>(
+    const result = await this.dataSource.query<[UserEntity, number]>(
       `
       DELETE FROM blogs
       WHERE id = $1;
@@ -55,7 +55,7 @@ export class BlogsWriteRepository {
       return false;
     }
 
-    const result = await this.dataSource.query<[UserEntityTypeOrm[], number]>(
+    const result = await this.dataSource.query<[UserEntity[], number]>(
       `
         UPDATE blogs
         SET name = $2,

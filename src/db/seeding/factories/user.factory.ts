@@ -1,11 +1,11 @@
 import { define } from 'typeorm-seeding';
 
 import { faker } from '@faker-js/faker';
-import UserEntityTypeOrm from '../../entities/typeorm/user.entity';
+import UserEntity from '../../entities/typeorm/user.entity';
 import { getRandomDateWithTimeZone } from '../../../common/utils/get-random-date-with-time-zone';
 
-define(UserEntityTypeOrm, () => {
-  const user = new UserEntityTypeOrm();
+define(UserEntity, () => {
+  const user = new UserEntity();
 
   user.login = faker.internet.displayName();
   user.password = faker.internet.password({ length: 20 });

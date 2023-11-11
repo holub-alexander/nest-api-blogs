@@ -1,9 +1,9 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import DeviceEntityTypeOrm from './device.entity';
+import DeviceEntity from './device.entity';
 import ReactionEntityTypeOrm from './reaction.entity';
 
 @Entity({ name: 'users' })
-class UserEntityTypeOrm {
+class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -43,10 +43,10 @@ class UserEntityTypeOrm {
   /**
    * RefreshTokensMeta
    * */
-  @OneToMany(() => DeviceEntityTypeOrm, (device) => device.user, {
+  @OneToMany(() => DeviceEntity, (device) => device.user, {
     onDelete: 'CASCADE',
   })
-  refresh_tokens_meta: DeviceEntityTypeOrm[];
+  refresh_tokens_meta: DeviceEntity[];
 
   /**
    * Relation to reactions
@@ -57,4 +57,4 @@ class UserEntityTypeOrm {
   reactions: ReactionEntityTypeOrm[];
 }
 
-export default UserEntityTypeOrm;
+export default UserEntity;

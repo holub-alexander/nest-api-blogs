@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { JwtService } from '@nestjs/jwt';
 import { UserRefreshTokenPayload } from '../Auth/interfaces';
 import config from '../../config/config';
-import DeviceEntityTypeOrm from '../../db/entities/typeorm/device.entity';
 import { SecurityDevicesWriteRepository } from './repositories/security-devices.write.repository';
 
 @Injectable()
@@ -23,7 +22,7 @@ export class SecurityDevicesService {
     ip: string;
     userAgent?: string;
   }): Promise<{ deviceId: string; issuedAt: Date } | null> {
-    const device = new DeviceEntityTypeOrm();
+    const device = await this.securityWriteRepository.create();
 
     device.user_id = userId;
     device.issued_at = new Date(new Date().setMilliseconds(0));
@@ -34,7 +33,7 @@ export class SecurityDevicesService {
     device.title = userAgent;
     device.ip = ip;
 
-    const res = await this.securityWriteRepository.create(device);
+    const res = await this.securityWriteRepository.save(device);
 
     return res ? { deviceId: device.device_id, issuedAt: device.issued_at } : null;
   }

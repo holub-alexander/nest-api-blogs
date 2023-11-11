@@ -1,8 +1,8 @@
 import { UserViewModel } from '../interfaces';
-import UserEntityTypeOrm from '../../../db/entities/typeorm/user.entity';
+import UserEntity from '../../../db/entities/typeorm/user.entity';
 
 export class UsersMapper {
-  public static mapUsersViewModel(data: UserEntityTypeOrm[]): UserViewModel[] {
+  public static mapUsersViewModel(data: UserEntity[]): UserViewModel[] {
     return data.map((user) => ({
       id: user.id.toString(),
       login: user.login,
@@ -11,7 +11,7 @@ export class UsersMapper {
     }));
   }
 
-  public static mapCreatedUserViewModel(user: UserEntityTypeOrm): UserViewModel {
+  public static mapCreatedUserViewModel(user: UserEntity): UserViewModel {
     return {
       id: user.id.toString(),
       login: user.login,

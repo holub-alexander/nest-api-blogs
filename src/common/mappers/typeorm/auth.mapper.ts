@@ -1,8 +1,8 @@
 import { MeViewModel } from 'src/application/Auth/interfaces';
-import UserEntityTypeOrm from '../../../db/entities/typeorm/user.entity';
+import UserEntity from '../../../db/entities/typeorm/user.entity';
 
 export class AuthMapper {
-  public static mapMeViewModel(data: UserEntityTypeOrm): MeViewModel {
+  public static mapMeViewModel(data: UserEntity): MeViewModel {
     return {
       email: data.email,
       login: data.login,

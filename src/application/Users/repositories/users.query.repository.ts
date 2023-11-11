@@ -4,9 +4,9 @@ import { PaginationDto } from '../../../common/dto/pagination.dto';
 import { getObjectToSort } from '../../../common/utils/get-object-to-sort';
 import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
 import { PaginationUsersDto } from '../dto/pagination-users.dto';
-import { InjectDataSource } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
-import UserEntityTypeOrm from '../../../db/entities/typeorm/user.entity';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
+import UserEntity from '../../../db/entities/typeorm/user.entity';
 
 const allowedFieldForSorting = {
   id: 'id',
@@ -17,7 +17,11 @@ const allowedFieldForSorting = {
 
 @Injectable()
 export class UsersQueryRepository {
-  constructor(@InjectDataSource() private dataSource: DataSource) {}
+  constructor(
+    @InjectDataSource() private dataSource: DataSource,
+    @InjectRepository(UserEntity)
+    private readonly usersRepository: Repository<UserEntity>,
+  ) {}
 
   public async findAll({
     pageSize = 10,
@@ -26,7 +30,7 @@ export class UsersQueryRepository {
     sortBy = '',
     searchLoginTerm = '',
     searchEmailTerm = '',
-  }: PaginationUsersDto): Promise<PaginationDto<UserEntityTypeOrm>> {
+  }: PaginationUsersDto): Promise<PaginationDto<UserEntity>> {
     const sorting = getObjectToSort({ sortBy, sortDirection, allowedFieldForSorting });
 
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
@@ -80,7 +84,7 @@ export class UsersQueryRepository {
       LIMIT $1;
     `;
 
-    const result = await this.dataSource.query<UserEntityTypeOrm[]>(query, queryParams);
+    const result = await this.dataSource.query<UserEntity[]>(query, queryParams);
 
     const paginationMetaDto = new PaginationMetaDto({
       paginationOptionsDto: { pageSize, pageNumber, sortBy, sortDirection },
@@ -90,69 +94,31 @@ export class UsersQueryRepository {
     return new PaginationDto(result, paginationMetaDto);
   }
 
-  public async findUserById(userId: string): Promise<UserEntityTypeOrm | null> {
+  public async findUserById(userId: string): Promise<UserEntity | null> {
     if (!userId || !Number.isInteger(+userId)) {
       return null;
     }
 
-    const result = await this.dataSource.query<UserEntityTypeOrm[]>(
-      `
-      SELECT * FROM users
-      WHERE id = $1;
-    `,
-      [userId],
-    );
-
-    return result[0];
+    return this.usersRepository.findOneBy({ id: +userId });
   }
 
   public async findByLoginOrEmail(loginOrEmail: string) {
-    const result = await this.dataSource.query<[UserEntityTypeOrm]>(
-      `
-      SELECT * FROM users
-      WHERE login = $1 OR email = $1;
-    `,
-      [loginOrEmail],
-    );
-
-    return result[0];
+    return this.usersRepository
+      .createQueryBuilder()
+      .select()
+      .where('login = :login OR email = :email', { login: loginOrEmail, email: loginOrEmail })
+      .getOne();
   }
 
-  public async findByLogin(login: string): Promise<UserEntityTypeOrm | null> {
-    const result = await this.dataSource.query<UserEntityTypeOrm[]>(
-      `
-      SELECT * FROM users
-      WHERE login = $1
-      LIMIT 1;
-    `,
-      [login],
-    );
-
-    return result[0] || null;
+  public async findByLogin(login: string): Promise<UserEntity | null> {
+    return this.usersRepository.findOneBy({ login });
   }
 
-  public async findByEmail(email: string): Promise<UserEntityTypeOrm | null> {
-    const result = await this.dataSource.query<UserEntityTypeOrm[]>(
-      `
-      SELECT * FROM users
-      WHERE email = $1
-      LIMIT 1;
-    `,
-      [email],
-    );
-
-    return result[0] || null;
+  public async findByEmail(email: string): Promise<UserEntity | null> {
+    return this.usersRepository.findOneBy({ email });
   }
 
-  public async findByConfirmationCode(code: string): Promise<UserEntityTypeOrm | null> {
-    const result = await this.dataSource.query<UserEntityTypeOrm[]>(
-      `
-      SELECT * FROM users
-      WHERE confirmation_code = $1;
-    `,
-      [code],
-    );
-
-    return result[0] || null;
+  public async findByConfirmationCode(code: string): Promise<UserEntity | null> {
+    return this.usersRepository.findOneBy({ confirmation_code: code });
   }
 }

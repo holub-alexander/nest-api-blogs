@@ -1,8 +1,8 @@
 import { DeviceViewModel } from '../../../application/Security-Devices/interfaces';
-import DeviceEntityTypeOrm from '../../../db/entities/typeorm/device.entity';
+import DeviceEntity from '../../../db/entities/typeorm/device.entity';
 
 export class SecurityMapper {
-  public static getAllDevicesForUser(data: DeviceEntityTypeOrm[]): DeviceViewModel[] {
+  public static getAllDevicesForUser(data: DeviceEntity[]): DeviceViewModel[] {
     return data.map((device) => ({
       ip: device.ip,
       title: device.title,

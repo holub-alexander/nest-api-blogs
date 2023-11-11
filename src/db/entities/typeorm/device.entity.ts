@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import UserEntityTypeOrm from './user.entity';
+import UserEntity from './user.entity';
 
 @Entity({ name: 'devices' })
-class DeviceEntityTypeOrm {
+class DeviceEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,12 +21,12 @@ class DeviceEntityTypeOrm {
   @Column({ type: 'timestamptz', nullable: false })
   expiration_date: Date;
 
-  @ManyToOne(() => UserEntityTypeOrm, (user) => user.refresh_tokens_meta)
+  @ManyToOne(() => UserEntity, (user) => user.refresh_tokens_meta)
   @JoinColumn({ name: 'user_id' })
-  user: UserEntityTypeOrm;
+  user: UserEntity;
 
   @Column({ type: 'int', nullable: false })
   user_id: number;
 }
 
-export default DeviceEntityTypeOrm;
+export default DeviceEntity;

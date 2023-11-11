@@ -17,7 +17,7 @@ import {
 import { SecurityDevicesService } from '../Security-Devices/security-devices.service';
 import { CreateUserDto } from '../Users/dto/create.dto';
 import config from '../../config/config';
-import UserEntityTypeOrm from '../../db/entities/typeorm/user.entity';
+import UserEntity from '../../db/entities/typeorm/user.entity';
 import { UsersQueryRepository } from '../Users/repositories/users.query.repository';
 import { UsersWriteRepository } from '../Users/repositories/users.write.repository';
 import { SecurityDevicesWriteRepository } from '../Security-Devices/repositories/security-devices.write.repository';
@@ -92,7 +92,7 @@ export class AuthService {
     return { refreshToken, accessToken };
   }
 
-  public async register(body: CreateUserDto): Promise<UserEntityTypeOrm | null> {
+  public async register(body: CreateUserDto): Promise<UserEntity | null> {
     const findUserByLogin = await this.usersQueryRepository.findByLogin(body.login);
     const findUserByEmail = await this.usersQueryRepository.findByEmail(body.email);
 
@@ -105,7 +105,7 @@ export class AuthService {
     }
 
     const passwordHash = await getPasswordHash(body.password);
-    const userData = new UserEntityTypeOrm();
+    const userData = this.usersWriteRepository.create();
 
     userData.login = body.login;
     userData.email = body.email;
@@ -118,7 +118,7 @@ export class AuthService {
     userData.is_confirmed = false;
     userData.recovery_code = null;
 
-    const createdUser = await this.usersWriteRepository.create(userData);
+    const createdUser = await this.usersWriteRepository.save(userData);
 
     if (createdUser) {
       await this.mailService.sendConfirmationCodeEmail(createdUser.email, createdUser.confirmation_code ?? '');

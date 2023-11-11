@@ -10,6 +10,8 @@ import { UsersQueryRepository } from '../Users/repositories/users.query.reposito
 import { BanUserTypeOrmQueryRepository } from '../BanUser/repositories/typeorm/ban-user.query.repository';
 import { ReactionsQueryRepository } from '../Reactions/repositories/reactions.query.repository';
 import { ReactionsWriteRepository } from '../Reactions/repositories/reactions.write.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import UserEntity from '../../db/entities/typeorm/user.entity';
 
 export const CommandHandlers = [
   FindCommentHandler,
@@ -19,7 +21,7 @@ export const CommandHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule],
+  imports: [CqrsModule, TypeOrmModule.forFeature([UserEntity])],
   controllers: [],
   providers: [
     CommentsQueryRepository,

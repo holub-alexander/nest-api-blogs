@@ -1,41 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import UserEntityTypeOrm from '../../../db/entities/typeorm/user.entity';
-import { InjectDataSource } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
+import UserEntity from '../../../db/entities/typeorm/user.entity';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
 export class UsersWriteRepository {
-  constructor(@InjectDataSource() private dataSource: DataSource) {}
+  constructor(
+    @InjectDataSource() private dataSource: DataSource,
+    @InjectRepository(UserEntity) private readonly usersRepository: Repository<UserEntity>,
+  ) {}
 
-  public async create(createUserDto: UserEntityTypeOrm): Promise<UserEntityTypeOrm | null> {
-    const result = await this.dataSource.query(
-      `
-      INSERT INTO users (
-        email,
-        login,
-        password,
-        created_at,
-        confirmation_code,
-        expiration_date,
-        is_confirmed,
-        recovery_code
-     )
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-     RETURNING *;
-    `,
-      [
-        createUserDto.email,
-        createUserDto.login,
-        createUserDto.password,
-        createUserDto.created_at,
-        createUserDto.confirmation_code,
-        createUserDto.expiration_date,
-        createUserDto.is_confirmed,
-        createUserDto.recovery_code,
-      ],
-    );
+  public create() {
+    return this.usersRepository.create();
+  }
 
-    return result[0] || null;
+  public async save(createUserDto: UserEntity): Promise<UserEntity | null> {
+    return this.usersRepository.save(createUserDto);
   }
 
   public async deleteOne(userId: string): Promise<boolean> {
@@ -43,39 +23,21 @@ export class UsersWriteRepository {
       return false;
     }
 
-    const result = await this.dataSource.query(
-      `
-      DELETE FROM users
-      WHERE id = $1
-    `,
-      [userId],
-    );
+    const res = await this.usersRepository.delete(+userId);
 
-    return result[1] > 0;
+    return !res.affected ? false : res.affected > 0;
   }
 
   public async deleteMany(): Promise<boolean> {
-    const result = await this.dataSource.query(`
-      DELETE FROM users
-      WHERE id > 0;
-    `);
+    const res = await this.usersRepository.delete({});
 
-    return result[1] > 0;
+    return !res.affected ? false : res.affected > 0;
   }
 
   public async confirmRegistration(id: number): Promise<boolean> {
-    const result = await this.dataSource.query<[UserEntityTypeOrm[], number]>(
-      `
-      UPDATE users
-      SET confirmation_code = NULL,
-          is_confirmed = true
-      WHERE id = $1
-      RETURNING *;
-    `,
-      [id],
-    );
+    const res = await this.usersRepository.update(+id, { confirmation_code: null, is_confirmed: true });
 
-    return result[1] > 0;
+    return !res.affected ? false : res.affected > 0;
   }
 
   public async updateConfirmationCode(
@@ -86,18 +48,12 @@ export class UsersWriteRepository {
       return false;
     }
 
-    const result = await this.dataSource.query<[UserEntityTypeOrm[], number]>(
-      `
-      UPDATE users
-      SET confirmation_code = $2,
-          expiration_date = $3
-      WHERE id = $1
-      RETURNING *;
-    `,
-      [id, confirmationCode, expirationDate],
-    );
+    const res = await this.usersRepository.update(+id, {
+      confirmation_code: confirmationCode,
+      expiration_date: expirationDate,
+    });
 
-    return result[1] > 0;
+    return !res.affected ? false : res.affected > 0;
   }
 
   async passwordRecovery(userId: number, recoveryCode: string): Promise<boolean> {
@@ -105,16 +61,9 @@ export class UsersWriteRepository {
       return false;
     }
 
-    const result = await this.dataSource.query<[[], number]>(
-      `
-      UPDATE users
-      SET recovery_code = $2
-      WHERE id = $1;
-    `,
-      [userId, recoveryCode],
-    );
+    const res = await this.usersRepository.update({ id: +userId }, { recovery_code: recoveryCode });
 
-    return result[1] > 0;
+    return !res.affected ? false : res.affected > 0;
   }
 
   public async confirmPasswordRecovery({
@@ -124,17 +73,12 @@ export class UsersWriteRepository {
     passwordHash: string;
     recoveryCode: string;
   }): Promise<boolean> {
-    const result = await this.dataSource.query<[[], number]>(
-      `
-      UPDATE users
-      SET recovery_code = NULL,
-          password = $2
-      WHERE recovery_code = $1;
-    `,
-      [recoveryCode, passwordHash],
+    const res = await this.usersRepository.update(
+      { recovery_code: recoveryCode },
+      { recovery_code: null, password: passwordHash },
     );
 
-    return result[1] > 0;
+    return !res.affected ? false : res.affected > 0;
   }
 
   public async banUnban(

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import DeviceEntityTypeOrm from '../../../db/entities/typeorm/device.entity';
+import DeviceEntity from '../../../db/entities/typeorm/device.entity';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 
@@ -7,7 +7,7 @@ import { DataSource } from 'typeorm';
 export class SecurityDevicesQueryRepository {
   constructor(@InjectDataSource() private dataSource: DataSource) {}
 
-  public async findDeviceById(deviceId: string): Promise<DeviceEntityTypeOrm> {
+  public async findDeviceById(deviceId: string): Promise<DeviceEntity> {
     const result = await this.dataSource.query(
       `
       SELECT * FROM devices
@@ -19,8 +19,8 @@ export class SecurityDevicesQueryRepository {
     return result[0];
   }
 
-  public async findAllByUserId(userId: string): Promise<DeviceEntityTypeOrm[]> {
-    return this.dataSource.query<DeviceEntityTypeOrm[]>(
+  public async findAllByUserId(userId: string): Promise<DeviceEntity[]> {
+    return this.dataSource.query<DeviceEntity[]>(
       `
       SELECT * FROM devices
       WHERE user_id = $1;
@@ -29,8 +29,8 @@ export class SecurityDevicesQueryRepository {
     );
   }
 
-  public async findDeviceByIssuedAt(userId: string): Promise<DeviceEntityTypeOrm[]> {
-    return this.dataSource.query<DeviceEntityTypeOrm[]>(
+  public async findDeviceByIssuedAt(userId: string): Promise<DeviceEntity[]> {
+    return this.dataSource.query<DeviceEntity[]>(
       `
       SELECT * FROM devices
       WHERE user_id = $1;

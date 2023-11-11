@@ -6,8 +6,8 @@ import { FindOneUserHandler } from './handlers/find-one-user.handler';
 import { BanUnbanUserHandler } from './handlers/ban-unban-user.handler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersQueryRepository } from './repositories/users.query.repository';
-import UserEntityTypeOrm from '../../db/entities/typeorm/user.entity';
-import DeviceEntityTypeOrm from '../../db/entities/typeorm/device.entity';
+import UserEntity from '../../db/entities/typeorm/user.entity';
+import DeviceEntity from '../../db/entities/typeorm/device.entity';
 import { UsersWriteRepository } from './repositories/users.write.repository';
 import { SecurityDevicesWriteRepository } from '../Security-Devices/repositories/security-devices.write.repository';
 import { CommentsWriteRepository } from '../Comments/repositories/comments.write.repository';
@@ -21,7 +21,7 @@ export const CommandHandlers = [
 ];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntityTypeOrm, DeviceEntityTypeOrm])],
+  imports: [TypeOrmModule.forFeature([UserEntity, DeviceEntity])],
   controllers: [],
   providers: [
     UsersQueryRepository,
