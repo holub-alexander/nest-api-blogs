@@ -1,40 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { UpdatePostDto } from '../dto/update.dto';
 
-import PostEntityTypeOrm from '../../../db/entities/typeorm/post.entity';
-import { DataSource } from 'typeorm';
+import PostEntity from '../../../db/entities/typeorm/post.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class PostsWriteRepository {
-  constructor(private readonly dataSource: DataSource) {}
+  constructor(@InjectRepository(PostEntity) private readonly postRepository: Repository<PostEntity>) {}
 
-  public async create(createdPost: PostEntityTypeOrm): Promise<PostEntityTypeOrm | null> {
-    const result = await this.dataSource.query(
-      `
-      WITH inserted_post AS (
-        INSERT INTO posts (
-            title,
-            short_description,
-            content,
-            blog_id,
-            created_at
-        )
-        VALUES ($1, $2, $3, $4, $5)
-        RETURNING *
-      ) 
-      SELECT inserted_post.*, blogs.name AS blog_name FROM inserted_post
-      JOIN blogs ON blogs.id = inserted_post.blog_id;
-    `,
-      [
-        createdPost.title,
-        createdPost.short_description,
-        createdPost.content,
-        createdPost.blog_id,
-        createdPost.created_at,
-      ],
-    );
+  public create() {
+    return this.postRepository.create();
+  }
 
-    return result[0] || null;
+  public async save(createdPost: PostEntity): Promise<PostEntity | null> {
+    const savedPost = await this.postRepository.save(createdPost);
+
+    return this.postRepository.findOne({
+      where: { id: savedPost.id },
+      relations: ['blog'],
+    });
   }
 
   public async deleteOne(postId: string): Promise<boolean> {
@@ -42,15 +27,9 @@ export class PostsWriteRepository {
       return false;
     }
 
-    const result = await this.dataSource.query<[PostEntityTypeOrm, number]>(
-      `
-      DELETE FROM posts
-      WHERE id = $1;
-    `,
-      [postId],
-    );
+    const res = await this.postRepository.delete({ id: +postId });
 
-    return result[1] > 0;
+    return !res.affected ? false : res.affected > 0;
   }
 
   public async updateOne(postId: string, data: UpdatePostDto): Promise<boolean> {
@@ -58,26 +37,21 @@ export class PostsWriteRepository {
       return false;
     }
 
-    const result = await this.dataSource.query<[PostEntityTypeOrm[], number]>(
-      `
-        UPDATE posts
-        SET title = $2,
-            short_description = $3,
-            content = $4
-        WHERE id = $1;
-    `,
-      [postId, data.title, data.shortDescription, data.content],
+    const res = await this.postRepository.update(
+      { id: +postId },
+      {
+        title: data.title,
+        short_description: data.shortDescription,
+        content: data.content,
+      },
     );
 
-    return result[1] > 0;
+    return !res.affected ? false : res.affected > 0;
   }
 
   public async deleteMany(): Promise<boolean> {
-    const result = await this.dataSource.query(`
-      DELETE FROM posts
-      WHERE id > 0;
-    `);
+    const res = await this.postRepository.delete({});
 
-    return result[1] > 0;
+    return !res.affected ? false : res.affected > 0;
   }
 }

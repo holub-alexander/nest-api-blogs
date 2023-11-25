@@ -21,6 +21,8 @@ import { ReactionsWriteRepository } from '../Reactions/repositories/reactions.wr
 import { BanUserTypeOrmQueryRepository } from '../BanUser/repositories/typeorm/ban-user.query.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import UserEntity from '../../db/entities/typeorm/user.entity';
+import BlogEntity from '../../db/entities/typeorm/blog.entity';
+import PostEntity from '../../db/entities/typeorm/post.entity';
 
 export const CommandHandler = [
   FindAllPostsHandler,
@@ -35,7 +37,7 @@ export const CommandHandler = [
 ];
 
 @Module({
-  imports: [CqrsModule, TypeOrmModule.forFeature([UserEntity])],
+  imports: [CqrsModule, TypeOrmModule.forFeature([UserEntity, BlogEntity, PostEntity])],
   controllers: [],
   providers: [
     IsBlogFound,

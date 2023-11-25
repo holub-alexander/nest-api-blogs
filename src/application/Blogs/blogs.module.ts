@@ -7,11 +7,12 @@ import { BlogsWriteRepository } from './repositories/blogs.write.repository';
 import { UsersQueryRepository } from '../Users/repositories/users.query.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import UserEntity from '../../db/entities/typeorm/user.entity';
+import BlogEntity from '../../db/entities/typeorm/blog.entity';
 
 export const CommandHandlers = [FindAllBlogsHandler, FindOneBlogHandler, CreateBlogHandler];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity])],
+  imports: [TypeOrmModule.forFeature([UserEntity, BlogEntity])],
   providers: [BlogsQueryRepository, BlogsWriteRepository, UsersQueryRepository, ...CommandHandlers],
 })
 export class BlogsModule {}

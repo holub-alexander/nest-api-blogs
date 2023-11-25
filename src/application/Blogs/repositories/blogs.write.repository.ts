@@ -1,37 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { UpdateBlogDto } from '../dto/update.dto';
-import { InjectDataSource } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
-import UserEntity from '../../../db/entities/typeorm/user.entity';
-import BlogEntityTypeOrm from '../../../db/entities/typeorm/blog.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import BlogEntity from '../../../db/entities/typeorm/blog.entity';
 
 @Injectable()
 export class BlogsWriteRepository {
-  constructor(@InjectDataSource() private dataSource: DataSource) {}
+  constructor(
+    @InjectRepository(BlogEntity)
+    private readonly blogRepository: Repository<BlogEntity>,
+  ) {}
 
-  public async create(createdBlog: BlogEntityTypeOrm): Promise<BlogEntityTypeOrm | null> {
-    const result = await this.dataSource.query(
-      `
-      INSERT INTO blogs (
-        name,
-        description,
-        website_url,
-        created_at,
-        is_membership
-     )
-     VALUES ($1, $2, $3, $4, $5)
-     RETURNING *;
-    `,
-      [
-        createdBlog.name,
-        createdBlog.description,
-        createdBlog.website_url,
-        createdBlog.created_at,
-        createdBlog.is_membership,
-      ],
-    );
+  public create() {
+    return this.blogRepository.create();
+  }
 
-    return result[0] || null;
+  public async save(createdBlog: BlogEntity): Promise<BlogEntity | null> {
+    return this.blogRepository.save(createdBlog);
   }
 
   public async deleteOne(blogId: string): Promise<boolean> {
@@ -39,15 +24,9 @@ export class BlogsWriteRepository {
       return false;
     }
 
-    const result = await this.dataSource.query<[UserEntity, number]>(
-      `
-      DELETE FROM blogs
-      WHERE id = $1;
-    `,
-      [blogId],
-    );
+    const res = await this.blogRepository.delete({ id: +blogId });
 
-    return result[1] > 0;
+    return !res.affected ? false : res.affected > 0;
   }
 
   public async updateOne(blogId: string, data: UpdateBlogDto): Promise<boolean> {
@@ -55,41 +34,21 @@ export class BlogsWriteRepository {
       return false;
     }
 
-    const result = await this.dataSource.query<[UserEntity[], number]>(
-      `
-        UPDATE blogs
-        SET name = $2,
-            description = $3,
-            website_url = $4
-        WHERE id = $1
-        RETURNING *;
-    `,
-      [blogId, data.name, data.description, data.websiteUrl],
+    const res = await this.blogRepository.update(
+      { id: +blogId },
+      {
+        name: data.name,
+        description: data.description,
+        website_url: data.websiteUrl,
+      },
     );
 
-    return result[1] > 0;
+    return !res.affected ? false : res.affected > 0;
   }
 
   public async deleteMany(): Promise<boolean> {
-    const result = await this.dataSource.query(`
-      DELETE FROM blogs
-      WHERE id > 0;
-    `);
+    const res = await this.blogRepository.delete({});
 
-    return result[1] > 0;
-  }
-
-  public async updateBanStatus(blogId: number, banDate: Date | null, isBanned: boolean): Promise<boolean> {
-    const result = await this.dataSource.query<[[], number]>(
-      `
-      UPDATE blogs
-      SET is_banned = $3,
-          ban_date = $2
-      WHERE id = $1;
-    `,
-      [blogId, banDate, isBanned],
-    );
-
-    return result[1] > 0;
+    return !res.affected ? false : res.affected > 0;
   }
 }

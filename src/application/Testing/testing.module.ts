@@ -10,11 +10,13 @@ import { BanUserTypeOrmWriteRepository } from '../BanUser/repositories/typeorm/b
 import { TypeOrmModule } from '@nestjs/typeorm';
 import UserEntity from '../../db/entities/typeorm/user.entity';
 import DeviceEntity from '../../db/entities/typeorm/device.entity';
+import BlogEntity from '../../db/entities/typeorm/blog.entity';
+import PostEntity from '../../db/entities/typeorm/post.entity';
 
 export const CommandHandlers = [DeleteAllHandler];
 
 @Module({
-  imports: [CqrsModule, TypeOrmModule.forFeature([UserEntity, DeviceEntity])],
+  imports: [CqrsModule, TypeOrmModule.forFeature([UserEntity, DeviceEntity, BlogEntity, PostEntity])],
   controllers: [],
   providers: [
     BlogsWriteRepository,

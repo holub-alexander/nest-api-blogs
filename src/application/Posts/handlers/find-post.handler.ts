@@ -21,11 +21,11 @@ export class FindPostHandler {
   public async execute({ postId, userLogin }: FindPostCommand): Promise<PostViewModel | null> {
     const post = await this.postsQueryRepository.findOne(postId);
 
-    if (!post || post.length === 0) {
+    if (!post) {
       return null;
     }
 
-    const latestLikes = await this.reactionsQueryRepository.findLatestReactionsForPost(post[0].id, 3);
+    const latestLikes = await this.reactionsQueryRepository.findLatestReactionsForPost(post.id, 3);
 
     if (userLogin) {
       const user = await this.usersQueryRepository.findByLogin(userLogin);
@@ -34,17 +34,11 @@ export class FindPostHandler {
         return null;
       }
 
-      const reaction = await this.reactionsQueryRepository.findPostReactionById(post[0].id, user.id);
+      const reaction = await this.reactionsQueryRepository.findPostReactionById(post.id, user.id);
 
-      return PostsMapper.mapPostViewModel(
-        post[0],
-        reaction[0],
-        latestLikes,
-        post[0].likes_count,
-        post[0].dislikes_count,
-      );
+      return PostsMapper.mapPostViewModel(post, reaction[0], latestLikes, post.likes_count, post.dislikes_count);
     } else {
-      return PostsMapper.mapPostViewModel(post[0], null, latestLikes, post[0].likes_count, post[0].dislikes_count);
+      return PostsMapper.mapPostViewModel(post, null, latestLikes, post.likes_count, post.dislikes_count);
     }
   }
 }

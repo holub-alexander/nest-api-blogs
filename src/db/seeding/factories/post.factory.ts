@@ -1,10 +1,10 @@
 import { define } from 'typeorm-seeding';
 
 import { faker } from '@faker-js/faker';
-import PostEntityTypeOrm from '../../entities/typeorm/post.entity';
+import PostEntity from '../../entities/typeorm/post.entity';
 
-define(PostEntityTypeOrm, () => {
-  const post = new PostEntityTypeOrm();
+define(PostEntity, () => {
+  const post = new PostEntity();
 
   post.title = faker.lorem.text().slice(0, 30);
   post.short_description = faker.lorem.text().slice(0, 100);

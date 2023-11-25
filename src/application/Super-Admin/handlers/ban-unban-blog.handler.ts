@@ -19,18 +19,18 @@ export class BanUnbanBlogSuperAdminHandler {
       return null;
     }
 
-    const blog = await this.blogsQueryRepository.findOne(command.blogId.toString(), true);
+    const blog = await this.blogsQueryRepository.findOne(command.blogId.toString());
 
-    if (!blog || blog.length === 0) {
+    if (!blog) {
       return null;
     }
 
-    await this.blogsWriteRepository.updateBanStatus(
-      blog[0].id,
-      command.body.isBanned ? new Date() : null,
-      command.body.isBanned,
-    );
-
-    return true;
+    //   await this.blogsWriteRepository.updateBanStatus(
+    //     blog.id,
+    //     command.body.isBanned ? new Date() : null,
+    //     command.body.isBanned,
+    //   );
+    //
+    //   return true;
   }
 }

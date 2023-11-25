@@ -9,17 +9,17 @@ import { Request } from 'express';
 import { PaginationBannedUsersDto } from '../dto/pagination-banned-users.dto';
 import { FindAllBannedUsersForBlogCommand } from '../handlers/find-all-banned-users-for-blog.handler';
 import { BlogsQueryRepository } from '../../Blogs/repositories/blogs.query.repository';
-import BlogEntityTypeOrm from '../../../db/entities/typeorm/blog.entity';
+import BlogEntity from '../../../db/entities/typeorm/blog.entity';
 
 @SkipThrottle()
 @Controller('blogger/users')
 export class BloggerUsersController {
   constructor(private readonly commandBus: CommandBus, private readonly blogsQueryRepository: BlogsQueryRepository) {}
 
-  private async checkAccessToBlog(blogId: string, userLogin: string): Promise<BlogEntityTypeOrm | never> {
+  private async checkAccessToBlog(blogId: string, userLogin: string): Promise<BlogEntity | never> {
     const foundBlog = await this.blogsQueryRepository.findOne(blogId);
 
-    if (!foundBlog || foundBlog.length === 0) {
+    if (!foundBlog) {
       throw new NotFoundException({});
     }
 
@@ -27,7 +27,7 @@ export class BloggerUsersController {
     //   throw new ForbiddenException();
     // }
 
-    return foundBlog[0];
+    return foundBlog;
   }
 
   @Put('/:userId/ban')

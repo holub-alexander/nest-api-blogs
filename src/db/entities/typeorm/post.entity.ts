@@ -1,9 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import BlogEntityTypeOrm from './blog.entity';
+import BlogEntity from './blog.entity';
 import ReactionEntityTypeOrm from './reaction.entity';
 
 @Entity({ name: 'posts' })
-class PostEntityTypeOrm {
+class PostEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -33,9 +33,9 @@ class PostEntityTypeOrm {
 
   blog_name: string;
 
-  @ManyToOne(() => BlogEntityTypeOrm, (blog) => blog.posts)
-  @JoinColumn({ name: 'blog_id' })
-  blog: BlogEntityTypeOrm;
+  @ManyToOne(() => BlogEntity, (blog) => blog.posts, { eager: true })
+  @JoinColumn({ name: 'blog_id', referencedColumnName: 'id' })
+  blog: BlogEntity;
 
   @Column({ nullable: false, type: 'timestamptz', default: new Date() })
   created_at: Date;
@@ -48,4 +48,4 @@ class PostEntityTypeOrm {
   reactions: ReactionEntityTypeOrm[];
 }
 
-export default PostEntityTypeOrm;
+export default PostEntity;

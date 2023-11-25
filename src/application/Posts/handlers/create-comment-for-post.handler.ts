@@ -26,11 +26,11 @@ export class CreateCommentForPostHandler {
     const foundPost = await this.postsQueryRepository.findOne(postId);
     const user = await this.usersQueryRepository.findByLogin(login);
 
-    if (!foundPost || foundPost.length === 0 || !user) {
+    if (!foundPost || !user) {
       return null;
     }
 
-    const bannedUserFound = await this.banUserQueryRepository.findBanedUserForBlog(user.id, foundPost[0].blog_id);
+    const bannedUserFound = await this.banUserQueryRepository.findBanedUserForBlog(user.id, foundPost.blog_id);
 
     if (bannedUserFound.length > 0) {
       throw new ForbiddenException();
@@ -39,8 +39,8 @@ export class CreateCommentForPostHandler {
     const newComment = new CommentEntityTypeOrm();
 
     newComment.user_id = user.id;
-    newComment.blog_id = foundPost[0].blog_id;
-    newComment.post_id = foundPost[0].id;
+    newComment.blog_id = foundPost.blog_id;
+    newComment.post_id = foundPost.id;
     newComment.created_at = new Date();
     newComment.content = body.content;
 

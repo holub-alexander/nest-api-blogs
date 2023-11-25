@@ -16,6 +16,8 @@ import { SuperAdminUsersController } from './controllers/super-admin-users.contr
 import { UsersModule } from '../Users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import UserEntity from '../../db/entities/typeorm/user.entity';
+import BlogEntity from '../../db/entities/typeorm/blog.entity';
+import PostEntity from '../../db/entities/typeorm/post.entity';
 
 export const CommandHandlers = [
   FindAllBlogsSuperAdminHandler,
@@ -24,7 +26,7 @@ export const CommandHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule, UsersModule, BanUserModule, TypeOrmModule.forFeature([UserEntity])],
+  imports: [CqrsModule, UsersModule, BanUserModule, TypeOrmModule.forFeature([UserEntity, BlogEntity, PostEntity])],
   controllers: [SuperAdminBlogsController, SuperAdminUsersController],
   providers: [
     BlogsWriteRepository,

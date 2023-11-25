@@ -1,6 +1,5 @@
 import { CommandHandler } from '@nestjs/cqrs';
 
-import BlogEntityTypeOrm from '../../../db/entities/typeorm/blog.entity';
 import { BlogsQueryRepository } from '../../Blogs/repositories/blogs.query.repository';
 import { BlogsWriteRepository } from '../../Blogs/repositories/blogs.write.repository';
 import { CreateBlogDto } from '../../Blogs/dto/create.dto';
@@ -19,7 +18,7 @@ export class CreateBlogSuperAdminHandler {
   ) {}
 
   public async execute(command: CreateBlogSuperAdminCommand): Promise<BlogViewModel | null> {
-    const blog = new BlogEntityTypeOrm();
+    const blog = this.blogsWriteRepository.create();
 
     blog.name = command.body.name;
     blog.description = command.body.description;
@@ -27,7 +26,7 @@ export class CreateBlogSuperAdminHandler {
     blog.created_at = new Date();
     blog.is_membership = false;
 
-    const createdBlog = await this.blogsWriteRepository.create(blog);
+    const createdBlog = await this.blogsWriteRepository.save(blog);
 
     return createdBlog ? BlogsMapper.mapBlogViewModel(createdBlog) : null;
   }

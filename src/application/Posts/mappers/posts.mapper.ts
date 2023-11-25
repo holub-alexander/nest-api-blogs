@@ -1,6 +1,6 @@
 import { NewestLike, PostViewModel } from '../interfaces';
 import { LikeStatuses } from '../../../common/interfaces';
-import PostEntityTypeOrm from '../../../db/entities/typeorm/post.entity';
+import PostEntity from '../../../db/entities/typeorm/post.entity';
 import ReactionEntityTypeOrm from '../../../db/entities/typeorm/reaction.entity';
 
 export class PostsMapper {
@@ -14,7 +14,7 @@ export class PostsMapper {
     );
   }
 
-  public static mapPostsViewModel(data: PostEntityTypeOrm[], lastReactions: ReactionEntityTypeOrm[]): PostViewModel[] {
+  public static mapPostsViewModel(data: PostEntity[], lastReactions: ReactionEntityTypeOrm[]): PostViewModel[] {
     return data.map(
       (post): PostViewModel => ({
         id: post.id.toString(),
@@ -22,7 +22,7 @@ export class PostsMapper {
         shortDescription: post.short_description,
         content: post.content,
         blogId: post.blog_id.toString(),
-        blogName: post.blog_name,
+        blogName: post.blog.name,
         createdAt: post.created_at,
         extendedLikesInfo: {
           dislikesCount: +post.dislikes_count,
@@ -35,7 +35,7 @@ export class PostsMapper {
   }
 
   public static mapPostViewModel(
-    post: PostEntityTypeOrm,
+    post: PostEntity,
     reaction: ReactionEntityTypeOrm | null,
     lastReactions: ReactionEntityTypeOrm[] | [],
     likesCount: number,
@@ -47,7 +47,7 @@ export class PostsMapper {
       shortDescription: post.short_description,
       content: post.content,
       blogId: post.blog_id.toString(),
-      blogName: post.blog_name,
+      blogName: post.blog ? post.blog.name : post.blog_name,
       createdAt: post.created_at,
       extendedLikesInfo: {
         dislikesCount: +dislikesCount,

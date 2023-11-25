@@ -27,7 +27,7 @@ export class FindAllCommentsForPostHandler {
   }: FindAllCommentsForPostCommand): Promise<Paginator<CommentViewModel[]> | null> {
     const post = await this.postsQueryRepository.findOne(postId);
 
-    if (!post || post.length === 0) {
+    if (!post) {
       return null;
     }
 
@@ -38,7 +38,7 @@ export class FindAllCommentsForPostHandler {
         return null;
       }
 
-      const { meta, items } = await this.commentsQueryRepository.findAllWithPagination(pagination, post[0].id, user.id);
+      const { meta, items } = await this.commentsQueryRepository.findAllWithPagination(pagination, post.id, user.id);
 
       return {
         ...meta,
@@ -46,7 +46,7 @@ export class FindAllCommentsForPostHandler {
       };
     }
 
-    const { meta, items } = await this.commentsQueryRepository.findAllWithPagination(pagination, post[0].id, null);
+    const { meta, items } = await this.commentsQueryRepository.findAllWithPagination(pagination, post.id, null);
 
     return {
       ...meta,

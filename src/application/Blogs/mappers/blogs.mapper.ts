@@ -1,8 +1,8 @@
 import { BlogViewModel } from '../interfaces';
-import BlogEntityTypeOrm from '../../../db/entities/typeorm/blog.entity';
+import BlogEntity from '../../../db/entities/typeorm/blog.entity';
 
 export class BlogsMapper {
-  public static mapBlogsViewModel(data: BlogEntityTypeOrm[]): BlogViewModel[] {
+  public static mapBlogsViewModel(data: BlogEntity[]): BlogViewModel[] {
     return data.map(
       (blog): BlogViewModel => ({
         id: blog.id.toString(),
@@ -15,7 +15,7 @@ export class BlogsMapper {
     );
   }
 
-  public static mapBlogViewModel(blog: BlogEntityTypeOrm): BlogViewModel {
+  public static mapBlogViewModel(blog: BlogEntity): BlogViewModel {
     console.log('blog', blog);
 
     return {

@@ -1,8 +1,8 @@
 import { BlogViewModelSuperAdmin } from '../../Blogs/interfaces';
-import BlogEntityTypeOrm from '../../../db/entities/typeorm/blog.entity';
+import BlogEntity from '../../../db/entities/typeorm/blog.entity';
 
 export class SuperAdminMapper {
-  public static mapBlogsViewModel(data: BlogEntityTypeOrm[]): BlogViewModelSuperAdmin[] {
+  public static mapBlogsViewModel(data: BlogEntity[]): BlogViewModelSuperAdmin[] {
     return data.map(
       (blog): BlogViewModelSuperAdmin => ({
         id: blog.id.toString(),

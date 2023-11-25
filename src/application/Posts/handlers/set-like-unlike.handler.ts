@@ -29,11 +29,11 @@ export class SetLikeUnlikeForPostHandler {
     const post = await this.postsQueryRepository.findOne(postId);
     const user = await this.usersQueryRepository.findByLogin(login);
 
-    if (!post || post.length === 0 || !user) {
+    if (!post || !user) {
       return null;
     }
 
-    const reaction = await this.reactionsQueryRepository.findPostReactionById(post[0].id, user.id);
+    const reaction = await this.reactionsQueryRepository.findPostReactionById(post.id, user.id);
 
     if ((!reaction || reaction.length === 0) && likeStatus === LikeStatuses.NONE) {
       return null;
@@ -52,7 +52,7 @@ export class SetLikeUnlikeForPostHandler {
     const newReaction = new ReactionEntityTypeOrm();
 
     newReaction.type = 'post';
-    newReaction.post_id = post[0].id;
+    newReaction.post_id = post.id;
     newReaction.comment_id = null;
     newReaction.user_id = user.id;
     newReaction.created_at = new Date();

@@ -5,7 +5,7 @@ import { PostsMapper } from '../mappers/posts.mapper';
 import { CommandBus, CommandHandler } from '@nestjs/cqrs';
 import { PostsQueryRepository } from '../repositories/posts.query.repository';
 import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';
-import PostEntityTypeOrm from '../../../db/entities/typeorm/post.entity';
+import PostEntity from '../../../db/entities/typeorm/post.entity';
 import ReactionEntityTypeOrm from '../../../db/entities/typeorm/reaction.entity';
 import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
 
@@ -22,7 +22,7 @@ export class FindAllPostsHandler {
     private readonly reactionsQueryRepository: ReactionsQueryRepository,
   ) {}
 
-  private formatPosts(items: PostEntityTypeOrm[], reactions: ReactionEntityTypeOrm[] | null): Promise<PostViewModel>[] {
+  private formatPosts(items: PostEntity[], reactions: ReactionEntityTypeOrm[] | null): Promise<PostViewModel>[] {
     return items.map(async (post) => {
       const lastReactions = await this.reactionsQueryRepository.findLatestReactionsForPost(post.id, 3);
 

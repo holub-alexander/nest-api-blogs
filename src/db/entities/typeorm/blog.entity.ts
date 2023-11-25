@@ -1,8 +1,8 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import PostEntityTypeOrm from './post.entity';
+import PostEntity from './post.entity';
 
 @Entity({ name: 'blogs' })
-class BlogEntityTypeOrm {
+class BlogEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -33,10 +33,10 @@ class BlogEntityTypeOrm {
   })
   is_membership: boolean;
 
-  @OneToMany(() => PostEntityTypeOrm, (post) => post.blog, {
+  @OneToMany(() => PostEntity, (post) => post.blog, {
     onDelete: 'CASCADE',
   })
-  posts: PostEntityTypeOrm[];
+  posts: PostEntity[];
 }
 
-export default BlogEntityTypeOrm;
+export default BlogEntity;

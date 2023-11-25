@@ -6,8 +6,9 @@ import { PaginationDto } from '../../../common/dto/pagination.dto';
 import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
 
 import { getObjectToSort } from '../../../common/utils/get-object-to-sort';
-import { DataSource } from 'typeorm';
-import BlogEntityTypeOrm from '../../../db/entities/typeorm/blog.entity';
+import { DataSource, Repository } from 'typeorm';
+import BlogEntity from '../../../db/entities/typeorm/blog.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 const allowedFieldForSorting = {
   id: 'id',
@@ -20,85 +21,53 @@ const allowedFieldForSorting = {
 
 @Injectable()
 export class BlogsQueryRepository {
-  constructor(private readonly dataSource: DataSource) {}
+  constructor(
+    private readonly dataSource: DataSource,
+    @InjectRepository(BlogEntity)
+    private readonly blogRepository: Repository<BlogEntity>,
+  ) {}
 
-  public async findAllWithPagination(
-    {
-      sortBy = 'createdAt',
-      sortDirection = SortDirections.DESC,
-      searchNameTerm = '',
-      pageSize = 10,
-      pageNumber = 1,
-    }: PaginationBlogDto,
-    userId?: number | null,
-    isShowAllBlogs = false,
-  ): Promise<PaginationDto<BlogEntityTypeOrm>> {
+  public async findAllWithPagination({
+    sortBy = 'createdAt',
+    sortDirection = SortDirections.DESC,
+    searchNameTerm = '',
+    pageSize = 10,
+    pageNumber = 1,
+  }: PaginationBlogDto): Promise<PaginationDto<BlogEntity>> {
     const sorting = getObjectToSort({ sortBy, sortDirection, allowedFieldForSorting });
 
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
-    const pageNumberFormat = (+pageNumber - 1) * +pageSizeValue;
+    const skippedItems = (+pageNumber - 1) * +pageSizeValue;
 
-    const queryParams: (number | string | boolean)[] = [pageSizeValue, pageNumberFormat];
-    const conditions: string[] = [];
-
-    const totalQueryParams: (number | string | boolean)[] = [];
-    const totalQueryConditions: string[] = [];
+    const totalCountQuery = await this.blogRepository.createQueryBuilder();
+    const query = await this.blogRepository.createQueryBuilder();
 
     if (searchNameTerm && searchNameTerm.trim() !== '') {
-      queryParams.push(`%${searchNameTerm}%`);
-      conditions.push('name ILIKE $' + queryParams.length);
-
-      totalQueryParams.push(`%${searchNameTerm}%`);
-      totalQueryConditions.push('name ILIKE $' + totalQueryParams.length);
+      totalCountQuery.where('name ILIKE :name', { name: `%${searchNameTerm}%` });
+      query.where('name ILIKE :name', { name: `%${searchNameTerm}%` });
     }
 
-    let query = `
-      SELECT blogs.* FROM blogs
-    `;
+    const totalCount = await totalCountQuery.getCount();
 
-    let totalCountQuery = `
-      SELECT COUNT(*) FROM blogs
-    `;
-
-    if (conditions.length > 0) {
-      query += ' WHERE (' + conditions.join(' OR ') + ')';
-      totalCountQuery += ' WHERE (' + totalQueryConditions.join(' OR ') + ')';
-    }
-
-    if (sorting) {
-      query += `
-      ORDER BY blogs.${sorting.field} ${sorting.direction}
-      `;
-    }
-
-    const totalCount = await this.dataSource.query(totalCountQuery, totalQueryParams);
-
-    query += `
-      OFFSET $2
-      LIMIT $1;
-    `;
-
-    const result = await this.dataSource.query<BlogEntityTypeOrm[]>(query, queryParams);
+    const blogs = await query
+      .orderBy(sorting.field, sorting.direction.toUpperCase() as 'ASC' | 'DESC')
+      .offset(skippedItems)
+      .limit(pageSizeValue)
+      .getMany();
 
     const paginationMetaDto = new PaginationMetaDto({
       paginationOptionsDto: { pageSize, pageNumber, sortBy, sortDirection },
-      totalCount: +totalCount[0].count,
+      totalCount: +totalCount,
     });
 
-    return new PaginationDto(result, paginationMetaDto);
+    return new PaginationDto(blogs, paginationMetaDto);
   }
 
-  public async findOne(blogId: string, isFindBanned = false): Promise<BlogEntityTypeOrm[] | null> {
+  public async findOne(blogId: string): Promise<BlogEntity | null> {
     if (!blogId || !Number.isInteger(+blogId)) {
       return null;
     }
 
-    return this.dataSource.query<BlogEntityTypeOrm[]>(
-      `
-        SELECT * FROM blogs
-        WHERE id = $1
-      `,
-      [blogId],
-    );
+    return this.blogRepository.findOneBy({ id: +blogId });
   }
 }

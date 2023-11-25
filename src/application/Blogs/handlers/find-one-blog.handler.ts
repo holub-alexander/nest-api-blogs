@@ -15,6 +15,6 @@ export class FindOneBlogHandler {
   public async execute(command: FindOneBlogCommand): Promise<BlogViewModel | null> {
     const blog = await this.blogsQueryRepository.findOne(command.blogId);
 
-    return blog && blog[0] ? BlogsMapper.mapBlogViewModel(blog[0]) : null;
+    return blog ? BlogsMapper.mapBlogViewModel(blog) : null;
   }
 }

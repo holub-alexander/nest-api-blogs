@@ -1,24 +1,24 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import UserEntity from './user.entity';
-import PostEntityTypeOrm from './post.entity';
-import BlogEntityTypeOrm from './blog.entity';
+import PostEntity from './post.entity';
+import BlogEntity from './blog.entity';
 
 @Entity({ name: 'banned_users_in_blogs' })
 class BannedUserInBlogEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToMany(() => PostEntityTypeOrm, (post) => post.blog, {
+  @OneToMany(() => PostEntity, (post) => post.blog, {
     onDelete: 'CASCADE',
   })
-  posts: PostEntityTypeOrm[];
+  posts: PostEntity[];
 
   /**
    * Relation to blogs
    * */
-  // @ManyToOne(() => BlogEntityTypeOrm, (blog) => blog.bannedUsers)
+  // @ManyToOne(() => BlogEntity, (blog) => blog.bannedUsers)
   // @JoinColumn({ name: 'blog_id' })
-  // blog: BlogEntityTypeOrm;
+  // blog: BlogEntity;
 
   @Column()
   blog_id: number;

@@ -3,7 +3,7 @@ import { Paginator } from '../../../common/interfaces';
 import { PostViewModel } from '../interfaces';
 import { PostsMapper } from '../mappers/posts.mapper';
 import { CommandBus, CommandHandler } from '@nestjs/cqrs';
-import PostEntityTypeOrm from '../../../db/entities/typeorm/post.entity';
+import PostEntity from '../../../db/entities/typeorm/post.entity';
 import ReactionEntityTypeOrm from '../../../db/entities/typeorm/reaction.entity';
 import { PostsQueryRepository } from '../repositories/posts.query.repository';
 import { NotFoundException } from '@nestjs/common';
@@ -23,7 +23,7 @@ export class FindAllPostsByBlogIdHandler {
     private readonly reactionsQueryRepository: ReactionsQueryRepository,
   ) {}
 
-  private formatPosts(items: PostEntityTypeOrm[], reactions: ReactionEntityTypeOrm[] | null): Promise<PostViewModel>[] {
+  private formatPosts(items: PostEntity[], reactions: ReactionEntityTypeOrm[] | null): Promise<PostViewModel>[] {
     return items.map(async (post) => {
       const lastReactions = await this.reactionsQueryRepository.findLatestReactionsForPost(post.id, 3);
 

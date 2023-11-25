@@ -6,7 +6,6 @@ import { UnauthorizedException } from '@nestjs/common';
 import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
 import { BlogsQueryRepository } from '../repositories/blogs.query.repository';
 import { BlogsWriteRepository } from '../repositories/blogs.write.repository';
-import BlogEntityTypeOrm from '../../../db/entities/typeorm/blog.entity';
 
 export class CreateBlogCommand {
   constructor(public body: CreateBlogDto, public userLogin: string) {}
@@ -27,7 +26,7 @@ export class CreateBlogHandler {
       throw new UnauthorizedException();
     }
 
-    const blog = new BlogEntityTypeOrm();
+    const blog = this.blogsWriteRepository.create();
 
     blog.name = command.body.name;
     blog.description = command.body.description;
@@ -35,7 +34,7 @@ export class CreateBlogHandler {
     blog.created_at = new Date();
     blog.is_membership = false;
 
-    const createdBlog = await this.blogsWriteRepository.create(blog);
+    const createdBlog = await this.blogsWriteRepository.save(blog);
 
     return createdBlog ? BlogsMapper.mapBlogViewModel(createdBlog) : null;
   }

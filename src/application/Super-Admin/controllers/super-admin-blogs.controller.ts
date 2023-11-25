@@ -24,10 +24,8 @@ import { UpdatePostDto } from '../../Posts/dto/update.dto';
 import { UpdatePostCommand } from '../../Posts/handlers/update-post.handler';
 import { DeleteOnePostCommand } from '../../Posts/handlers/delete-one-post.handler';
 import { BlogsQueryRepository } from '../../Blogs/repositories/blogs.query.repository';
-import BlogEntityTypeOrm from '../../../db/entities/typeorm/blog.entity';
 import { BlogsWriteRepository } from '../../Blogs/repositories/blogs.write.repository';
 import { PostViewModel } from '../../Posts/interfaces';
-import { PostsQueryRepository } from '../../Posts/repositories/posts.query.repository';
 import { FindAllPostsByBlogIdCommand } from '../../Posts/handlers/find-all-posts-for-blog.handler';
 import { BasicAuthGuard } from '../../Auth/guards/basic-auth.guard';
 import { BlogViewModelSuperAdmin } from '../../Blogs/interfaces';
@@ -42,33 +40,7 @@ export class SuperAdminBlogsController {
     private readonly commandBus: CommandBus,
     private readonly blogsWriteRepository: BlogsWriteRepository,
     private readonly blogsQueryRepository: BlogsQueryRepository,
-    private readonly postsQueryRepository: PostsQueryRepository,
   ) {}
-
-  private async checkAccessToBlog(blogId: string, userLogin: string): Promise<BlogEntityTypeOrm | never> {
-    const foundBlog = await this.blogsQueryRepository.findOne(blogId);
-
-    if (!foundBlog || foundBlog.length === 0) {
-      throw new NotFoundException({});
-    }
-
-    return foundBlog[0];
-  }
-
-  private async checkAccessToBlogAndPost(
-    blogId: string,
-    postId: string,
-    userLogin: string,
-  ): Promise<BlogEntityTypeOrm | never> {
-    const foundBlog = await this.blogsQueryRepository.findOne(blogId);
-    const foundPost = await this.postsQueryRepository.findOne(postId);
-
-    if (!foundBlog || foundBlog.length === 0 || !foundPost || foundPost.length === 0) {
-      throw new NotFoundException({});
-    }
-
-    return foundBlog[0];
-  }
 
   @Get()
   @UseGuards(BasicAuthGuard)
@@ -129,11 +101,11 @@ export class SuperAdminBlogsController {
   ) {
     const foundBlog = await this.blogsQueryRepository.findOne(id);
 
-    if (!foundBlog || foundBlog.length === 0) {
+    if (!foundBlog) {
       throw new NotFoundException({});
     }
 
-    return this.commandBus.execute(new CreatePostCommand(body, foundBlog[0].id));
+    return this.commandBus.execute(new CreatePostCommand(body, foundBlog.id));
   }
 
   @Put('/:blogId/posts/:postId')
@@ -147,7 +119,7 @@ export class SuperAdminBlogsController {
   ) {
     const foundBlog = await this.blogsQueryRepository.findOne(blogId);
 
-    if (!foundBlog || foundBlog.length === 0) {
+    if (!foundBlog) {
       throw new NotFoundException({});
     }
 
@@ -166,7 +138,7 @@ export class SuperAdminBlogsController {
   public async deleteOnePost(@Param('blogId') blogId: string, @Param('postId') postId: string, @Req() req: Request) {
     const foundBlog = await this.blogsQueryRepository.findOne(blogId);
 
-    if (!foundBlog || foundBlog.length === 0) {
+    if (!foundBlog) {
       throw new NotFoundException({});
     }
 
