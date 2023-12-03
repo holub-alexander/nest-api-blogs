@@ -1,5 +1,6 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, DeepPartial, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import PostEntity from './post.entity';
+import CommentEntity from './comment.entity';
 
 @Entity({ name: 'blogs' })
 class BlogEntity {
@@ -37,6 +38,18 @@ class BlogEntity {
     onDelete: 'CASCADE',
   })
   posts: PostEntity[];
+
+  /**
+   * Relation to comments
+   * */
+  @OneToMany(() => CommentEntity, (comment) => comment.blog, {
+    onDelete: 'CASCADE',
+  })
+  comments: CommentEntity[];
+
+  static fromPartial(data: DeepPartial<BlogEntity>): BlogEntity {
+    return Object.assign(new BlogEntity(), data);
+  }
 }
 
 export default BlogEntity;

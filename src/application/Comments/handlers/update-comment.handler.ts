@@ -28,11 +28,11 @@ export class UpdateCommentHandler {
 
     const comment = await this.commentsQueryRepository.findOne(command.id, user.id);
 
-    if (!comment || comment.length === 0) {
+    if (!comment) {
       throw new NotFoundException();
     }
 
-    if (user.login !== comment[0].user_login) {
+    if (user.login !== comment.user.login) {
       throw new ForbiddenException();
     }
 

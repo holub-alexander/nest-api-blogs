@@ -1,9 +1,12 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import ReactionEntity from './reaction.entity';
 import { LikeStatuses } from '../../../common/interfaces';
+import UserEntity from './user.entity';
+import BlogEntity from './blog.entity';
+import PostEntity from './post.entity';
 
 @Entity({ name: 'comments' })
-class CommentEntityTypeOrm {
+class CommentEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -22,19 +25,37 @@ class CommentEntityTypeOrm {
   @Column({ type: 'varchar', nullable: false })
   content: string;
 
-  @Column({ type: 'varchar' })
   user_login: string;
 
-  @OneToMany(() => ReactionEntity, (reaction) => reaction.comment)
+  @OneToMany(() => ReactionEntity, (reaction) => reaction.comment, { eager: true })
   reactions: ReactionEntity[];
 
-  @Column({ type: 'int' })
   likes_count: number;
 
-  @Column({ type: 'int' })
   dislikes_count: number;
 
   like_status: LikeStatuses;
+
+  /**
+   * Relation to user
+   * */
+  @ManyToOne(() => UserEntity, (user) => user.comments, { eager: true })
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
+  user: UserEntity;
+
+  /**
+   * Relation to blog
+   * */
+  @ManyToOne(() => BlogEntity, (blog) => blog.comments, { eager: true })
+  @JoinColumn({ name: 'blog_id', referencedColumnName: 'id' })
+  blog: BlogEntity;
+
+  /**
+   * Relation to post
+   * */
+  @ManyToOne(() => PostEntity, (post) => post.comments, { eager: true })
+  @JoinColumn({ name: 'post_id', referencedColumnName: 'id' })
+  post: PostEntity;
 }
 
-export default CommentEntityTypeOrm;
+export default CommentEntity;

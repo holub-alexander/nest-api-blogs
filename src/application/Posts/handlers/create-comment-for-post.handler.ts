@@ -7,7 +7,7 @@ import { PostsQueryRepository } from '../repositories/posts.query.repository';
 import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
 import { BanUserTypeOrmQueryRepository } from '../../BanUser/repositories/typeorm/ban-user.query.repository';
 import { CommentsWriteRepository } from '../../Comments/repositories/comments.write.repository';
-import CommentEntityTypeOrm from '../../../db/entities/typeorm/comment.entity';
+import { LikeStatuses } from '../../../common/interfaces';
 
 export class CreateCommentForPostCommand {
   constructor(public postId: string, public body: CreateCommentForPostDto, public login: string) {}
@@ -36,7 +36,7 @@ export class CreateCommentForPostHandler {
       throw new ForbiddenException();
     }
 
-    const newComment = new CommentEntityTypeOrm();
+    const newComment = await this.commentsWriteRepository.create();
 
     newComment.user_id = user.id;
     newComment.blog_id = foundPost.blog_id;
@@ -44,7 +44,7 @@ export class CreateCommentForPostHandler {
     newComment.created_at = new Date();
     newComment.content = body.content;
 
-    const res = await this.commentsWriteRepository.create(newComment);
+    const res = await this.commentsWriteRepository.save(newComment);
 
     return res ? CommentMapper.mapCommentViewModel(res, null, 0, 0) : null;
   }

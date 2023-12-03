@@ -2,12 +2,12 @@ import { LikeStatuses } from '../../../common/interfaces';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import UserEntity from './user.entity';
 import PostEntity from './post.entity';
-import CommentEntityTypeOrm from './comment.entity';
+import CommentEntity from './comment.entity';
 
 export type ReactionType = 'comment' | 'post';
 
 @Entity({ name: 'reactions' })
-class ReactionEntityTypeOrm {
+class ReactionEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -18,22 +18,25 @@ class ReactionEntityTypeOrm {
   })
   type: ReactionType;
 
-  @ManyToOne(() => CommentEntityTypeOrm, (comment) => comment.reactions)
-  @JoinColumn({ name: 'comment_id' })
-  comment: CommentEntityTypeOrm;
+  @ManyToOne(() => CommentEntity, (comment) => comment.reactions)
+  @JoinColumn({ name: 'comment_id', referencedColumnName: 'id' })
+  comment: CommentEntity;
 
+  @Column({ type: 'int', nullable: true })
   comment_id: number | null;
 
   @ManyToOne(() => PostEntity, (post) => post.reactions)
   @JoinColumn({ name: 'post_id' })
   post: PostEntity;
 
+  @Column({ type: 'int', nullable: true })
   post_id: number | null;
 
   @ManyToOne(() => UserEntity, (user) => user.reactions)
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
+  @Column({ type: 'int', nullable: true })
   user_id: number;
 
   user_login: string;
@@ -45,4 +48,4 @@ class ReactionEntityTypeOrm {
   like_status: LikeStatuses;
 }
 
-export default ReactionEntityTypeOrm;
+export default ReactionEntity;

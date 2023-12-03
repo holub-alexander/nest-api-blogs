@@ -8,11 +8,23 @@ import { UsersQueryRepository } from '../Users/repositories/users.query.reposito
 import { TypeOrmModule } from '@nestjs/typeorm';
 import UserEntity from '../../db/entities/typeorm/user.entity';
 import BlogEntity from '../../db/entities/typeorm/blog.entity';
+import { PublicBlogsController } from '../Public/controllers/public-blogs.controller';
+import { CqrsModule } from '@nestjs/cqrs';
+import { JwtModule } from '@nestjs/jwt';
+import { SuperAdminBlogsController } from '../Super-Admin/controllers/super-admin-blogs.controller';
 
 export const CommandHandlers = [FindAllBlogsHandler, FindOneBlogHandler, CreateBlogHandler];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity, BlogEntity])],
+  imports: [
+    CqrsModule,
+    TypeOrmModule.forFeature([UserEntity, BlogEntity]),
+    JwtModule.register({
+      global: true,
+      signOptions: { expiresIn: '10m' },
+    }),
+  ],
   providers: [BlogsQueryRepository, BlogsWriteRepository, UsersQueryRepository, ...CommandHandlers],
+  controllers: [PublicBlogsController, SuperAdminBlogsController],
 })
 export class BlogsModule {}

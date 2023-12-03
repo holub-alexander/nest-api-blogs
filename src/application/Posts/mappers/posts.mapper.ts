@@ -1,10 +1,10 @@
 import { NewestLike, PostViewModel } from '../interfaces';
 import { LikeStatuses } from '../../../common/interfaces';
 import PostEntity from '../../../db/entities/typeorm/post.entity';
-import ReactionEntityTypeOrm from '../../../db/entities/typeorm/reaction.entity';
+import ReactionEntity from '../../../db/entities/typeorm/reaction.entity';
 
 export class PostsMapper {
-  public static mapNewestLikes(reactions: ReactionEntityTypeOrm[]): NewestLike[] {
+  public static mapNewestLikes(reactions: ReactionEntity[]): NewestLike[] {
     return reactions.map(
       (reaction): NewestLike => ({
         addedAt: reaction.created_at,
@@ -14,7 +14,7 @@ export class PostsMapper {
     );
   }
 
-  public static mapPostsViewModel(data: PostEntity[], lastReactions: ReactionEntityTypeOrm[]): PostViewModel[] {
+  public static mapPostsViewModel(data: PostEntity[], lastReactions: ReactionEntity[]): PostViewModel[] {
     return data.map(
       (post): PostViewModel => ({
         id: post.id.toString(),
@@ -36,8 +36,8 @@ export class PostsMapper {
 
   public static mapPostViewModel(
     post: PostEntity,
-    reaction: ReactionEntityTypeOrm | null,
-    lastReactions: ReactionEntityTypeOrm[] | [],
+    reaction: ReactionEntity | null,
+    lastReactions: ReactionEntity[] | [],
     likesCount: number,
     dislikesCount: number,
   ): PostViewModel {

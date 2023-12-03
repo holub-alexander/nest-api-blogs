@@ -28,26 +28,34 @@ export class FindCommentHandler {
 
       const comment = await this.commentsQueryRepository.findOne(command.commentId, user.id);
 
-      if (!comment || comment.length === 0) {
+      console.log(comment);
+
+      if (!comment) {
         return null;
       }
 
-      const reaction = await this.reactionsQueryRepository.findCommentReactionById(comment[0].id, user.id);
-
-      return CommentMapper.mapCommentViewModel(
-        comment[0],
-        reaction[0],
-        comment[0].likes_count,
-        comment[0].dislikes_count,
+      const reaction = await this.reactionsQueryRepository.findCommentReactionById(comment.id, user.id);
+      const { likesCount, dislikesCount } = await this.reactionsQueryRepository.getCountLikesAndDislikesForUser(
+        'comment',
+        comment.id,
       );
+
+      console.log(likesCount, dislikesCount);
+
+      return CommentMapper.mapCommentViewModel(comment, reaction, likesCount, dislikesCount);
     } else {
       const comment = await this.commentsQueryRepository.findOne(command.commentId, null);
 
-      if (!comment || comment.length === 0) {
+      if (!comment) {
         return null;
       }
 
-      return CommentMapper.mapCommentViewModel(comment[0], null, comment[0].likes_count, comment[0].dislikes_count);
+      const { likesCount, dislikesCount } = await this.reactionsQueryRepository.getCountLikesAndDislikesForUser(
+        'comment',
+        comment.id,
+      );
+
+      return CommentMapper.mapCommentViewModel(comment, null, likesCount, dislikesCount);
     }
   }
 }

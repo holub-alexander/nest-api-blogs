@@ -1,10 +1,10 @@
 import { LikeStatuses } from '../../../common/interfaces';
 import { CommentViewModel } from '../interfaces';
-import CommentEntityTypeOrm from '../../../db/entities/typeorm/comment.entity';
-import ReactionEntityTypeOrm from '../../../db/entities/typeorm/reaction.entity';
+import CommentEntity from '../../../db/entities/typeorm/comment.entity';
+import ReactionEntity from '../../../db/entities/typeorm/reaction.entity';
 
 export class CommentMapper {
-  public static mapCommentsViewModel(comments: CommentEntityTypeOrm[]): CommentViewModel[] {
+  public static mapCommentsViewModel(comments: CommentEntity[]): CommentViewModel[] {
     return comments.map((comment) => {
       return {
         id: comment.id.toString(),
@@ -24,8 +24,8 @@ export class CommentMapper {
   }
 
   public static mapCommentViewModel(
-    comment: CommentEntityTypeOrm,
-    reaction: ReactionEntityTypeOrm | null,
+    comment: CommentEntity,
+    reaction: ReactionEntity | null,
     likesCount: number,
     dislikesCount: number,
   ): CommentViewModel {
@@ -34,7 +34,7 @@ export class CommentMapper {
       content: comment.content,
       commentatorInfo: {
         userId: comment.user_id.toString(),
-        userLogin: comment.user_login,
+        userLogin: comment.user.login,
       },
       createdAt: comment.created_at.toISOString(),
       likesInfo: {

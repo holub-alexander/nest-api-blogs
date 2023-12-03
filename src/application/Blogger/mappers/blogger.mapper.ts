@@ -1,8 +1,8 @@
-import { CommentDocument } from '../../../db/entities/mongoose/comment.entity';
+import { CommentDocument } from '../../../mongoose/comment.entity';
 import { CommentBloggerViewModel, UserBloggerViewModel } from '../interfaces';
-import { PostDocument } from '../../../db/entities/mongoose/post.entity';
+import { PostDocument } from '../../../mongoose/post.entity';
 
-import { ReactionDocument } from '../../../db/entities/mongoose/reaction.entity';
+import { ReactionDocument } from '../../../mongoose/reaction.entity';
 import { LikeStatuses } from '../../../common/interfaces';
 import BannedUserInBlogEntity from '../../../db/entities/typeorm/banned-user-in-blog.entity';
 

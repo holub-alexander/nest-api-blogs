@@ -1,6 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class BlogsTable1691222776639 implements MigrationInterface {
+  name = 'BlogsTable1691222776639';
+
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
             CREATE TABLE blogs (

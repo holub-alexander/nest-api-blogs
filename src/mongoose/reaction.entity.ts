@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 import { CommentatorInfo } from './comment.entity';
-import { LikeStatuses } from '../../../common/interfaces';
+import { LikeStatuses } from '../common/interfaces';
 
 export type ReactionDocument = HydratedDocument<Reaction>;
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { BanUser, BanUserDocument } from '../../../../db/entities/mongoose/ban-user.entity';
+import { BanUser, BanUserDocument } from '../../../../mongoose/ban-user.entity';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { getObjectToSort } from '../../../../common/utils/mongoose/get-object-to-sort';

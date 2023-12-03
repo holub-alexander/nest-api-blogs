@@ -36,7 +36,7 @@ export class FindPostHandler {
 
       const reaction = await this.reactionsQueryRepository.findPostReactionById(post.id, user.id);
 
-      return PostsMapper.mapPostViewModel(post, reaction[0], latestLikes, post.likes_count, post.dislikes_count);
+      return PostsMapper.mapPostViewModel(post, reaction, latestLikes, post.likes_count, post.dislikes_count);
     } else {
       return PostsMapper.mapPostViewModel(post, null, latestLikes, post.likes_count, post.dislikes_count);
     }

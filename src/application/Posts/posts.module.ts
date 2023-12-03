@@ -23,6 +23,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import UserEntity from '../../db/entities/typeorm/user.entity';
 import BlogEntity from '../../db/entities/typeorm/blog.entity';
 import PostEntity from '../../db/entities/typeorm/post.entity';
+import CommentEntity from '../../db/entities/typeorm/comment.entity';
+import ReactionEntity from '../../db/entities/typeorm/reaction.entity';
 
 export const CommandHandler = [
   FindAllPostsHandler,
@@ -37,7 +39,7 @@ export const CommandHandler = [
 ];
 
 @Module({
-  imports: [CqrsModule, TypeOrmModule.forFeature([UserEntity, BlogEntity, PostEntity])],
+  imports: [CqrsModule, TypeOrmModule.forFeature([UserEntity, BlogEntity, PostEntity, CommentEntity, ReactionEntity])],
   controllers: [],
   providers: [
     IsBlogFound,

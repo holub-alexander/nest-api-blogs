@@ -21,6 +21,8 @@ import { SecurityDevicesQueryRepository } from '../Security-Devices/repositories
 import { TypeOrmModule } from '@nestjs/typeorm';
 import UserEntity from '../../db/entities/typeorm/user.entity';
 import DeviceEntity from '../../db/entities/typeorm/device.entity';
+import { JwtModule } from '@nestjs/jwt';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -31,6 +33,10 @@ import DeviceEntity from '../../db/entities/typeorm/device.entity';
     ReactionsModule,
     TestingModule,
     TypeOrmModule.forFeature([UserEntity, DeviceEntity]),
+    JwtModule.register({
+      global: true,
+      signOptions: { expiresIn: '10m' },
+    }),
   ],
   controllers: [
     PublicBlogsController,

@@ -11,6 +11,7 @@ import DeviceEntity from '../../db/entities/typeorm/device.entity';
 import { UsersWriteRepository } from './repositories/users.write.repository';
 import { SecurityDevicesWriteRepository } from '../Security-Devices/repositories/security-devices.write.repository';
 import { CommentsWriteRepository } from '../Comments/repositories/comments.write.repository';
+import CommentEntity from '../../db/entities/typeorm/comment.entity';
 
 export const CommandHandlers = [
   FindAllUsersHandler,
@@ -21,7 +22,7 @@ export const CommandHandlers = [
 ];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity, DeviceEntity])],
+  imports: [TypeOrmModule.forFeature([UserEntity, DeviceEntity, CommentEntity])],
   controllers: [],
   providers: [
     UsersQueryRepository,

@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import BlogEntity from './blog.entity';
-import ReactionEntityTypeOrm from './reaction.entity';
+import ReactionEntity from './reaction.entity';
+import CommentEntity from './comment.entity';
 
 @Entity({ name: 'posts' })
 class PostEntity {
@@ -33,6 +34,7 @@ class PostEntity {
 
   blog_name: string;
 
+  // @ts=ignore
   @ManyToOne(() => BlogEntity, (blog) => blog.posts, { eager: true })
   @JoinColumn({ name: 'blog_id', referencedColumnName: 'id' })
   blog: BlogEntity;
@@ -44,8 +46,16 @@ class PostEntity {
 
   likes_count: number;
 
-  @OneToMany(() => ReactionEntityTypeOrm, (reaction) => reaction.post)
-  reactions: ReactionEntityTypeOrm[];
+  @OneToMany(() => ReactionEntity, (reaction) => reaction.post)
+  reactions: ReactionEntity[];
+
+  /**
+   * Relation to comments
+   * */
+  @OneToMany(() => CommentEntity, (comment) => comment.post, {
+    onDelete: 'CASCADE',
+  })
+  comments: CommentEntity[];
 }
 
 export default PostEntity;

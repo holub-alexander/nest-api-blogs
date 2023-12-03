@@ -1,6 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class DevicesTable1690013311285 implements MigrationInterface {
+  name = 'DevicesTable1690013311285';
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
             CREATE TABLE devices (

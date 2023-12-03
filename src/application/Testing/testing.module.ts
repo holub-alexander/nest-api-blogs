@@ -12,11 +12,12 @@ import UserEntity from '../../db/entities/typeorm/user.entity';
 import DeviceEntity from '../../db/entities/typeorm/device.entity';
 import BlogEntity from '../../db/entities/typeorm/blog.entity';
 import PostEntity from '../../db/entities/typeorm/post.entity';
+import ReactionEntity from '../../db/entities/typeorm/reaction.entity';
 
 export const CommandHandlers = [DeleteAllHandler];
 
 @Module({
-  imports: [CqrsModule, TypeOrmModule.forFeature([UserEntity, DeviceEntity, BlogEntity, PostEntity])],
+  imports: [CqrsModule, TypeOrmModule.forFeature([UserEntity, DeviceEntity, BlogEntity, PostEntity, ReactionEntity])],
   controllers: [],
   providers: [
     BlogsWriteRepository,

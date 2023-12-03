@@ -4,7 +4,7 @@ import { PostViewModel } from '../interfaces';
 import { PostsMapper } from '../mappers/posts.mapper';
 import { CommandBus, CommandHandler } from '@nestjs/cqrs';
 import PostEntity from '../../../db/entities/typeorm/post.entity';
-import ReactionEntityTypeOrm from '../../../db/entities/typeorm/reaction.entity';
+import ReactionEntity from '../../../db/entities/typeorm/reaction.entity';
 import { PostsQueryRepository } from '../repositories/posts.query.repository';
 import { NotFoundException } from '@nestjs/common';
 import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
@@ -23,7 +23,7 @@ export class FindAllPostsByBlogIdHandler {
     private readonly reactionsQueryRepository: ReactionsQueryRepository,
   ) {}
 
-  private formatPosts(items: PostEntity[], reactions: ReactionEntityTypeOrm[] | null): Promise<PostViewModel>[] {
+  private formatPosts(items: PostEntity[], reactions: ReactionEntity[] | null): Promise<PostViewModel>[] {
     return items.map(async (post) => {
       const lastReactions = await this.reactionsQueryRepository.findLatestReactionsForPost(post.id, 3);
 

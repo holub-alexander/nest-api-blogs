@@ -1,6 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class ReactionsTable1692429778716 implements MigrationInterface {
+  name = 'ReactionsTable1692429778716';
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
             CREATE TYPE reaction_subjects AS ENUM('comment', 'post');

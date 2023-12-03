@@ -1,4 +1,4 @@
-import { Comment } from '../../../db/entities/mongoose/comment.entity';
+import { Comment } from '../../../mongoose/comment.entity';
 import { IsNotEmpty, Length } from 'class-validator';
 import { Transform, TransformFnParams } from 'class-transformer';
 

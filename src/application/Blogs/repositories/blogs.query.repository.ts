@@ -6,7 +6,7 @@ import { PaginationDto } from '../../../common/dto/pagination.dto';
 import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
 
 import { getObjectToSort } from '../../../common/utils/get-object-to-sort';
-import { DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import BlogEntity from '../../../db/entities/typeorm/blog.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -22,7 +22,6 @@ const allowedFieldForSorting = {
 @Injectable()
 export class BlogsQueryRepository {
   constructor(
-    private readonly dataSource: DataSource,
     @InjectRepository(BlogEntity)
     private readonly blogRepository: Repository<BlogEntity>,
   ) {}

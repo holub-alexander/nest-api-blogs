@@ -119,7 +119,7 @@ export class PostsQueryRepository {
           .from(ReactionEntity, 'reactions')
           .where('reactions.post_id = posts.id')
           .andWhere('reactions.type = :type', { type: 'post' })
-          .andWhere('reactions.like_status = :likeStatus', { likeStatus: 'Like' });
+          .andWhere("reactions.like_status = 'Like'");
       }, 'likes_count')
       .addSelect((subQuery) => {
         return subQuery
@@ -127,7 +127,7 @@ export class PostsQueryRepository {
           .from(ReactionEntity, 'reactions')
           .where('reactions.post_id = posts.id')
           .andWhere('reactions.type = :type', { type: 'post' })
-          .andWhere('reactions.like_status = :likeStatus', { likeStatus: 'Dislike' });
+          .andWhere("reactions.like_status = 'Dislike'");
       }, 'dislikes_count')
       .leftJoin(BlogEntity, 'blogs', `blogs.id = posts.blog_id`)
       .orderBy(sorting.field, sorting.direction.toUpperCase() as 'ASC' | 'DESC')
@@ -189,7 +189,7 @@ export class PostsQueryRepository {
           .from(ReactionEntity, 'reactions')
           .where('reactions.post_id = posts.id')
           .andWhere('reactions.type = :type', { type: 'post' })
-          .andWhere('reactions.like_status = :likeStatus', { likeStatus: 'Like' });
+          .andWhere("reactions.like_status = 'Like'");
       }, 'likes_count')
       .addSelect((subQuery) => {
         return subQuery
@@ -197,7 +197,7 @@ export class PostsQueryRepository {
           .from(ReactionEntity, 'reactions')
           .where('reactions.post_id = posts.id')
           .andWhere('reactions.type = :type', { type: 'post' })
-          .andWhere('reactions.like_status = :likeStatus', { likeStatus: 'Dislike' });
+          .andWhere("reactions.like_status = 'Dislike'");
       }, 'dislikes_count')
       .leftJoin(BlogEntity, 'blogs', `blogs.id = posts.blog_id`)
       .where('posts.id = :postId', { postId })

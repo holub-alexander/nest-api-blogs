@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import DeviceEntity from './device.entity';
-import ReactionEntityTypeOrm from './reaction.entity';
+import ReactionEntity from './reaction.entity';
+import CommentEntity from './comment.entity';
 
 @Entity({ name: 'users' })
 class UserEntity {
@@ -51,10 +52,18 @@ class UserEntity {
   /**
    * Relation to reactions
    * */
-  @OneToMany(() => ReactionEntityTypeOrm, (reaction) => reaction.user, {
+  @OneToMany(() => ReactionEntity, (reaction) => reaction.user, {
     onDelete: 'CASCADE',
   })
-  reactions: ReactionEntityTypeOrm[];
+  reactions: ReactionEntity[];
+
+  /**
+   * Relation to comments
+   * */
+  @OneToMany(() => CommentEntity, (comment) => comment.user, {
+    onDelete: 'CASCADE',
+  })
+  comments: CommentEntity[];
 }
 
 export default UserEntity;

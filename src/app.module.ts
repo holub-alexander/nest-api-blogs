@@ -10,13 +10,19 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { PublicModule } from './application/Public/public.module';
 import { SuperAdminModule } from './application/Super-Admin/super-admin.module';
 import { APP_GUARD } from '@nestjs/core';
+
 import { TypeOrmModule } from '@nestjs/typeorm';
-import typeorm from './config/typeorm';
+import { configuration } from './config/configuration';
+import { dataSource } from './config/data-source';
 
 @Module({
   imports: [
     CqrsModule,
-    ConfigModule.forRoot({ envFilePath: 'env/.env', isGlobal: true, load: [typeorm] }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      expandVariables: true,
+      load: [configuration],
+    }),
 
     ThrottlerModule.forRoot({
       ttl: 10,
@@ -52,9 +58,11 @@ import typeorm from './config/typeorm';
     ),
 
     TypeOrmModule.forRootAsync({
+      imports: [ConfigModule.forFeature(dataSource)],
       inject: [ConfigService],
-      // @ts-ignore
-      useFactory: async (configService: ConfigService) => configService.get('typeorm'),
+      useFactory(config: ConfigService) {
+        return config.getOrThrow('data-source');
+      },
     }),
 
     JwtModule.register({

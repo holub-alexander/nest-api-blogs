@@ -20,15 +20,15 @@ export class DeleteOneCommentHandler {
     const user = await this.usersQueryRepository.findByLogin(command.login);
     const comment = await this.commentsQueryRepository.findOne(command.id, null);
 
-    if (!user || !comment || comment.length === 0) {
+    if (!user || !comment) {
       throw new NotFoundException();
     }
 
-    if (user.id !== comment[0].user_id) {
+    if (user.id !== comment.user_id) {
       throw new ForbiddenException();
     }
 
-    const deleteComment = await this.commentsWriteRepository.deleteById(comment[0].id, user.id);
+    const deleteComment = await this.commentsWriteRepository.deleteById(comment.id, user.id);
 
     if (!deleteComment) {
       throw new NotFoundException();

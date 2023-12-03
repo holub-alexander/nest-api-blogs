@@ -1,6 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class BannedUsersInBlogs1693246766276 implements MigrationInterface {
+  name = 'BannedUsersInBlogs1693246766276';
+
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
             CREATE TABLE banned_users_in_blogs (

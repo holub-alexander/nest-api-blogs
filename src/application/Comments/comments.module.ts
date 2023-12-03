@@ -12,6 +12,8 @@ import { ReactionsQueryRepository } from '../Reactions/repositories/reactions.qu
 import { ReactionsWriteRepository } from '../Reactions/repositories/reactions.write.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import UserEntity from '../../db/entities/typeorm/user.entity';
+import CommentEntity from '../../db/entities/typeorm/comment.entity';
+import ReactionEntity from '../../db/entities/typeorm/reaction.entity';
 
 export const CommandHandlers = [
   FindCommentHandler,
@@ -21,7 +23,7 @@ export const CommandHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule, TypeOrmModule.forFeature([UserEntity])],
+  imports: [CqrsModule, TypeOrmModule.forFeature([UserEntity, CommentEntity, ReactionEntity])],
   controllers: [],
   providers: [
     CommentsQueryRepository,
