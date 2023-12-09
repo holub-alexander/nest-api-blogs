@@ -4,8 +4,9 @@ import { AppModule } from './app.module';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { useContainer } from 'class-validator';
 import cookieParser from 'cookie-parser';
+import { documentBuilder } from './docs/document-builder';
 
-// const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -37,7 +38,9 @@ async function bootstrap() {
   );
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  await app.listen(3000);
+  documentBuilder(app);
+
+  await app.listen(PORT);
 }
 
 bootstrap();

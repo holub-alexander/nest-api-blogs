@@ -4,7 +4,7 @@ import { SecurityDevicesWriteRepository } from '../../Security-Devices/repositor
 import { BlogsWriteRepository } from '../../Blogs/repositories/blogs.write.repository';
 import { PostsWriteRepository } from '../../Posts/repositories/posts.write.repository';
 import { ReactionsWriteRepository } from '../../Reactions/repositories/reactions.write.repository';
-import { BanUserTypeOrmWriteRepository } from '../../BanUser/repositories/typeorm/ban-user.write.repository';
+import { CommentsWriteRepository } from '../../Comments/repositories/comments.write.repository';
 
 export class DeleteAllCommand {}
 
@@ -15,9 +15,8 @@ export class DeleteAllHandler {
     private readonly postsWriteRepository: PostsWriteRepository,
     private readonly usersWriteRepository: UsersWriteRepository,
     private readonly securityDevicesWriteRepository: SecurityDevicesWriteRepository,
-    // private readonly commentsWriteRepository: CommentsWriteRepository,
     private readonly reactionsWriteRepository: ReactionsWriteRepository,
-    private readonly banUserTypeOrmWriteRepository: BanUserTypeOrmWriteRepository,
+    private readonly commentsWriteRepository: CommentsWriteRepository,
   ) {}
 
   public async execute() {
@@ -27,8 +26,7 @@ export class DeleteAllHandler {
       this.postsWriteRepository.deleteMany(),
       this.blogsWriteRepository.deleteMany(),
       this.reactionsWriteRepository.deleteMany(),
-      this.banUserTypeOrmWriteRepository.deleteMany(),
-      // this.commentsWriteRepository.deleteMany(),
+      this.commentsWriteRepository.deleteMany(),
     ]);
   }
 }

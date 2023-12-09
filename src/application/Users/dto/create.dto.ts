@@ -1,9 +1,8 @@
 import { IsNotEmpty, Length, Matches } from 'class-validator';
 import { Transform, TransformFnParams } from 'class-transformer';
-import { AccountData } from '../../../mongoose/user.entity';
 import { EMAIL_REGEX, LOGIN_REGEX } from '../../../common/constants/regexp';
 
-export class CreateUserDto implements Omit<AccountData, 'createdAt' | 'banReason' | 'isBanned' | 'banDate'> {
+export class CreateUserDto {
   @IsNotEmpty()
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(3, 10, { message: 'The field must contain from 3 to 10 characters' })

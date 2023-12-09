@@ -7,11 +7,8 @@ import {
 } from 'class-validator';
 import { Transform, TransformFnParams } from 'class-transformer';
 import { Injectable } from '@nestjs/common';
-import { Post } from '../../../mongoose/post.entity';
 import { CommandBus } from '@nestjs/cqrs';
 import { FindOneBlogCommand } from '../../Blogs/handlers/find-one-blog.handler';
-
-type CreatePost = Omit<Post, '_id' | 'blog' | 'createdAt' | 'likesInfo' | 'userInfo' | 'isBanned'>;
 
 @ValidatorConstraint({ name: 'customText', async: true })
 @Injectable()
@@ -33,7 +30,7 @@ export class IsBlogFound implements ValidatorConstraintInterface {
   }
 }
 
-export class CreatePostDto implements CreatePost {
+export class CreatePostDto {
   @IsNotEmpty()
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(1, 30)
@@ -50,7 +47,7 @@ export class CreatePostDto implements CreatePost {
   public content: string;
 }
 
-export class CreatePostFromBlog implements CreatePost {
+export class CreatePostFromBlog {
   @IsNotEmpty()
   @Transform(({ value }: TransformFnParams) => value?.trim())
   @Length(1, 30)

@@ -2,12 +2,9 @@ import { CreateCommentForPostDto } from '../../Comments/dto/create.dto';
 import { CommentViewModel } from '../../Comments/interfaces';
 import { CommentMapper } from '../../Comments/mappers/comment.mapper';
 import { CommandHandler } from '@nestjs/cqrs';
-import { ForbiddenException } from '@nestjs/common';
 import { PostsQueryRepository } from '../repositories/posts.query.repository';
 import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
-import { BanUserTypeOrmQueryRepository } from '../../BanUser/repositories/typeorm/ban-user.query.repository';
 import { CommentsWriteRepository } from '../../Comments/repositories/comments.write.repository';
-import { LikeStatuses } from '../../../common/interfaces';
 
 export class CreateCommentForPostCommand {
   constructor(public postId: string, public body: CreateCommentForPostDto, public login: string) {}
@@ -19,7 +16,6 @@ export class CreateCommentForPostHandler {
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly usersQueryRepository: UsersQueryRepository,
     private readonly commentsWriteRepository: CommentsWriteRepository,
-    private readonly banUserQueryRepository: BanUserTypeOrmQueryRepository,
   ) {}
 
   public async execute({ postId, body, login }: CreateCommentForPostCommand): Promise<CommentViewModel | null> {
@@ -28,12 +24,6 @@ export class CreateCommentForPostHandler {
 
     if (!foundPost || !user) {
       return null;
-    }
-
-    const bannedUserFound = await this.banUserQueryRepository.findBanedUserForBlog(user.id, foundPost.blog_id);
-
-    if (bannedUserFound.length > 0) {
-      throw new ForbiddenException();
     }
 
     const newComment = await this.commentsWriteRepository.create();

@@ -11,14 +11,6 @@ export class SuperAdminMapper {
         websiteUrl: blog.website_url,
         createdAt: blog.created_at,
         isMembership: blog.is_membership,
-        // blogOwnerInfo: {
-        //   userId: blog.user_id.toString(),
-        //   userLogin: blog.user_login,
-        // },
-        // banInfo: {
-        //   isBanned: blog.is_banned,
-        //   banDate: blog.ban_date ? blog.ban_date.toISOString() : null,
-        // },
       }),
     );
   }

@@ -7,7 +7,6 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { CommentsQueryRepository } from './repositories/comments.query.repository';
 import { CommentsWriteRepository } from './repositories/comments.write.repository';
 import { UsersQueryRepository } from '../Users/repositories/users.query.repository';
-import { BanUserTypeOrmQueryRepository } from '../BanUser/repositories/typeorm/ban-user.query.repository';
 import { ReactionsQueryRepository } from '../Reactions/repositories/reactions.query.repository';
 import { ReactionsWriteRepository } from '../Reactions/repositories/reactions.write.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -31,7 +30,6 @@ export const CommandHandlers = [
     UsersQueryRepository,
     ReactionsQueryRepository,
     ReactionsWriteRepository,
-    BanUserTypeOrmQueryRepository,
     ...CommandHandlers,
   ],
 })

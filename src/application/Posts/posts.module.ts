@@ -18,7 +18,6 @@ import { UsersQueryRepository } from '../Users/repositories/users.query.reposito
 import { CommentsQueryRepository } from '../Comments/repositories/comments.query.repository';
 import { CommentsWriteRepository } from '../Comments/repositories/comments.write.repository';
 import { ReactionsWriteRepository } from '../Reactions/repositories/reactions.write.repository';
-import { BanUserTypeOrmQueryRepository } from '../BanUser/repositories/typeorm/ban-user.query.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import UserEntity from '../../db/entities/typeorm/user.entity';
 import BlogEntity from '../../db/entities/typeorm/blog.entity';
@@ -52,7 +51,6 @@ export const CommandHandler = [
     CommentsWriteRepository,
     ReactionsQueryRepository,
     ReactionsWriteRepository,
-    BanUserTypeOrmQueryRepository,
     ...CommandHandler,
   ],
 })
