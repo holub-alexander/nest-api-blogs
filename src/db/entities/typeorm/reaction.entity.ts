@@ -1,5 +1,5 @@
 import { LikeStatuses } from '../../../common/interfaces';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, DeepPartial, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import UserEntity from './user.entity';
 import PostEntity from './post.entity';
 import CommentEntity from './comment.entity';
@@ -46,6 +46,10 @@ class ReactionEntity {
 
   @Column({ type: 'enum', enum: LikeStatuses, nullable: false, default: LikeStatuses.NONE })
   like_status: LikeStatuses;
+
+  static fromPartial(data: DeepPartial<ReactionEntity>): ReactionEntity {
+    return Object.assign(new ReactionEntity(), data);
+  }
 }
 
 export default ReactionEntity;

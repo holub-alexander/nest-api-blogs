@@ -13,6 +13,11 @@ import DeviceEntity from '../db/entities/typeorm/device.entity';
 import { BlogFactory } from '../db/seeding/factories/blog.factory';
 import { MainSeeder } from '../db/seeding/seeders/main.seeder';
 import BannedUserInBlogEntity from '../db/entities/typeorm/banned-user-in-blog.entity';
+import { UserFactory } from '../db/seeding/factories/user.factory';
+import { DeviceFactory } from '../db/seeding/factories/device.factory';
+import { PostFactory } from '../db/seeding/factories/post.factory';
+import { CommentFactory } from '../db/seeding/factories/comment.factory';
+import { ReactionFactory } from '../db/seeding/factories/reaction.factory';
 
 dotenvConfig({ path: 'env/.env' });
 
@@ -28,6 +33,8 @@ const entities = [
   BannedUserInBlogEntity,
 ];
 
+const factories = [BlogFactory, UserFactory, DeviceFactory, PostFactory, CommentFactory, ReactionFactory];
+
 const dataSourceOptions: DataSourceOptions & SeederOptions = {
   type,
   host: process.env.PG_HOST,
@@ -37,7 +44,7 @@ const dataSourceOptions: DataSourceOptions & SeederOptions = {
   ssl: true,
   migrations: ['dist/db/migrations/*{.ts,.js}'],
   entities,
-  factories: [BlogFactory],
+  factories: factories,
   seeds: [MainSeeder],
 };
 
@@ -58,7 +65,7 @@ export const dataSource = registerAs('data-source', () => {
       migrationsRun: true,
       migrations: ['src/db/migrations/*{.ts,.js}'],
       entities,
-      factories: [BlogFactory],
+      factories: factories,
       seeds: [MainSeeder],
     } as DataSourceOptions & SeederOptions;
   }

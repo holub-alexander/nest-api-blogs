@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, DeepPartial, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import UserEntity from './user.entity';
 
 @Entity({ name: 'devices' })
@@ -27,6 +27,10 @@ class DeviceEntity {
 
   @Column({ type: 'int', nullable: false })
   user_id: number;
+
+  static fromPartial(data: DeepPartial<DeviceEntity>): DeviceEntity {
+    return Object.assign(new DeviceEntity(), data);
+  }
 }
 
 export default DeviceEntity;

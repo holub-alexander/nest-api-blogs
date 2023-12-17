@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, DeepPartial, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import DeviceEntity from './device.entity';
 import ReactionEntity from './reaction.entity';
 import CommentEntity from './comment.entity';
@@ -64,6 +64,10 @@ class UserEntity {
     onDelete: 'CASCADE',
   })
   comments: CommentEntity[];
+
+  static fromPartial(data: DeepPartial<UserEntity>): UserEntity {
+    return Object.assign(new UserEntity(), data);
+  }
 }
 
 export default UserEntity;

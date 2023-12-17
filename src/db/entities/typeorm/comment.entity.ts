@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, DeepPartial, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import ReactionEntity from './reaction.entity';
 import { LikeStatuses } from '../../../common/interfaces';
 import UserEntity from './user.entity';
@@ -56,6 +56,10 @@ class CommentEntity {
   @ManyToOne(() => PostEntity, (post) => post.comments, { eager: true })
   @JoinColumn({ name: 'post_id', referencedColumnName: 'id' })
   post: PostEntity;
+
+  static fromPartial(data: DeepPartial<CommentEntity>): CommentEntity {
+    return Object.assign(new CommentEntity(), data);
+  }
 }
 
 export default CommentEntity;
