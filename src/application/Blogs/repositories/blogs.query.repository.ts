@@ -7,7 +7,7 @@ import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
 
 import { getObjectToSort } from '../../../common/utils/get-object-to-sort';
 import { Repository } from 'typeorm';
-import BlogEntity from '../../../db/entities/typeorm/blog.entity';
+import BlogEntity from '../../../db/entities/blog.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 const allowedFieldForSorting = {

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import ReactionEntity from '../../../db/entities/typeorm/reaction.entity';
+import ReactionEntity from '../../../db/entities/reaction.entity';
 
 @Injectable()
 export class ReactionsQueryRepository {

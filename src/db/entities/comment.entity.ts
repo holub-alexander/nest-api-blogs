@@ -1,6 +1,6 @@
 import { Column, DeepPartial, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import ReactionEntity from './reaction.entity';
-import { LikeStatuses } from '../../../common/interfaces';
+import { LikeStatuses } from '../../common/interfaces';
 import UserEntity from './user.entity';
 import BlogEntity from './blog.entity';
 import PostEntity from './post.entity';

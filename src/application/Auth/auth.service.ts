@@ -17,7 +17,7 @@ import {
 import { SecurityDevicesService } from '../Security-Devices/security-devices.service';
 import { CreateUserDto } from '../Users/dto/create.dto';
 import config from '../../config/config';
-import UserEntity from '../../db/entities/typeorm/user.entity';
+import UserEntity from '../../db/entities/user.entity';
 import { UsersQueryRepository } from '../Users/repositories/users.query.repository';
 import { UsersWriteRepository } from '../Users/repositories/users.write.repository';
 import { SecurityDevicesWriteRepository } from '../Security-Devices/repositories/security-devices.write.repository';

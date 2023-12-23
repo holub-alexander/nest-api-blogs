@@ -1,7 +1,7 @@
 import { LikeStatuses } from '../../../common/interfaces';
 import { CommentViewModel } from '../interfaces';
-import CommentEntity from '../../../db/entities/typeorm/comment.entity';
-import ReactionEntity from '../../../db/entities/typeorm/reaction.entity';
+import CommentEntity from '../../../db/entities/comment.entity';
+import ReactionEntity from '../../../db/entities/reaction.entity';
 
 export class CommentMapper {
   public static mapCommentsViewModel(comments: CommentEntity[]): CommentViewModel[] {

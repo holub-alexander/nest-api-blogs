@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import DeviceEntity from '../../../db/entities/typeorm/device.entity';
+import DeviceEntity from '../../../db/entities/device.entity';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 

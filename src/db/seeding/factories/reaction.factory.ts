@@ -1,5 +1,5 @@
 import { setSeederFactory } from 'typeorm-extension';
-import ReactionEntity from '../../entities/typeorm/reaction.entity';
+import ReactionEntity from '../../entities/reaction.entity';
 import { getRandomDateWithTimeZone } from '../../../common/utils/get-random-date-with-time-zone';
 import { LikeStatuses } from '../../../common/interfaces';
 

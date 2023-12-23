@@ -1,5 +1,5 @@
 import { BlogViewModel } from '../interfaces';
-import BlogEntity from '../../../db/entities/typeorm/blog.entity';
+import BlogEntity from '../../../db/entities/blog.entity';
 
 export class BlogsMapper {
   public static mapBlogsViewModel(data: BlogEntity[]): BlogViewModel[] {

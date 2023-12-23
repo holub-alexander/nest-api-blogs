@@ -19,11 +19,11 @@ import { CommentsQueryRepository } from '../Comments/repositories/comments.query
 import { CommentsWriteRepository } from '../Comments/repositories/comments.write.repository';
 import { ReactionsWriteRepository } from '../Reactions/repositories/reactions.write.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import UserEntity from '../../db/entities/typeorm/user.entity';
-import BlogEntity from '../../db/entities/typeorm/blog.entity';
-import PostEntity from '../../db/entities/typeorm/post.entity';
-import CommentEntity from '../../db/entities/typeorm/comment.entity';
-import ReactionEntity from '../../db/entities/typeorm/reaction.entity';
+import UserEntity from '../../db/entities/user.entity';
+import BlogEntity from '../../db/entities/blog.entity';
+import PostEntity from '../../db/entities/post.entity';
+import CommentEntity from '../../db/entities/comment.entity';
+import ReactionEntity from '../../db/entities/reaction.entity';
 
 export const CommandHandler = [
   FindAllPostsHandler,

@@ -1,4 +1,4 @@
-import { LikeStatuses } from '../../../common/interfaces';
+import { LikeStatuses } from '../../common/interfaces';
 import { Column, DeepPartial, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import UserEntity from './user.entity';
 import PostEntity from './post.entity';

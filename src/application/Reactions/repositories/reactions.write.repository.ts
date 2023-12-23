@@ -1,7 +1,7 @@
 import { LikeStatuses } from '../../../common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import ReactionEntity from '../../../db/entities/typeorm/reaction.entity';
+import ReactionEntity from '../../../db/entities/reaction.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()

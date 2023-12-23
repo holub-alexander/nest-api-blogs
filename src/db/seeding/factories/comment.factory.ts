@@ -1,6 +1,6 @@
 import { setSeederFactory } from 'typeorm-extension';
 import { getRandomDateWithTimeZone } from '../../../common/utils/get-random-date-with-time-zone';
-import CommentEntity from '../../entities/typeorm/comment.entity';
+import CommentEntity from '../../entities/comment.entity';
 
 export const CommentFactory = setSeederFactory(CommentEntity, (faker) =>
   CommentEntity.fromPartial({

@@ -13,9 +13,9 @@ import { UsersWriteRepository } from '../Users/repositories/users.write.reposito
 import { SuperAdminUsersController } from './controllers/super-admin-users.controller';
 import { UsersModule } from '../Users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import UserEntity from '../../db/entities/typeorm/user.entity';
-import BlogEntity from '../../db/entities/typeorm/blog.entity';
-import PostEntity from '../../db/entities/typeorm/post.entity';
+import UserEntity from '../../db/entities/user.entity';
+import BlogEntity from '../../db/entities/blog.entity';
+import PostEntity from '../../db/entities/post.entity';
 
 export const CommandHandlers = [FindAllBlogsSuperAdminHandler, CreateBlogSuperAdminHandler];
 

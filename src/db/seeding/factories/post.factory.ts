@@ -1,5 +1,5 @@
 import { setSeederFactory } from 'typeorm-extension';
-import PostEntity from '../../entities/typeorm/post.entity';
+import PostEntity from '../../entities/post.entity';
 
 export const PostFactory = setSeederFactory(PostEntity, (faker) =>
   PostEntity.fromPartial({

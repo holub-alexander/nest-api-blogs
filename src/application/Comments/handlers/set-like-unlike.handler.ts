@@ -5,7 +5,7 @@ import { UsersQueryRepository } from '../../Users/repositories/users.query.repos
 import { CommentsWriteRepository } from '../repositories/comments.write.repository';
 import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';
 import { ReactionsWriteRepository } from '../../Reactions/repositories/reactions.write.repository';
-import ReactionEntity from '../../../db/entities/typeorm/reaction.entity';
+import ReactionEntity from '../../../db/entities/reaction.entity';
 
 export class SetLikeUnlikeForCommentCommand {
   constructor(public commentId: string, public login: string, public likeStatus: LikeStatuses) {}

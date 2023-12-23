@@ -6,7 +6,7 @@ import { PaginationMetaDto } from '../../../common/dto/pagination-meta.dto';
 import { PaginationUsersDto } from '../dto/pagination-users.dto';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
-import UserEntity from '../../../db/entities/typeorm/user.entity';
+import UserEntity from '../../../db/entities/user.entity';
 
 const allowedFieldForSorting = {
   id: 'id',

@@ -1,5 +1,5 @@
 import { UserViewModel } from '../interfaces';
-import UserEntity from '../../../db/entities/typeorm/user.entity';
+import UserEntity from '../../../db/entities/user.entity';
 
 export class UsersMapper {
   public static mapUsersViewModel(data: UserEntity[]): UserViewModel[] {

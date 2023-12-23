@@ -1,7 +1,7 @@
 import { NewestLike, PostViewModel } from '../interfaces';
 import { LikeStatuses } from '../../../common/interfaces';
-import PostEntity from '../../../db/entities/typeorm/post.entity';
-import ReactionEntity from '../../../db/entities/typeorm/reaction.entity';
+import PostEntity from '../../../db/entities/post.entity';
+import ReactionEntity from '../../../db/entities/reaction.entity';
 
 export class PostsMapper {
   public static mapNewestLikes(reactions: ReactionEntity[]): NewestLike[] {

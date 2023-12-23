@@ -6,12 +6,12 @@ import { FindOneUserHandler } from './handlers/find-one-user.handler';
 import { BanUnbanUserHandler } from './handlers/ban-unban-user.handler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersQueryRepository } from './repositories/users.query.repository';
-import UserEntity from '../../db/entities/typeorm/user.entity';
-import DeviceEntity from '../../db/entities/typeorm/device.entity';
+import UserEntity from '../../db/entities/user.entity';
+import DeviceEntity from '../../db/entities/device.entity';
 import { UsersWriteRepository } from './repositories/users.write.repository';
 import { SecurityDevicesWriteRepository } from '../Security-Devices/repositories/security-devices.write.repository';
 import { CommentsWriteRepository } from '../Comments/repositories/comments.write.repository';
-import CommentEntity from '../../db/entities/typeorm/comment.entity';
+import CommentEntity from '../../db/entities/comment.entity';
 
 export const CommandHandlers = [
   FindAllUsersHandler,

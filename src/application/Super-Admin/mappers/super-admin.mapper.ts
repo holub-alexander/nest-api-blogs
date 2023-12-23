@@ -1,5 +1,5 @@
 import { BlogViewModelSuperAdmin } from '../../Blogs/interfaces';
-import BlogEntity from '../../../db/entities/typeorm/blog.entity';
+import BlogEntity from '../../../db/entities/blog.entity';
 
 export class SuperAdminMapper {
   public static mapBlogsViewModel(data: BlogEntity[]): BlogViewModelSuperAdmin[] {

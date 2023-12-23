@@ -10,9 +10,9 @@ import { UsersQueryRepository } from '../Users/repositories/users.query.reposito
 import { ReactionsQueryRepository } from '../Reactions/repositories/reactions.query.repository';
 import { ReactionsWriteRepository } from '../Reactions/repositories/reactions.write.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import UserEntity from '../../db/entities/typeorm/user.entity';
-import CommentEntity from '../../db/entities/typeorm/comment.entity';
-import ReactionEntity from '../../db/entities/typeorm/reaction.entity';
+import UserEntity from '../../db/entities/user.entity';
+import CommentEntity from '../../db/entities/comment.entity';
+import ReactionEntity from '../../db/entities/reaction.entity';
 
 export const CommandHandlers = [
   FindCommentHandler,

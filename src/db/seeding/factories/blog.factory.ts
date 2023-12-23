@@ -1,5 +1,5 @@
 import { setSeederFactory } from 'typeorm-extension';
-import BlogEntity from '../../entities/typeorm/blog.entity';
+import BlogEntity from '../../entities/blog.entity';
 
 export const BlogFactory = setSeederFactory(BlogEntity, (faker) =>
   BlogEntity.fromPartial({

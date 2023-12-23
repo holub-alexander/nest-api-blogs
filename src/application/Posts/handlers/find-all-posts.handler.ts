@@ -5,8 +5,8 @@ import { PostsMapper } from '../mappers/posts.mapper';
 import { CommandBus, CommandHandler } from '@nestjs/cqrs';
 import { PostsQueryRepository } from '../repositories/posts.query.repository';
 import { ReactionsQueryRepository } from '../../Reactions/repositories/reactions.query.repository';
-import PostEntity from '../../../db/entities/typeorm/post.entity';
-import ReactionEntity from '../../../db/entities/typeorm/reaction.entity';
+import PostEntity from '../../../db/entities/post.entity';
+import ReactionEntity from '../../../db/entities/reaction.entity';
 import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
 
 export class FindAllPostsCommand {

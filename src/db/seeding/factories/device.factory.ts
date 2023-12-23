@@ -1,5 +1,5 @@
 import { setSeederFactory } from 'typeorm-extension';
-import DeviceEntity from '../../entities/typeorm/device.entity';
+import DeviceEntity from '../../entities/device.entity';
 import { getRandomDateWithTimeZone } from '../../../common/utils/get-random-date-with-time-zone';
 
 export const DeviceFactory = setSeederFactory(DeviceEntity, (faker) =>

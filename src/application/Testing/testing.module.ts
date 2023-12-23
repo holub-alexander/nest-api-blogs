@@ -7,13 +7,13 @@ import { BlogsWriteRepository } from '../Blogs/repositories/blogs.write.reposito
 import { PostsWriteRepository } from '../Posts/repositories/posts.write.repository';
 import { ReactionsWriteRepository } from '../Reactions/repositories/reactions.write.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import UserEntity from '../../db/entities/typeorm/user.entity';
-import DeviceEntity from '../../db/entities/typeorm/device.entity';
-import BlogEntity from '../../db/entities/typeorm/blog.entity';
-import PostEntity from '../../db/entities/typeorm/post.entity';
-import ReactionEntity from '../../db/entities/typeorm/reaction.entity';
+import UserEntity from '../../db/entities/user.entity';
+import DeviceEntity from '../../db/entities/device.entity';
+import BlogEntity from '../../db/entities/blog.entity';
+import PostEntity from '../../db/entities/post.entity';
+import ReactionEntity from '../../db/entities/reaction.entity';
 import { CommentsWriteRepository } from '../Comments/repositories/comments.write.repository';
-import CommentEntity from '../../db/entities/typeorm/comment.entity';
+import CommentEntity from '../../db/entities/comment.entity';
 
 export const CommandHandlers = [DeleteAllHandler];
 

@@ -1,11 +1,11 @@
 import type { DataSource } from 'typeorm';
-import BlogEntity from '../../entities/typeorm/blog.entity';
+import BlogEntity from '../../entities/blog.entity';
 import { SeederFactoryManager, Seeder } from 'typeorm-extension';
-import UserEntity from '../../entities/typeorm/user.entity';
-import DeviceEntity from '../../entities/typeorm/device.entity';
-import PostEntity from '../../entities/typeorm/post.entity';
-import CommentEntity from '../../entities/typeorm/comment.entity';
-import ReactionEntity from '../../entities/typeorm/reaction.entity';
+import UserEntity from '../../entities/user.entity';
+import DeviceEntity from '../../entities/device.entity';
+import PostEntity from '../../entities/post.entity';
+import CommentEntity from '../../entities/comment.entity';
+import ReactionEntity from '../../entities/reaction.entity';
 
 export class MainSeeder implements Seeder {
   public async run(dataSource: DataSource, factoryManager: SeederFactoryManager): Promise<void> {

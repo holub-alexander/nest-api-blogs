@@ -1,5 +1,5 @@
 import { DeviceViewModel } from '../../../application/Security-Devices/interfaces';
-import DeviceEntity from '../../../db/entities/typeorm/device.entity';
+import DeviceEntity from '../../../db/entities/device.entity';
 
 export class SecurityMapper {
   public static getAllDevicesForUser(data: DeviceEntity[]): DeviceViewModel[] {

@@ -19,8 +19,8 @@ import { UsersWriteRepository } from '../Users/repositories/users.write.reposito
 import { SecurityDevicesWriteRepository } from '../Security-Devices/repositories/security-devices.write.repository';
 import { SecurityDevicesQueryRepository } from '../Security-Devices/repositories/security-devices.query.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import UserEntity from '../../db/entities/typeorm/user.entity';
-import DeviceEntity from '../../db/entities/typeorm/device.entity';
+import UserEntity from '../../db/entities/user.entity';
+import DeviceEntity from '../../db/entities/device.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { MailerService } from '@nestjs-modules/mailer';
 
