@@ -4,8 +4,8 @@ import { CreateBlogDto } from '../../../../application/Blogs/dto/create.dto';
 
 export const createBlogFactory = FactoryBuilder.of(CreateBlogDto)
   .props({
-    name: faker.lorem.slug(5),
-    description: faker.lorem.slug(20),
+    name: faker.person.fullName().slice(0, 15),
+    description: faker.lorem.slug(10).slice(0, 40),
     websiteUrl: faker.internet.url(),
   })
   .build();

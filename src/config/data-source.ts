@@ -18,6 +18,11 @@ import { DeviceFactory } from '../db/seeding/factories/device.factory';
 import { PostFactory } from '../db/seeding/factories/post.factory';
 import { CommentFactory } from '../db/seeding/factories/comment.factory';
 import { ReactionFactory } from '../db/seeding/factories/reaction.factory';
+import PairQuizGameEntity from '../db/entities/quiz-game/pair-quiz-game.entity';
+import PairQuizGameQuestionEntity from '../db/entities/quiz-game/pair-quiz-game-question.entity';
+import PairQuizPlayerAnswerEntity from '../db/entities/quiz-game/pair-quiz-player-answer.entity';
+import PairQuizPlayerProgressEntity from '../db/entities/quiz-game/pair-quiz-player-progress.entity';
+import QuizQuestionEntity from '../db/entities/quiz-game/quiz-question.entity';
 
 dotenvConfig({ path: 'env/.env' });
 
@@ -28,9 +33,14 @@ const entities = [
   PostEntity,
   ReactionEntity,
   CommentEntity,
+  PairQuizPlayerProgressEntity,
   UserEntity,
   DeviceEntity,
   BannedUserInBlogEntity,
+  PairQuizGameEntity,
+  PairQuizGameQuestionEntity,
+  PairQuizPlayerAnswerEntity,
+  QuizQuestionEntity,
 ];
 
 const factories = [BlogFactory, UserFactory, DeviceFactory, PostFactory, CommentFactory, ReactionFactory];
@@ -49,11 +59,7 @@ const dataSourceOptions: DataSourceOptions & SeederOptions = {
 };
 
 export const dataSource = registerAs('data-source', () => {
-  console.log('process', process.env.NODE_ENV, process.env.PG_DATABASE, process.env.DB_HOST);
-
   if (process.env.NODE_ENV === 'test') {
-    console.log('config :>> test config');
-
     return {
       type,
       host: process.env.DB_HOST,

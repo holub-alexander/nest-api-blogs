@@ -16,8 +16,6 @@ export class BlogsMapper {
   }
 
   public static mapBlogViewModel(blog: BlogEntity): BlogViewModel {
-    console.log('blog', blog);
-
     return {
       id: blog.id.toString(),
       name: blog.name,

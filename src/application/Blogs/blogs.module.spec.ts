@@ -51,11 +51,11 @@ describe('BlogsModule', () => {
     });
 
     it.each([100, 101])('[GET] should return a error if blog does not exies "%s"', async (id) => {
-      await request(app.getHttpServer()).get(`/blogs/${id}`).expect(HttpStatus.NOT_FOUND).expect({});
+      await request(app.getHttpServer()).get(`/blogs/${id}`).expect(HttpStatus.NOT_FOUND);
     });
 
     it("[GET] fail to get a blog when it doesn't exist", async () => {
-      await request(app.getHttpServer()).get('/blogs/100').expect(HttpStatus.NOT_FOUND).expect({});
+      await request(app.getHttpServer()).get('/blogs/100').expect(HttpStatus.NOT_FOUND);
     });
 
     it.each(searchParams)('[GET] should return a valid list with valid parameters "%s"', async (query) => {

@@ -11,10 +11,15 @@ export enum LikeStatuses {
   DISLIKE = 'Dislike',
 }
 
-export enum BanStatuses {
-  All = 'all',
-  Banned = 'banned',
-  NotBanned = 'notBanned',
+export enum PairQuizGameStatuses {
+  PendingSecondPlayer = 'pending_second_player',
+  Active = 'active',
+  Finished = 'finished',
+}
+
+export enum PairQuizGameAnswerStatuses {
+  Correct = 'correct',
+  Incorrect = 'incorrect',
 }
 
 export interface PageMetaDtoParameters {

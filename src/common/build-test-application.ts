@@ -14,6 +14,7 @@ import type { DataSource } from 'typeorm';
 import { ConfigObject, configuration } from '../config/configuration';
 import { dataSource } from '../config/data-source';
 import { database } from './setup-database';
+import { setupApp } from './setup-app';
 
 export async function buildTestApplication(
   ...modules: Array<Type<unknown> | DynamicModule | Promise<DynamicModule> | ForwardReference>
@@ -36,12 +37,15 @@ export async function buildTestApplication(
       ...modules,
     ],
   }).compile();
+
   const app = module.createNestApplication();
   const config = app.get<ConfigService<ConfigObject>>(ConfigService);
 
   // app.useGlobalPipes(new ValidationPipe(config.get('validation')));
   // app.use(cookieParser(config.get('secret', 's€cr3to')));
-  // useContainer(module, { fallbackOnErrors: true });
+
+  useContainer(module, { fallbackOnErrors: true });
+  setupApp(app);
 
   return app.init();
 }

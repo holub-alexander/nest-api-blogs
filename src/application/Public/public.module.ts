@@ -22,7 +22,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import UserEntity from '../../db/entities/user.entity';
 import DeviceEntity from '../../db/entities/device.entity';
 import { JwtModule } from '@nestjs/jwt';
-import { MailerService } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [

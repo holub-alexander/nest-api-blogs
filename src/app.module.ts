@@ -14,6 +14,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { configuration } from './config/configuration';
 import { dataSource } from './config/data-source';
+import { QuizQuestionsModule } from './application/QuizQuestins/quiz-questions.module';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ import { dataSource } from './config/data-source';
 
     PublicModule,
     SuperAdminModule,
+    QuizQuestionsModule,
   ],
   controllers: [],
   // providers: [

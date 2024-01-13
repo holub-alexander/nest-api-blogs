@@ -2,6 +2,7 @@ import { Column, DeepPartial, Entity, OneToMany, PrimaryGeneratedColumn } from '
 import DeviceEntity from './device.entity';
 import ReactionEntity from './reaction.entity';
 import CommentEntity from './comment.entity';
+import PairQuizPlayerProgressEntity from './quiz-game/pair-quiz-player-progress.entity';
 
 @Entity({ name: 'users' })
 class UserEntity {
@@ -64,6 +65,12 @@ class UserEntity {
     onDelete: 'CASCADE',
   })
   comments: CommentEntity[];
+
+  /**
+   * Relation to pair quiz player progress
+   * */
+  @OneToMany(() => PairQuizPlayerProgressEntity, (quizPlayerProgress) => quizPlayerProgress.user)
+  pair_quiz_player_progresses: PairQuizPlayerProgressEntity[];
 
   static fromPartial(data: DeepPartial<UserEntity>): UserEntity {
     return Object.assign(new UserEntity(), data);
