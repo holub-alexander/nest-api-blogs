@@ -23,6 +23,8 @@ import PairQuizGameQuestionEntity from '../db/entities/quiz-game/pair-quiz-game-
 import PairQuizPlayerAnswerEntity from '../db/entities/quiz-game/pair-quiz-player-answer.entity';
 import PairQuizPlayerProgressEntity from '../db/entities/quiz-game/pair-quiz-player-progress.entity';
 import QuizQuestionEntity from '../db/entities/quiz-game/quiz-question.entity';
+import { QuizQuestionFactory } from '../db/seeding/factories/quiz-game/quiz-question.factory';
+import { PairQuizSeeder } from '../db/seeding/seeders/pair-quiz.seeder';
 
 dotenvConfig({ path: 'env/.env' });
 
@@ -43,7 +45,17 @@ const entities = [
   QuizQuestionEntity,
 ];
 
-const factories = [BlogFactory, UserFactory, DeviceFactory, PostFactory, CommentFactory, ReactionFactory];
+const factories = [
+  BlogFactory,
+  UserFactory,
+  DeviceFactory,
+  PostFactory,
+  CommentFactory,
+  ReactionFactory,
+  QuizQuestionFactory,
+];
+
+const seeders = [MainSeeder, PairQuizSeeder];
 
 const dataSourceOptions: DataSourceOptions & SeederOptions = {
   type,
@@ -55,7 +67,7 @@ const dataSourceOptions: DataSourceOptions & SeederOptions = {
   migrations: ['dist/db/migrations/*{.ts,.js}'],
   entities,
   factories: factories,
-  seeds: [MainSeeder],
+  seeds: seeders,
 };
 
 export const dataSource = registerAs('data-source', () => {
@@ -72,7 +84,7 @@ export const dataSource = registerAs('data-source', () => {
       migrations: ['src/db/migrations/*{.ts,.js}'],
       entities,
       factories: factories,
-      seeds: [MainSeeder],
+      seeds: seeders,
     } as DataSourceOptions & SeederOptions;
   }
 

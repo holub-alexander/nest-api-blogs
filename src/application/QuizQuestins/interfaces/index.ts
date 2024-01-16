@@ -9,5 +9,5 @@ export interface QuizQuestionViewModel {
   correctAnswers: (string | number)[];
   published: boolean;
   createdAt: string;
-  updatedAt: string;
+  updatedAt: string | null;
 }

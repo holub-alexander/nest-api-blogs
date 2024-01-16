@@ -5,11 +5,11 @@ export class QuizQuestionsTable1703316048732 implements MigrationInterface {
     await queryRunner.query(`
             CREATE TABLE quiz_questions (
                 id SERIAL PRIMARY KEY,
-                body VARCHAR(300) DEFAULT NULL,
+                body VARCHAR(500) DEFAULT NULL,
                 correct_answers JSONB DEFAULT NULL,
                 published BOOLEAN DEFAULT FALSE NOT NULL,
                 created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
-                updated_at TIMESTAMP WITH TIME ZONE NOT NULL
+                updated_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
             )
         `);
   }

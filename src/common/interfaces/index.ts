@@ -22,6 +22,12 @@ export enum PairQuizGameAnswerStatuses {
   Incorrect = 'incorrect',
 }
 
+export enum PublishedStatuses {
+  All = 'all',
+  Published = 'published',
+  NotPublished = 'not_published',
+}
+
 export interface PageMetaDtoParameters {
   paginationOptionsDto: PaginationOptionsDto;
   totalCount: number;

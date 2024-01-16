@@ -9,7 +9,20 @@ export class QuizQuestionsMapper {
       correctAnswers: quizQuestion.correct_answers,
       published: quizQuestion.published,
       createdAt: quizQuestion.created_at.toISOString(),
-      updatedAt: quizQuestion.updated_at.toISOString(),
+      updatedAt: quizQuestion.updated_at ? quizQuestion.updated_at.toISOString() : null,
     };
+  }
+
+  public static mapQuizQuestionsViewModel(data: QuizQuestionEntity[]): QuizQuestionViewModel[] {
+    return data.map(
+      (quizQuestion): QuizQuestionViewModel => ({
+        id: quizQuestion.id.toString(),
+        body: quizQuestion.body,
+        correctAnswers: quizQuestion.correct_answers,
+        published: quizQuestion.published,
+        createdAt: quizQuestion.created_at.toISOString(),
+        updatedAt: quizQuestion.updated_at ? quizQuestion.updated_at.toISOString() : null,
+      }),
+    );
   }
 }

@@ -1,5 +1,17 @@
 import { SkipThrottle } from '@nestjs/throttler';
-import { Body, Controller, Delete, HttpCode, NotFoundException, Param, Post, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { QuizQuestionsQueryRepository } from './repositories/quiz-questions.query.repository';
 import { QuizQuestionsWriteRepository } from './repositories/quiz-questions.write.repository';
@@ -11,6 +23,8 @@ import { DeleteQuizQuestionCommand } from './handlers/delete-quiz-question.handl
 import { UpdateQuizQuestionDto } from './dto/update.dto';
 import { UpdatePublishedQuestionDto } from './dto/update-published-question.dto';
 import { UpdateQuizQuestionCommand } from './handlers/update-quiz-question.handler';
+import { FindAllQuizQuestionsCommand } from './handlers/find-all-quiz-questions.handler';
+import { PaginationQuizQuestionsDto } from './dto/pagination-quiz-questions.dto';
 
 @SkipThrottle()
 @Controller(SA_QUIZ_QUESTIONS_MAIN_ROUTE)
@@ -20,6 +34,13 @@ export class QuizQuestionsController {
     private readonly quizQuestionsQueryRepository: QuizQuestionsQueryRepository,
     private readonly quizQuestionsWriteRepository: QuizQuestionsWriteRepository,
   ) {}
+
+  @Get()
+  @UseGuards(BasicAuthGuard)
+  @HttpCode(200)
+  public async findAll(@Query() queryParams: PaginationQuizQuestionsDto) {
+    return this.commandBus.execute(new FindAllQuizQuestionsCommand(queryParams));
+  }
 
   @Post()
   @UseGuards(BasicAuthGuard)

@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, DeepPartial, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'quiz_questions' })
 class QuizQuestionEntity {
@@ -34,9 +34,13 @@ class QuizQuestionEntity {
 
   @Column({
     type: 'timestamptz',
-    nullable: false,
+    nullable: true,
   })
-  updated_at: Date;
+  updated_at: Date | null;
+
+  static fromPartial(data: DeepPartial<QuizQuestionEntity>): QuizQuestionEntity {
+    return Object.assign(new QuizQuestionEntity(), data);
+  }
 }
 
 export default QuizQuestionEntity;

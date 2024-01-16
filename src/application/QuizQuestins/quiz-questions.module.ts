@@ -8,8 +8,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import QuizQuestionEntity from '../../db/entities/quiz-game/quiz-question.entity';
 import { DeleteQuizQuestionHandler } from './handlers/delete-quiz-question.handler';
 import { UpdateQuizQuestionHandler } from './handlers/update-quiz-question.handler';
+import { FindAllQuizQuestionsHandler } from './handlers/find-all-quiz-questions.handler';
 
-export const CommandHandlers = [CreateQuizQuestionHandler, DeleteQuizQuestionHandler, UpdateQuizQuestionHandler];
+export const CommandHandlers = [
+  FindAllQuizQuestionsHandler,
+  CreateQuizQuestionHandler,
+  DeleteQuizQuestionHandler,
+  UpdateQuizQuestionHandler,
+];
 
 @Module({
   imports: [CqrsModule, TypeOrmModule.forFeature([QuizQuestionEntity])],
