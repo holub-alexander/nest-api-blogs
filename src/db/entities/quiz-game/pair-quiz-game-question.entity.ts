@@ -1,25 +1,22 @@
-import { Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import QuizQuestionEntity from './quiz-question.entity';
 import PairQuizGameEntity from './pair-quiz-game.entity';
-import PairQuizPlayerAnswerEntity from './pair-quiz-player-answer.entity';
 
 @Entity({ name: 'pair_quiz_game_questions' })
 class PairQuizGameQuestionEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToMany(() => QuizQuestionEntity, (question) => question.id)
-  @JoinTable({ name: 'quiz_question_id' })
-  questions: QuizQuestionEntity[];
+  @Column({ type: 'int' })
+  pair_quiz_game_id: number;
 
-  @ManyToMany(() => PairQuizGameEntity, (quiz) => quiz.id)
-  @JoinTable({ name: 'pair_quiz_game_id' })
-  quiz_games: PairQuizGameEntity[];
+  @ManyToOne(() => QuizQuestionEntity, (question) => question.id, { eager: true })
+  @JoinColumn({ name: 'quiz_question_id', referencedColumnName: 'id' })
+  question: QuizQuestionEntity;
 
-  @OneToMany(() => PairQuizPlayerAnswerEntity, (quizQuestion) => quizQuestion.pair_question, {
-    onDelete: 'CASCADE',
-  })
-  pair_quiz_questions: PairQuizPlayerAnswerEntity[];
+  @ManyToOne(() => PairQuizGameEntity, (quiz) => quiz.quiz_questions)
+  @JoinColumn({ name: 'pair_quiz_game_id', referencedColumnName: 'id' })
+  pair_quiz_game: PairQuizGameEntity;
 }
 
 export default PairQuizGameQuestionEntity;

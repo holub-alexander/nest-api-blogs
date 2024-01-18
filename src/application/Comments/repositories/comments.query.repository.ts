@@ -29,48 +29,13 @@ export class CommentsQueryRepository {
       return null;
     }
 
-    // const params: (string | number)[] = [commentId];
-    //
-    // const mainSelect = `
-    //    SELECT comments.*,
-    //    users.login AS user_login,
-    // `;
-    //
-    // const mainQuery = `
-    //     (SELECT COUNT(*)
-    //      FROM reactions
-    //      WHERE comment_id = comments.id
-    //        AND TYPE = 'comment'
-    //        AND comment_id = comments.id
-    //        AND like_status = 'Like' ) AS likes_count,
-    //
-    //     (SELECT COUNT(*)
-    //      FROM reactions
-    //      WHERE comment_id = comments.id
-    //        AND TYPE = 'comment'
-    //        AND comment_id = comments.id
-    //        AND like_status = 'Dislike' ) AS dislikes_count
-    //
-    //   FROM comments
-    //   JOIN users ON users.id = comments.user_id
-    //   JOIN blogs ON blogs.id = comments.blog_id
-    // `;
-    //
-    // const mainWhere = `
-    //   WHERE comments.id = $${params.length}
-    // `;
-    //
-    // return this.dataSource.query(mainSelect + mainQuery + mainWhere, params);
-
-    const comment = await this.commentRepository
+    return this.commentRepository
       .createQueryBuilder('comments')
       .leftJoinAndSelect('comments.user', 'users')
       .leftJoinAndSelect('comments.blog', 'blogs')
       .leftJoinAndSelect('comments.post', 'posts')
       .where('comments.id = :commentId', { commentId })
       .getOne();
-
-    return comment;
   }
 
   public async findAllWithPagination(
@@ -82,71 +47,6 @@ export class CommentsQueryRepository {
 
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
     const skippedItems = (+pageNumber - 1) * +pageSizeValue;
-    // const queryParams: (number | null)[] = [pageSizeValue, pageNumberFormat, postId, userId];
-    // const totalQueryParams: (number | null)[] = [postId, userId];
-    //
-    // let query = `
-    //   SELECT comments.*,
-    //   users.login AS user_login,
-    //
-    //   (SELECT COUNT(*)
-    //      FROM reactions
-    //      JOIN users ON users.id = reactions.user_id
-    //      WHERE comment_id = comments.id
-    //        AND TYPE = 'comment'
-    //        AND comment_id = comments.id
-    //        AND like_status = 'Like' ) AS likes_count,
-    //
-    //     (SELECT COUNT(*)
-    //      FROM reactions
-    //      JOIN users ON users.id = reactions.user_id
-    //      WHERE comment_id = comments.id
-    //        AND TYPE = 'comment'
-    //        AND comment_id = comments.id
-    //        AND like_status = 'Dislike' ) AS dislikes_count,
-    //
-    //     like_status
-    //
-    //     FROM comments
-    //
-    //     JOIN users ON users.id = comments.user_id
-    //     JOIN blogs ON blogs.id = comments.blog_id
-    //     LEFT JOIN reactions ON reactions.comment_id = comments.id AND reactions.user_id = $4
-    //
-    //     WHERE comments.post_id = $3
-    // `;
-    //
-    // const totalCountQuery = `
-    //   SELECT COUNT(*) FROM comments
-    //
-    //   JOIN users ON users.id = comments.user_id
-    //   JOIN blogs ON blogs.id = comments.blog_id
-    //   LEFT JOIN reactions ON reactions.comment_id = comments.id AND reactions.user_id = $2
-    //
-    //   WHERE comments.post_id = $1
-    // `;
-    //
-    // if (sorting) {
-    //   query += `
-    //   ORDER BY ${sorting.field} ${sorting.direction}
-    //   `;
-    // }
-    //
-    // const totalCount = await this.dataSource.query<[{ count: string }]>(totalCountQuery, totalQueryParams);
-    //
-    // query += `
-    //   OFFSET $2
-    //   LIMIT $1;
-    // `;
-    //
-    // const result = await this.dataSource.query<CommentEntity[]>(query, queryParams);
-    //
-    // const paginationMetaDto = new PaginationMetaDto({
-    //   paginationOptionsDto: { pageSize, pageNumber, sortBy, sortDirection },
-    //   totalCount: +totalCount[0].count,
-    // });
-    //
-    // return new PaginationDto(result, paginationMetaDto);
 
     const totalCountQuery = await this.commentRepository.createQueryBuilder('comments');
     const query = await this.commentRepository.createQueryBuilder('comments');
@@ -184,8 +84,6 @@ export class CommentsQueryRepository {
       .offset(skippedItems)
       .limit(pageSizeValue)
       .getRawMany();
-
-    console.log(comments[0]);
 
     const paginationMetaDto = new PaginationMetaDto({
       paginationOptionsDto: { pageSize, pageNumber, sortBy, sortDirection },

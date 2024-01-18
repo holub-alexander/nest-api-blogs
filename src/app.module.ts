@@ -15,6 +15,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { configuration } from './config/configuration';
 import { dataSource } from './config/data-source';
 import { QuizQuestionsModule } from './application/QuizQuestins/quiz-questions.module';
+import { PairQuizGamesModule } from './application/PairQuizGames/pair-quiz-games.module';
 
 @Module({
   imports: [
@@ -74,6 +75,7 @@ import { QuizQuestionsModule } from './application/QuizQuestins/quiz-questions.m
     PublicModule,
     SuperAdminModule,
     QuizQuestionsModule,
+    PairQuizGamesModule,
   ],
   controllers: [],
   // providers: [

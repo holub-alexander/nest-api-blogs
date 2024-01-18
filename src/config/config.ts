@@ -2,8 +2,8 @@ const config = {
   login: 'admin',
   password: 'qwerty',
   enableSecureCookie: true,
-  accessTokenExpiration: '10000s',
-  refreshTokenExpiration: '20000s',
+  accessTokenExpiration: '100000s',
+  refreshTokenExpiration: '200000s',
 };
 
 export default config;

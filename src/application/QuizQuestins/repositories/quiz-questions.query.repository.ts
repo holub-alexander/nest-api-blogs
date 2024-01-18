@@ -66,4 +66,8 @@ export class QuizQuestionsQueryRepository {
 
     return new PaginationDto(quizQuestions, paginationMetaDto);
   }
+
+  public async getRandomQuestions(): Promise<QuizQuestionEntity[]> {
+    return this.quizQuestionRepository.createQueryBuilder().select().orderBy('RANDOM()').limit(5).getMany();
+  }
 }

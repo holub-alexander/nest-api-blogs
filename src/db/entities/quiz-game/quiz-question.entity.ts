@@ -1,4 +1,5 @@
-import { Column, DeepPartial, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, DeepPartial, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import PairQuizGameQuestionEntity from './pair-quiz-game-question.entity';
 
 @Entity({ name: 'quiz_questions' })
 class QuizQuestionEntity {
@@ -37,6 +38,9 @@ class QuizQuestionEntity {
     nullable: true,
   })
   updated_at: Date | null;
+
+  @OneToMany(() => PairQuizGameQuestionEntity, (pairQuizGameQuestion) => pairQuizGameQuestion.question)
+  pair_quiz_game_questions: PairQuizGameQuestionEntity[];
 
   static fromPartial(data: DeepPartial<QuizQuestionEntity>): QuizQuestionEntity {
     return Object.assign(new QuizQuestionEntity(), data);
