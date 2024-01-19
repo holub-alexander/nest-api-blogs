@@ -48,7 +48,7 @@ export class CreateAnswerForNextQuestionHandler {
     }
 
     const notAnsweredQuestionIndex = currentUserProgress.answers.length;
-    const activeQuestion = currentPairQuizGame.quiz_questions[notAnsweredQuestionIndex];
+    const activeQuestion = currentPairQuizGame.quiz_questions.sort((a, b) => a.id - b.id)[notAnsweredQuestionIndex];
 
     const newAnswer = this.pairQuizPlayerAnswersWriteRepository.create({
       pair_quiz: {

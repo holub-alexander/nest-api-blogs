@@ -56,11 +56,13 @@ export class PairQuizGameMapper {
   }
 
   public static mapCreatedAnswersForQuestion(answers: PairQuizPlayerAnswerEntity[]): AnswerViewModel[] {
-    return answers.map((answer) => ({
-      questionId: answer.pair_question.id.toString(),
-      answerStatus: `${answer.answer_status[0].toUpperCase()}${answer.answer_status.slice(1)}`,
-      addedAt: answer.added_at.toISOString(),
-    }));
+    return answers
+      .map((answer) => ({
+        questionId: answer.pair_question.id.toString(),
+        answerStatus: `${answer.answer_status[0].toUpperCase()}${answer.answer_status.slice(1)}`,
+        addedAt: answer.added_at.toISOString(),
+      }))
+      .sort((a, b) => +a.questionId - +b.questionId);
   }
 
   public static mapCreatedAnswerForQuestion(answer: PairQuizPlayerAnswerEntity): AnswerViewModel {
