@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import PairQuizGameEntity from './pair-quiz-game.entity';
 import PairQuizGameQuestionEntity from './pair-quiz-game-question.entity';
 import PairQuizPlayerProgressEntity from './pair-quiz-player-progress.entity';
@@ -17,8 +17,8 @@ class PairQuizPlayerAnswerEntity {
   @JoinColumn({ name: 'pair_question_id', referencedColumnName: 'id' })
   pair_question: PairQuizGameQuestionEntity;
 
-  @OneToOne(() => PairQuizPlayerProgressEntity)
-  @JoinColumn()
+  @ManyToOne(() => PairQuizPlayerProgressEntity, (progress) => progress.answers)
+  @JoinColumn({ name: 'player_progress_id', referencedColumnName: 'id' })
   player_progress: PairQuizPlayerProgressEntity;
 
   @Column({

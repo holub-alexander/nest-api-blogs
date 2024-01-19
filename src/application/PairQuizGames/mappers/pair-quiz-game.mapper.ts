@@ -1,7 +1,8 @@
-import { GamePairViewModel } from '../interfaces';
+import { AnswerViewModel, GamePairViewModel } from '../interfaces';
 import PairQuizGameEntity from '../../../db/entities/quiz-game/pair-quiz-game.entity';
 import { QuizQuestionViewModel } from '../../QuizQuestins/interfaces';
 import PairQuizGameQuestionEntity from '../../../db/entities/quiz-game/pair-quiz-game-question.entity';
+import PairQuizPlayerAnswerEntity from '../../../db/entities/quiz-game/pair-quiz-player-answer.entity';
 
 export class PairQuizGameMapper {
   public static mapQuizQuestionsViewModel(
@@ -19,7 +20,10 @@ export class PairQuizGameMapper {
     return {
       id: quizGame.id.toString(),
       firstPlayerProgress: {
-        answers: null,
+        answers:
+          quizGame.first_player_progress.answers && quizGame.first_player_progress.answers.length > 0
+            ? this.mapCreatedAnswersForQuestion(quizGame.first_player_progress.answers)
+            : null,
         player: {
           id: quizGame.first_player_progress.user.id.toString(),
           login: quizGame.first_player_progress.user.login,
@@ -28,7 +32,10 @@ export class PairQuizGameMapper {
       },
       secondPlayerProgress: quizGame.second_player_progress
         ? {
-            answers: null,
+            answers:
+              quizGame.second_player_progress.answers && quizGame.second_player_progress.answers.length > 0
+                ? this.mapCreatedAnswersForQuestion(quizGame.second_player_progress.answers)
+                : null,
             player: {
               id: quizGame.second_player_progress.user.id.toString(),
               login: quizGame.second_player_progress.user.login,
@@ -44,6 +51,22 @@ export class PairQuizGameMapper {
       pairCreatedDate: quizGame.pair_created_at.toISOString(),
       startGameDate: quizGame.start_date ? quizGame.start_date.toISOString() : null,
       finishGameDate: quizGame.finish_date ? quizGame.finish_date.toISOString() : null,
+    };
+  }
+
+  public static mapCreatedAnswersForQuestion(answers: PairQuizPlayerAnswerEntity[]): AnswerViewModel[] {
+    return answers.map((answer) => ({
+      questionId: answer.pair_question.id.toString(),
+      answerStatus: answer.answer_status,
+      addedAt: answer.added_at.toISOString(),
+    }));
+  }
+
+  public static mapCreatedAnswerForQuestion(answer: PairQuizPlayerAnswerEntity): AnswerViewModel {
+    return {
+      questionId: answer.pair_question.id.toString(),
+      answerStatus: answer.answer_status,
+      addedAt: answer.added_at.toISOString(),
     };
   }
 }

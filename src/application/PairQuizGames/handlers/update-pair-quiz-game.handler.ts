@@ -84,6 +84,7 @@ export class UpdatePairQuizGameHandler {
     );
 
     await transactionRunner.commitTransaction();
+
     const updatedQuizGame = await this.pairQuizGamesQueryRepository.find({ where: { id: quizGame.id } });
 
     if (updatedQuizGame) {

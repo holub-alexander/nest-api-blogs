@@ -8,4 +8,8 @@ export class PairQuizPlayerProgressQueryRepository {
   constructor(
     @InjectRepository(PairQuizGameEntity) private readonly pairQuizGameRepository: Repository<PairQuizGameEntity>,
   ) {}
+
+  public async findOne(id: number) {
+    return this.pairQuizGameRepository.findBy({ id });
+  }
 }

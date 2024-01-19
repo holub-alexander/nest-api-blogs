@@ -19,12 +19,16 @@ import { PairQuizQuestionsWriteRepository } from './repositories/pair-quiz-quest
 import PairQuizGameQuestionEntity from '../../db/entities/quiz-game/pair-quiz-game-question.entity';
 import { FindUnfinishedPairQuizGameHandler } from './handlers/find-unfinished-pair-quiz-game.handler';
 import { FindPairQuizGameByIdHandler } from './handlers/find-pair-quiz-game-by-id.handler';
+import { CreateAnswerForNextQuestionHandler } from './handlers/create-answer-for-next-question.handler';
+import { PairQuizPlayerAnswersWriteRepository } from './repositories/paiz-quiz-answers/pair-quiz-player-answers.write.repository';
+import PairQuizPlayerAnswerEntity from '../../db/entities/quiz-game/pair-quiz-player-answer.entity';
 
 export const CommandHandlers = [
   CreatePairQuizGameHandler,
   UpdatePairQuizGameHandler,
   FindUnfinishedPairQuizGameHandler,
   FindPairQuizGameByIdHandler,
+  CreateAnswerForNextQuestionHandler,
 ];
 
 @Module({
@@ -36,6 +40,7 @@ export const CommandHandlers = [
       UserEntity,
       QuizQuestionEntity,
       PairQuizGameQuestionEntity,
+      PairQuizPlayerAnswerEntity,
     ]),
   ],
   controllers: [PairQuizGamesController],
@@ -47,6 +52,7 @@ export const CommandHandlers = [
     PairQuizPlayerProgressWriteRepository,
     PairQuizQuestionsWriteRepository,
     QuizQuestionsQueryRepository,
+    PairQuizPlayerAnswersWriteRepository,
     ...CommandHandlers,
   ],
 })

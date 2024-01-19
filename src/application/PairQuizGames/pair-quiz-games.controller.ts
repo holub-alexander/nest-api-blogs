@@ -1,5 +1,5 @@
 import { SkipThrottle } from '@nestjs/throttler';
-import { Controller, Get, HttpCode, NotFoundException, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, NotFoundException, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { PUBLIC_PAIR_QUIZ_GAME } from '../../common/constants/endpoints';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreatePairQuizGameCommand } from './handlers/create-pair-quiz-game.handler';
@@ -7,6 +7,8 @@ import { Request } from 'express';
 import { JwtTokenGuard } from '../Auth/guards/jwt-token.guard';
 import { FindUnfinishedPairQuizGameCommand } from './handlers/find-unfinished-pair-quiz-game.handler';
 import { FindPairQuizGameByIdCommand } from './handlers/find-pair-quiz-game-by-id.handler';
+import { CreateAnswerForNextQuestionCommand } from './handlers/create-answer-for-next-question.handler';
+import { CreateAnswerDto } from './dto/create-answer.dto';
 
 @SkipThrottle()
 @Controller(PUBLIC_PAIR_QUIZ_GAME)
@@ -18,6 +20,13 @@ export class PairQuizGamesController {
   @HttpCode(200)
   public async connectCurrentUserToQuizGame(@Req() req: Request) {
     return this.commandBus.execute(new CreatePairQuizGameCommand(req.user?.login));
+  }
+
+  @Post('/my-current/answers')
+  @UseGuards(JwtTokenGuard)
+  @HttpCode(200)
+  public async createAnswerForNextQuestion(@Body() body: CreateAnswerDto, @Req() req: Request) {
+    return this.commandBus.execute(new CreateAnswerForNextQuestionCommand(req.user?.login, body));
   }
 
   @Get('/:id')

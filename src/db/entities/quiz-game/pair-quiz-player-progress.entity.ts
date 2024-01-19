@@ -1,5 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import UserEntity from '../user.entity';
+import PairQuizPlayerAnswerEntity from './pair-quiz-player-answer.entity';
 
 @Entity({ name: 'pair_quiz_player_progress' })
 class PairQuizPlayerProgressEntity {
@@ -16,6 +17,24 @@ class PairQuizPlayerProgressEntity {
     default: 0,
   })
   score: number;
+
+  @OneToMany(() => PairQuizPlayerAnswerEntity, (quizPlayerAnswer) => quizPlayerAnswer.player_progress, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
+  answers: PairQuizPlayerAnswerEntity[];
+
+  @Column({
+    type: 'timestamptz',
+    default: null,
+  })
+  start_date: Date;
+
+  @Column({
+    type: 'timestamptz',
+    default: null,
+  })
+  finish_date: Date;
 }
 
 export default PairQuizPlayerProgressEntity;

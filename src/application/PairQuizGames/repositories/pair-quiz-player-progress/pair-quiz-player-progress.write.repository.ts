@@ -18,4 +18,12 @@ export class PairQuizPlayerProgressWriteRepository extends Repository<PairQuizPl
 
     return this.save(data);
   }
+
+  public async incrementScore(progressId: number) {
+    return this.createQueryBuilder('pair_quiz_player_progress')
+      .update(PairQuizPlayerProgressEntity)
+      .set({ score: () => 'score + 1' })
+      .where('id = :id', { id: progressId })
+      .execute();
+  }
 }

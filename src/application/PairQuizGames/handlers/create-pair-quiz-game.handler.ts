@@ -13,7 +13,6 @@ import { PairQuizGamesQueryRepository } from '../repositories/pair-quiz-games/pa
 import PairQuizGameEntity from '../../../db/entities/quiz-game/pair-quiz-game.entity';
 import { UpdatePairQuizGameCommand } from './update-pair-quiz-game.handler';
 import { GamePairViewModel } from '../interfaces';
-import { FindUnfinishedPairQuizGameCommand } from './find-unfinished-pair-quiz-game.handler';
 
 export class CreatePairQuizGameCommand {
   constructor(public userLogin: string) {}

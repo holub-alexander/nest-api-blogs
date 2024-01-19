@@ -22,7 +22,7 @@ export class FindPairQuizGameByIdHandler {
       throw new BadRequestException('User not found.');
     }
 
-    const pairQuizGame = await this.pairQuizGamesQueryRepository.findUnfinishedGameForCurrentUser(user.id, command.id);
+    const pairQuizGame = await this.pairQuizGamesQueryRepository.findGameById(command.id);
 
     if (!pairQuizGame) {
       return null;

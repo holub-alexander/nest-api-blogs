@@ -43,11 +43,6 @@ class PairQuizGameEntity {
   })
   finish_date: Date;
 
-  // @OneToMany(() => PairQuizPlayerAnswerEntity, (quizPlayerAnswer) => quizPlayerAnswer.pair_quiz, {
-  //   onDelete: 'CASCADE',
-  // })
-  // pair_quiz_player_answers: PairQuizPlayerAnswerEntity[];
-
   @OneToMany(() => PairQuizGameQuestionEntity, (quizQuestion) => quizQuestion.pair_quiz_game, {
     onDelete: 'CASCADE',
     eager: true,
