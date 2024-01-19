@@ -1,4 +1,4 @@
-import { DeviceViewModel } from '../../../application/Security-Devices/interfaces';
+import { DeviceViewModel } from '../interfaces';
 import DeviceEntity from '../../../db/entities/device.entity';
 
 export class SecurityMapper {

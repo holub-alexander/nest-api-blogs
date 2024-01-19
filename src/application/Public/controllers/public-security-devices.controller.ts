@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { DeviceViewModel } from '../../Security-Devices/interfaces';
-import { SecurityMapper } from '../../../common/mappers/typeorm/security-devices.mapper';
+import { SecurityMapper } from '../../Security-Devices/mappers/security-devices.mapper';
 import { SkipThrottle } from '@nestjs/throttler';
 import { RefreshTokenGuard } from '../../Auth/guards/refresh-token.guard';
 import { SecurityDevicesQueryRepository } from '../../Security-Devices/repositories/security-devices.query.repository';

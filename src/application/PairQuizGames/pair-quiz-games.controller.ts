@@ -1,5 +1,16 @@
 import { SkipThrottle } from '@nestjs/throttler';
-import { Body, Controller, Get, HttpCode, NotFoundException, Param, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { PUBLIC_PAIR_QUIZ_GAME } from '../../common/constants/endpoints';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreatePairQuizGameCommand } from './handlers/create-pair-quiz-game.handler';
@@ -29,11 +40,11 @@ export class PairQuizGamesController {
     return this.commandBus.execute(new CreateAnswerForNextQuestionCommand(req.user?.login, body));
   }
 
-  @Get('/:id')
+  @Get('/my-current')
   @UseGuards(JwtTokenGuard)
   @HttpCode(200)
-  public async findPairQuizGameById(@Req() req: Request, @Param('id') id: string) {
-    const res = await this.commandBus.execute(new FindPairQuizGameByIdCommand(req.user?.login, id));
+  public async findUnfinishedPairQuizGame(@Req() req: Request) {
+    const res = await this.commandBus.execute(new FindUnfinishedPairQuizGameCommand(req.user?.login));
 
     if (!res) {
       throw new NotFoundException();
@@ -42,11 +53,11 @@ export class PairQuizGamesController {
     return res;
   }
 
-  @Get('/my-current')
+  @Get(':id')
   @UseGuards(JwtTokenGuard)
   @HttpCode(200)
-  public async findUnfinishedPairQuizGame(@Req() req: Request) {
-    const res = await this.commandBus.execute(new FindUnfinishedPairQuizGameCommand(req.user?.login));
+  public async findPairQuizGameById(@Req() req: Request, @Param('id', ParseIntPipe) id: string) {
+    const res = await this.commandBus.execute(new FindPairQuizGameByIdCommand(req.user?.login, id));
 
     if (!res) {
       throw new NotFoundException();

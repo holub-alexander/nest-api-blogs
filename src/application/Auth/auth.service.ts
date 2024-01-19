@@ -4,7 +4,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { MailService } from '../Mail/mail.service';
 import { add } from 'date-fns';
-import { AuthMapper } from '../../common/mappers/typeorm/auth.mapper';
+import { AuthMapper } from './mappers/auth.mapper';
 import { getPasswordHash } from '../../common/utils/get-password-hash';
 import { UserRefreshTokenPayload } from './interfaces';
 import {

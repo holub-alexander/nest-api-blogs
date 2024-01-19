@@ -63,14 +63,22 @@ export class PairQuizGamesQueryRepository {
     const query = this.createQuery();
 
     query
-      .where('(pair_quiz_games.status = :pendingStatus AND first_player_progress.user.id = :userId)', {
-        pendingStatus: PairQuizGameStatuses.PendingSecondPlayer,
-        userId,
-      })
-      .orWhere('(pair_quiz_games.status = :activeStatus AND second_player_progress.user.id = :userId)', {
-        activeStatus: PairQuizGameStatuses.Active,
-        userId,
-      });
+      .where(
+        '((pair_quiz_games.status = :activeStatus OR pair_quiz_games.status = :pendingStatus) AND first_player_progress.user.id = :userId)',
+        {
+          activeStatus: PairQuizGameStatuses.Active,
+          pendingStatus: PairQuizGameStatuses.PendingSecondPlayer,
+          userId,
+        },
+      )
+      .orWhere(
+        '((pair_quiz_games.status = :activeStatus OR pair_quiz_games.status = :pendingStatus) AND second_player_progress.user.id = :userId)',
+        {
+          activeStatus: PairQuizGameStatuses.Active,
+          pendingStatus: PairQuizGameStatuses.PendingSecondPlayer,
+          userId,
+        },
+      );
 
     return query.getOne();
   }
