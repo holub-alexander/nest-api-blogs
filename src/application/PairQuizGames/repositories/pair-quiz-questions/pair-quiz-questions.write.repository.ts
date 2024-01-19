@@ -15,4 +15,10 @@ export class PairQuizQuestionsWriteRepository extends Repository<PairQuizGameQue
 
     return this.insert(data);
   }
+
+  public async deleteMany(): Promise<boolean> {
+    const res = await this.delete({});
+
+    return !res.affected ? false : res.affected > 0;
+  }
 }

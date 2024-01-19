@@ -14,13 +14,35 @@ import PostEntity from '../../db/entities/post.entity';
 import ReactionEntity from '../../db/entities/reaction.entity';
 import { CommentsWriteRepository } from '../Comments/repositories/comments.write.repository';
 import CommentEntity from '../../db/entities/comment.entity';
+import { QuizQuestionsWriteRepository } from '../QuizQuestins/repositories/quiz-questions.write.repository';
+import QuizQuestionEntity from '../../db/entities/quiz-game/quiz-question.entity';
+import { PairQuizGamesWriteRepository } from '../PairQuizGames/repositories/pair-quiz-games/pair-quiz-games.write.repository';
+import PairQuizGameEntity from '../../db/entities/quiz-game/pair-quiz-game.entity';
+import { PairQuizPlayerProgressWriteRepository } from '../PairQuizGames/repositories/pair-quiz-player-progress/pair-quiz-player-progress.write.repository';
+import PairQuizPlayerProgressEntity from '../../db/entities/quiz-game/pair-quiz-player-progress.entity';
+import { PairQuizQuestionsWriteRepository } from '../PairQuizGames/repositories/pair-quiz-questions/pair-quiz-questions.write.repository';
+import PairQuizGameQuestionEntity from '../../db/entities/quiz-game/pair-quiz-game-question.entity';
+import { PairQuizPlayerAnswersWriteRepository } from '../PairQuizGames/repositories/paiz-quiz-answers/pair-quiz-player-answers.write.repository';
+import PairQuizPlayerAnswerEntity from '../../db/entities/quiz-game/pair-quiz-player-answer.entity';
 
 export const CommandHandlers = [DeleteAllHandler];
 
 @Module({
   imports: [
     CqrsModule,
-    TypeOrmModule.forFeature([UserEntity, DeviceEntity, BlogEntity, PostEntity, ReactionEntity, CommentEntity]),
+    TypeOrmModule.forFeature([
+      UserEntity,
+      DeviceEntity,
+      BlogEntity,
+      PostEntity,
+      ReactionEntity,
+      CommentEntity,
+      QuizQuestionEntity,
+      PairQuizGameEntity,
+      PairQuizPlayerProgressEntity,
+      PairQuizQuestionsWriteRepository,
+      PairQuizPlayerAnswerEntity,
+    ]),
   ],
   controllers: [],
   providers: [
@@ -30,6 +52,11 @@ export const CommandHandlers = [DeleteAllHandler];
     UsersWriteRepository,
     SecurityDevicesWriteRepository,
     CommentsWriteRepository,
+    QuizQuestionsWriteRepository,
+    PairQuizGamesWriteRepository,
+    PairQuizPlayerProgressWriteRepository,
+    PairQuizGameQuestionEntity,
+    PairQuizPlayerAnswersWriteRepository,
     ...CommandHandlers,
   ],
 })

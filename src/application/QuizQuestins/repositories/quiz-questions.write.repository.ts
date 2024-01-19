@@ -39,6 +39,7 @@ export class QuizQuestionsWriteRepository {
       {
         body: data.body,
         correct_answers: data.correctAnswers,
+        updated_at: new Date(),
       },
     );
 
@@ -50,8 +51,15 @@ export class QuizQuestionsWriteRepository {
       { id: +id },
       {
         published: publish,
+        updated_at: new Date(),
       },
     );
+
+    return !res.affected ? false : res.affected > 0;
+  }
+
+  public async deleteMany(): Promise<boolean> {
+    const res = await this.quizQuestionRepository.delete({});
 
     return !res.affected ? false : res.affected > 0;
   }

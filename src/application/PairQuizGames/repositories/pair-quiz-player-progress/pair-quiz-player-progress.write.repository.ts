@@ -26,4 +26,10 @@ export class PairQuizPlayerProgressWriteRepository extends Repository<PairQuizPl
       .where('id = :id', { id: progressId })
       .execute();
   }
+
+  public async deleteMany(): Promise<boolean> {
+    const res = await this.delete({});
+
+    return !res.affected ? false : res.affected > 0;
+  }
 }

@@ -7,4 +7,10 @@ export class PairQuizPlayerAnswersWriteRepository extends Repository<PairQuizPla
   constructor(private dataSource: DataSource) {
     super(PairQuizPlayerAnswerEntity, dataSource.createEntityManager());
   }
+
+  public async deleteMany(): Promise<boolean> {
+    const res = await this.delete({});
+
+    return !res.affected ? false : res.affected > 0;
+  }
 }

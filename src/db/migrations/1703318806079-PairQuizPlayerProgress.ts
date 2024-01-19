@@ -7,7 +7,7 @@ export class PairQuizPlayerProgress1703318806079 implements MigrationInterface {
     await queryRunner.query(`
       CREATE TABLE pair_quiz_player_progress (
         id SERIAL PRIMARY KEY,
-        user_id INTEGER REFERENCES users(id) NOT NULL,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         score INTEGER DEFAULT 0 NOT NULL,
         start_date TIMESTAMP WITH TIME ZONE DEFAULT NULL,
         finish_date TIMESTAMP WITH TIME ZONE DEFAULT NULL

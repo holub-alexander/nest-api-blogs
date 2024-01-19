@@ -19,7 +19,7 @@ export class CreateQuizQuestionHandler {
     createdQuizQuestion.correct_answers = command.body.correctAnswers;
     createdQuizQuestion.published = false;
     createdQuizQuestion.created_at = new Date();
-    createdQuizQuestion.updated_at = new Date();
+    createdQuizQuestion.updated_at = null;
 
     const response = await this.quizQuestionsWriteRepository.save(createdQuizQuestion);
 

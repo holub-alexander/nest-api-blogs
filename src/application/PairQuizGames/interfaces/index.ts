@@ -1,4 +1,4 @@
-import { PairQuizGameAnswerStatuses, PairQuizGameStatuses } from '../../../common/interfaces';
+import { PairQuizGameAnswerStatuses } from '../../../common/interfaces';
 import { QuizQuestionViewModel } from '../../QuizQuestins/interfaces';
 
 export interface PlayerViewModel {
@@ -23,7 +23,7 @@ export interface GamePairViewModel {
   firstPlayerProgress: GamePlayerProgressViewModel;
   secondPlayerProgress: GamePlayerProgressViewModel | null;
   questions: Pick<QuizQuestionViewModel, 'body' & 'id'> | null;
-  status: PairQuizGameStatuses;
+  status: string;
   pairCreatedDate: string;
   startGameDate: string | null;
   finishGameDate: string | null;

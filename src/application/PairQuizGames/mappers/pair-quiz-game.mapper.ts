@@ -4,6 +4,12 @@ import { QuizQuestionViewModel } from '../../QuizQuestins/interfaces';
 import PairQuizGameQuestionEntity from '../../../db/entities/quiz-game/pair-quiz-game-question.entity';
 import PairQuizPlayerAnswerEntity from '../../../db/entities/quiz-game/pair-quiz-player-answer.entity';
 
+const formattedStatuses = {
+  pending_second_player: 'PendingSecondPlayer',
+  active: 'Active',
+  finished: 'Finished',
+};
+
 export class PairQuizGameMapper {
   public static mapQuizQuestionsViewModel(
     data: PairQuizGameQuestionEntity[],
@@ -20,10 +26,7 @@ export class PairQuizGameMapper {
     return {
       id: quizGame.id.toString(),
       firstPlayerProgress: {
-        answers:
-          quizGame.first_player_progress.answers && quizGame.first_player_progress.answers.length > 0
-            ? this.mapCreatedAnswersForQuestion(quizGame.first_player_progress.answers)
-            : null,
+        answers: this.mapCreatedAnswersForQuestion(quizGame.first_player_progress.answers),
         player: {
           id: quizGame.first_player_progress.user.id.toString(),
           login: quizGame.first_player_progress.user.login,
@@ -32,10 +35,7 @@ export class PairQuizGameMapper {
       },
       secondPlayerProgress: quizGame.second_player_progress
         ? {
-            answers:
-              quizGame.second_player_progress.answers && quizGame.second_player_progress.answers.length > 0
-                ? this.mapCreatedAnswersForQuestion(quizGame.second_player_progress.answers)
-                : null,
+            answers: this.mapCreatedAnswersForQuestion(quizGame.second_player_progress.answers),
             player: {
               id: quizGame.second_player_progress.user.id.toString(),
               login: quizGame.second_player_progress.user.login,
@@ -47,7 +47,7 @@ export class PairQuizGameMapper {
         quizGame.quiz_questions && quizGame.quiz_questions.length > 0
           ? this.mapQuizQuestionsViewModel(quizGame.quiz_questions)
           : null,
-      status: quizGame.status,
+      status: formattedStatuses[quizGame.status],
       pairCreatedDate: quizGame.pair_created_at.toISOString(),
       startGameDate: quizGame.start_date ? quizGame.start_date.toISOString() : null,
       finishGameDate: quizGame.finish_date ? quizGame.finish_date.toISOString() : null,

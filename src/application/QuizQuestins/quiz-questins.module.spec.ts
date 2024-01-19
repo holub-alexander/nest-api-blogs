@@ -161,7 +161,7 @@ describe('QuizQuestions', () => {
               id: expect.any(String),
               published: false,
               createdAt: expect.any(String),
-              updatedAt: expect.any(String),
+              updatedAt: null,
               ...newQuestion,
             });
           });
@@ -206,7 +206,7 @@ describe('QuizQuestions', () => {
             id: expect.any(String),
             published: false,
             createdAt: expect.any(String),
-            updatedAt: expect.any(String),
+            updatedAt: null,
             ...newQuestion,
           }),
         );

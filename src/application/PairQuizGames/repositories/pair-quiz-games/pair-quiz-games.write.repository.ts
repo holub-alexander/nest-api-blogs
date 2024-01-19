@@ -8,7 +8,10 @@ export class PairQuizGamesWriteRepository extends Repository<PairQuizGameEntity>
     super(PairQuizGameEntity, dataSource.createEntityManager());
   }
 
-  saveWithTransactions(data: PairQuizGameEntity, transactionManager: EntityManager): Promise<PairQuizGameEntity> {
+  public async saveWithTransactions(
+    data: PairQuizGameEntity,
+    transactionManager: EntityManager,
+  ): Promise<PairQuizGameEntity> {
     if (transactionManager) {
       return transactionManager.save(data);
     }
@@ -16,7 +19,17 @@ export class PairQuizGamesWriteRepository extends Repository<PairQuizGameEntity>
     return this.save(data);
   }
 
-  updateWithTransactions(id: number, data: Partial<PairQuizGameEntity>, transactionManager: EntityManager) {
+  public async updateWithTransactions(
+    id: number,
+    data: Partial<PairQuizGameEntity>,
+    transactionManager: EntityManager,
+  ) {
     return transactionManager.update(PairQuizGameEntity, { id: +id }, data);
+  }
+
+  public async deleteMany(): Promise<boolean> {
+    const res = await this.delete({});
+
+    return !res.affected ? false : res.affected > 0;
   }
 }
