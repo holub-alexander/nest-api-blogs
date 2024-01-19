@@ -85,6 +85,10 @@ export class CreatePairQuizGameHandler {
 
     const foundGame = await this.pairQuizGamesQueryRepository.findUnfinishedGameForCurrentUser(user.id);
 
+    if (foundGame && foundGame.quiz_questions.length > 0) {
+      throw new ForbiddenException();
+    }
+
     if (foundGame) {
       throw new ForbiddenException();
     }
@@ -95,7 +99,6 @@ export class CreatePairQuizGameHandler {
       await transactionRunner.startTransaction();
 
       const transactionManager = transactionRunner.transactionManager;
-
       const quizGame = await this.pairQuizGamesQueryRepository.findQuizGameWithPendingSecondPlayer(transactionManager);
 
       if (quizGame) {

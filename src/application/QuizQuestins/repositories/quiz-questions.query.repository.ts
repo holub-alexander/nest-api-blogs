@@ -68,6 +68,12 @@ export class QuizQuestionsQueryRepository {
   }
 
   public async getRandomQuestions(): Promise<QuizQuestionEntity[]> {
-    return this.quizQuestionRepository.createQueryBuilder().select().orderBy('RANDOM()').limit(5).getMany();
+    return this.quizQuestionRepository
+      .createQueryBuilder()
+      .select()
+      .where({ published: true })
+      .orderBy('RANDOM()')
+      .limit(5)
+      .getMany();
   }
 }

@@ -8,7 +8,7 @@ export interface PlayerViewModel {
 
 export interface AnswerViewModel {
   questionId: string;
-  answerStatus: PairQuizGameAnswerStatuses;
+  answerStatus: string;
   addedAt: string;
 }
 

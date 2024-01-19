@@ -32,7 +32,9 @@ export class CreateAnswerForNextQuestionHandler {
 
     const currentPairQuizGame = await this.pairQuizGamesQueryRepository.findActiveGameForCurrentUser(user.id);
 
-    if (!currentPairQuizGame) {
+    console.log('/pair-game-quiz/pairs/my-current', currentPairQuizGame);
+
+    if (!currentPairQuizGame || currentPairQuizGame.quiz_questions.length === 0) {
       throw new ForbiddenException();
     }
 

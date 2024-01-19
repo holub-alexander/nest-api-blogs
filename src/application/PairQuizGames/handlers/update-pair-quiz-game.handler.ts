@@ -13,6 +13,7 @@ import { PairQuizPlayerProgressWriteRepository } from '../repositories/pair-quiz
 import { PairQuizGamesWriteRepository } from '../repositories/pair-quiz-games/pair-quiz-games.write.repository';
 import { PairQuizGameMapper } from '../mappers/pair-quiz-game.mapper';
 import { PairQuizGamesQueryRepository } from '../repositories/pair-quiz-games/pair-quiz-games.query.repository';
+import { ForbiddenException } from '@nestjs/common';
 
 export class UpdatePairQuizGameCommand {
   constructor(
@@ -38,6 +39,10 @@ export class UpdatePairQuizGameHandler {
 
   private async generateQuestions(quizId: number, transactionManager: EntityManager) {
     const questions = await this.quizQuestionsQueryRepository.getRandomQuestions();
+
+    if (questions.length === 0) {
+      throw new ForbiddenException();
+    }
 
     if (questions.length > 0) {
       const questionsForQuiz: PairQuizGameQuestionEntity[] = [];
