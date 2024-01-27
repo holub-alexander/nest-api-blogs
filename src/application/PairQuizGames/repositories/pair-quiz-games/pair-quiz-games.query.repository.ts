@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, FindOneOptions, Repository } from 'typeorm';
 import PairQuizGameEntity from '../../../../db/entities/quiz-game/pair-quiz-game.entity';
-import { PairQuizGameStatuses } from '../../../../common/interfaces';
+import { PairQuizGameStatuses, SortDirections } from '../../../../common/interfaces';
+import { PaginationOptionsDto } from '../../../../common/dto/pagination-options.dto';
+import { getObjectToSort } from '../../../../common/utils/get-object-to-sort';
+import { PaginationMetaDto } from '../../../../common/dto/pagination-meta.dto';
+import { PaginationDto } from '../../../../common/dto/pagination.dto';
 
 @Injectable()
 export class PairQuizGamesQueryRepository {
@@ -96,5 +100,46 @@ export class PairQuizGamesQueryRepository {
     }
 
     return this.pairQuizGameRepository.findOne(queryOptions);
+  }
+
+  public async findAllWithPagination(
+    userId: number,
+    { pageSize = 10, pageNumber = 1, sortDirection = SortDirections.DESC, sortBy = '' }: PaginationOptionsDto,
+  ) {
+    const allowedFieldForSorting = {
+      id: 'pair_quiz_games.id',
+      status: 'pair_quiz_games.status',
+      pairCreatedDate: 'pair_quiz_games.pair_created_at',
+      startGameDate: 'pair_quiz_games.start_date',
+      finishGameDate: 'pair_quiz_games.finish_date',
+    };
+
+    const sorting = getObjectToSort({
+      sortBy,
+      sortDirection,
+      allowedFieldForSorting,
+      defaultField: allowedFieldForSorting.pairCreatedDate,
+    });
+
+    const pageSizeValue = pageSize < 1 ? 1 : pageSize;
+    const skippedItems = (+pageNumber - 1) * +pageSizeValue;
+
+    const sourceQuery = this.createQuery();
+
+    const totalCount = await sourceQuery.getCount();
+
+    const quizQuestions = await sourceQuery
+      .orderBy(sorting.field, sorting.direction.toUpperCase() as 'ASC' | 'DESC')
+      .addOrderBy('pair_quiz_games.pair_created_at', 'DESC')
+      .skip(skippedItems)
+      .take(pageSizeValue)
+      .getMany();
+
+    const paginationMetaDto = new PaginationMetaDto({
+      paginationOptionsDto: { pageSize, pageNumber, sortBy, sortDirection },
+      totalCount: +totalCount,
+    });
+
+    return new PaginationDto(quizQuestions, paginationMetaDto);
   }
 }

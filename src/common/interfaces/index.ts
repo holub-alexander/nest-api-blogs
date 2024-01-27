@@ -28,6 +28,12 @@ export enum PublishedStatuses {
   NotPublished = 'not_published',
 }
 
+export enum PairQuizProgressStatuses {
+  Win = 'win',
+  Loss = 'loss',
+  Draw = 'draw',
+}
+
 export interface PageMetaDtoParameters {
   paginationOptionsDto: PaginationOptionsDto;
   totalCount: number;
@@ -52,4 +58,15 @@ export interface SortQueryParamsNew {
   sortBy: string;
   sortDirection: SortDirections;
   allowedFieldForSorting: { [key: string]: string };
+  defaultField?: string;
+}
+
+export interface PairQuizGameUserStatisticQuery {
+  user_id: number;
+  sum_scores: number | null;
+  avg_scores: number | null;
+  games_count: number | null;
+  wins_count: number | null;
+  losses_count: number | null;
+  draws_count: number | null;
 }

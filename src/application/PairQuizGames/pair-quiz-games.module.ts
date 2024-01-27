@@ -22,6 +22,9 @@ import { FindPairQuizGameByIdHandler } from './handlers/find-pair-quiz-game-by-i
 import { CreateAnswerForNextQuestionHandler } from './handlers/create-answer-for-next-question.handler';
 import { PairQuizPlayerAnswersWriteRepository } from './repositories/paiz-quiz-answers/pair-quiz-player-answers.write.repository';
 import PairQuizPlayerAnswerEntity from '../../db/entities/quiz-game/pair-quiz-player-answer.entity';
+import { FindCurrentUserStatisticHandler } from './handlers/find-current-user-stastic.handler';
+import { PairQuizPlayerProgressQueryRepository } from './repositories/pair-quiz-player-progress/pair-quiz-player-progress.query.repository';
+import { FindAllQuizGamesHandler } from './handlers/find-all-quiz-games.handler';
 
 export const CommandHandlers = [
   CreatePairQuizGameHandler,
@@ -29,6 +32,8 @@ export const CommandHandlers = [
   FindUnfinishedPairQuizGameHandler,
   FindPairQuizGameByIdHandler,
   CreateAnswerForNextQuestionHandler,
+  FindCurrentUserStatisticHandler,
+  FindAllQuizGamesHandler,
 ];
 
 @Module({
@@ -53,6 +58,7 @@ export const CommandHandlers = [
     PairQuizQuestionsWriteRepository,
     QuizQuestionsQueryRepository,
     PairQuizPlayerAnswersWriteRepository,
+    PairQuizPlayerProgressQueryRepository,
     ...CommandHandlers,
   ],
 })

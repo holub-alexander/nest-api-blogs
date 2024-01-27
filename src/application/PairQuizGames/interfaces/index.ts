@@ -1,4 +1,3 @@
-import { PairQuizGameAnswerStatuses } from '../../../common/interfaces';
 import { QuizQuestionViewModel } from '../../QuizQuestins/interfaces';
 
 export interface PlayerViewModel {
@@ -27,4 +26,13 @@ export interface GamePairViewModel {
   pairCreatedDate: string;
   startGameDate: string | null;
   finishGameDate: string | null;
+}
+
+export interface MyStatisticViewModel {
+  sumScore: number;
+  avgScores: number;
+  gamesCount: number;
+  winsCount: number;
+  lossesCount: number;
+  drawsCount: number;
 }

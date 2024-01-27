@@ -1,7 +1,8 @@
-import { AnswerViewModel, GamePairViewModel } from '../interfaces';
+import { AnswerViewModel, GamePairViewModel, MyStatisticViewModel } from '../interfaces';
 import PairQuizGameEntity from '../../../db/entities/quiz-game/pair-quiz-game.entity';
 import PairQuizGameQuestionEntity from '../../../db/entities/quiz-game/pair-quiz-game-question.entity';
 import PairQuizPlayerAnswerEntity from '../../../db/entities/quiz-game/pair-quiz-player-answer.entity';
+import { PairQuizGameUserStatisticQuery } from '../../../common/interfaces';
 
 const formattedStatuses = {
   pending_second_player: 'PendingSecondPlayer',
@@ -55,6 +56,10 @@ export class PairQuizGameMapper {
     };
   }
 
+  public static mapPairQuizGamesViewModel(quizGames: PairQuizGameEntity[]): GamePairViewModel[] {
+    return quizGames.map((quizGame) => this.mapPairQuizGameViewModel(quizGame));
+  }
+
   public static mapCreatedAnswersForQuestion(answers: PairQuizPlayerAnswerEntity[]): AnswerViewModel[] {
     return answers
       .map((answer) => ({
@@ -70,6 +75,17 @@ export class PairQuizGameMapper {
       questionId: answer.pair_question.id.toString(),
       answerStatus: `${answer.answer_status[0].toUpperCase()}${answer.answer_status.slice(1)}`,
       addedAt: answer.added_at.toISOString(),
+    };
+  }
+
+  public static mapUserStatistics(data: PairQuizGameUserStatisticQuery): MyStatisticViewModel {
+    return {
+      sumScore: data.sum_scores ?? 0,
+      avgScores: data.avg_scores ? +data.avg_scores : 0,
+      gamesCount: data.games_count ?? 0,
+      winsCount: data.wins_count ?? 0,
+      lossesCount: data.losses_count ?? 0,
+      drawsCount: data.draws_count ?? 0,
     };
   }
 }

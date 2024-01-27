@@ -4,7 +4,6 @@ import { QuizQuestionsQueryRepository } from '../repositories/quiz-questions.que
 import { Paginator } from '../../../common/interfaces';
 import { QuizQuestionViewModel } from '../interfaces';
 import { QuizQuestionsMapper } from '../mappers/quiz-questions.mapper';
-import { faker } from '@faker-js/faker';
 
 export class FindAllQuizQuestionsCommand {
   constructor(public paginationQuizQuestion: PaginationQuizQuestionsDto) {}
