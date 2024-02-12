@@ -36,3 +36,13 @@ export interface MyStatisticViewModel {
   lossesCount: number;
   drawsCount: number;
 }
+
+export interface TopGamePlayerViewModel {
+  gamesCount: number;
+  winsCount: number;
+  lossesCount: number;
+  drawsCount: number;
+  sumScore: number;
+  avgScores: number;
+  player: PlayerViewModel;
+}

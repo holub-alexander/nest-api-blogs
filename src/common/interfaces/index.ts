@@ -35,7 +35,8 @@ export enum PairQuizProgressStatuses {
 }
 
 export interface PageMetaDtoParameters {
-  paginationOptionsDto: PaginationOptionsDto;
+  paginationOptionsDto: Pick<PaginationOptionsDto, 'pageSize' | 'pageNumber'> &
+    Partial<Pick<PaginationOptionsDto, 'sortDirection' | 'sortBy'>>;
   totalCount: number;
 }
 
@@ -63,6 +64,17 @@ export interface SortQueryParamsNew {
 
 export interface PairQuizGameUserStatisticQuery {
   user_id: number;
+  sum_scores: number | null;
+  avg_scores: number | null;
+  games_count: number | null;
+  wins_count: number | null;
+  losses_count: number | null;
+  draws_count: number | null;
+}
+
+export interface TopUsersQuery {
+  user_id: number;
+  user_login: string;
   sum_scores: number | null;
   avg_scores: number | null;
   games_count: number | null;

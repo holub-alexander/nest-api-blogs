@@ -25,6 +25,7 @@ import PairQuizPlayerAnswerEntity from '../../db/entities/quiz-game/pair-quiz-pl
 import { FindCurrentUserStatisticHandler } from './handlers/find-current-user-stastic.handler';
 import { PairQuizPlayerProgressQueryRepository } from './repositories/pair-quiz-player-progress/pair-quiz-player-progress.query.repository';
 import { FindAllQuizGamesHandler } from './handlers/find-all-quiz-games.handler';
+import { FindUsersTopHandler } from './handlers/find-users-top.handler';
 
 export const CommandHandlers = [
   CreatePairQuizGameHandler,
@@ -34,6 +35,7 @@ export const CommandHandlers = [
   CreateAnswerForNextQuestionHandler,
   FindCurrentUserStatisticHandler,
   FindAllQuizGamesHandler,
+  FindUsersTopHandler,
 ];
 
 @Module({

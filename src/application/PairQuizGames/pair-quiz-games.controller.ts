@@ -24,6 +24,8 @@ import { CreateAnswerDto } from './dto/create-answer.dto';
 import { FindCurrentUserStatisticCommand } from './handlers/find-current-user-stastic.handler';
 import { FindAllQuizGamesCommand } from './handlers/find-all-quiz-games.handler';
 import { PaginationOptionsDto } from '../../common/dto/pagination-options.dto';
+import { FindUsersTopCommand } from './handlers/find-users-top.handler';
+import { PaginationTopUsersDto } from './dto/pagination-top-users.dto';
 
 @SkipThrottle()
 @Controller(PUBLIC_PAIR_QUIZ_GAME)
@@ -69,6 +71,12 @@ export class PairQuizGamesController {
   @HttpCode(200)
   public async findCurrentUserStatistic(@Req() req: Request) {
     return this.commandBus.execute(new FindCurrentUserStatisticCommand(req.user?.login));
+  }
+
+  @Get('/users/top')
+  @HttpCode(200)
+  public async findUsersTop(@Query() queryParams: PaginationTopUsersDto) {
+    return this.commandBus.execute(new FindUsersTopCommand(queryParams));
   }
 
   @Get('/pairs/:id')

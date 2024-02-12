@@ -1,8 +1,8 @@
-import { AnswerViewModel, GamePairViewModel, MyStatisticViewModel } from '../interfaces';
+import { AnswerViewModel, GamePairViewModel, MyStatisticViewModel, TopGamePlayerViewModel } from '../interfaces';
 import PairQuizGameEntity from '../../../db/entities/quiz-game/pair-quiz-game.entity';
 import PairQuizGameQuestionEntity from '../../../db/entities/quiz-game/pair-quiz-game-question.entity';
 import PairQuizPlayerAnswerEntity from '../../../db/entities/quiz-game/pair-quiz-player-answer.entity';
-import { PairQuizGameUserStatisticQuery } from '../../../common/interfaces';
+import { PairQuizGameUserStatisticQuery, TopUsersQuery } from '../../../common/interfaces';
 
 const formattedStatuses = {
   pending_second_player: 'PendingSecondPlayer',
@@ -87,5 +87,22 @@ export class PairQuizGameMapper {
       lossesCount: data.losses_count ?? 0,
       drawsCount: data.draws_count ?? 0,
     };
+  }
+
+  public static mapTopUsers(data: TopUsersQuery[]) {
+    return data.map(
+      (progress): TopGamePlayerViewModel => ({
+        gamesCount: progress.games_count ?? 0,
+        winsCount: progress.wins_count ?? 0,
+        lossesCount: progress.losses_count ?? 0,
+        drawsCount: progress.draws_count ?? 0,
+        sumScore: progress.sum_scores ?? 0,
+        avgScores: progress.avg_scores ? +progress.avg_scores : 0,
+        player: {
+          id: progress.user_id.toString(),
+          login: progress.user_login,
+        },
+      }),
+    );
   }
 }
