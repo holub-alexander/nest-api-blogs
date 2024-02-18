@@ -16,6 +16,7 @@ import { configuration } from './config/configuration';
 import { dataSource } from './config/data-source';
 import { QuizQuestionsModule } from './application/QuizQuestins/quiz-questions.module';
 import { PairQuizGamesModule } from './application/PairQuizGames/pair-quiz-games.module';
+import { BloggerModule } from './application/Blogger/blogger.module';
 
 @Module({
   imports: [
@@ -76,6 +77,7 @@ import { PairQuizGamesModule } from './application/PairQuizGames/pair-quiz-games
     SuperAdminModule,
     QuizQuestionsModule,
     PairQuizGamesModule,
+    BloggerModule,
   ],
   controllers: [],
   // providers: [

@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { FindAllPostsByBlogIdHandler } from './handlers/find-all-posts-for-blog.handler';
 import { FindPostHandler } from './handlers/find-post.handler';
 import { CreatePostHandler } from './handlers/create-post.handler';
-import { IsBlogFound } from './dto/create.dto';
 import { CqrsModule } from '@nestjs/cqrs';
 import { SetLikeUnlikeForPostHandler } from './handlers/set-like-unlike.handler';
 import { FindAllPostsHandler } from './handlers/find-all-posts.handler';
@@ -41,7 +40,6 @@ export const CommandHandler = [
   imports: [CqrsModule, TypeOrmModule.forFeature([UserEntity, BlogEntity, PostEntity, CommentEntity, ReactionEntity])],
   controllers: [],
   providers: [
-    IsBlogFound,
     PostsQueryRepository,
     PostsWriteRepository,
     ReactionsQueryRepository,

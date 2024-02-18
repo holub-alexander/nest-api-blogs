@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { FindAllBlogsHandler } from './handlers/find-all-blogs.handler';
-import { FindOneBlogHandler } from './handlers/find-one-blog.handler';
-import { CreateBlogHandler } from './handlers/create-blog.handler';
+import { FindAllBlogsHandler } from './handlers/blogs/find-all-blogs.handler';
+import { FindOneBlogHandler } from './handlers/blogs/find-one-blog.handler';
+import { CreateBlogHandler } from './handlers/blogs/create-blog.handler';
 import { BlogsQueryRepository } from './repositories/blogs.query.repository';
 import { BlogsWriteRepository } from './repositories/blogs.write.repository';
 import { UsersQueryRepository } from '../Users/repositories/users.query.repository';

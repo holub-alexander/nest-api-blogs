@@ -1,9 +1,9 @@
-import { PaginationBlogDto } from '../dto/pagination-blog.dto';
-import { Paginator } from '../../../common/interfaces';
-import { BlogViewModel } from '../interfaces';
-import { BlogsMapper } from '../mappers/blogs.mapper';
+import { PaginationBlogDto } from '../../dto/pagination-blog.dto';
+import { Paginator } from '../../../../common/interfaces';
+import { BlogViewModel } from '../../interfaces';
+import { BlogsMapper } from '../../mappers/blogs.mapper';
 import { CommandHandler } from '@nestjs/cqrs';
-import { BlogsQueryRepository } from '../repositories/blogs.query.repository';
+import { BlogsQueryRepository } from '../../repositories/blogs.query.repository';
 
 export class FindAllBlogsCommand {
   constructor(public paginationSortBlogDto: PaginationBlogDto) {}

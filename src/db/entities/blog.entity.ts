@@ -1,8 +1,9 @@
-import { Column, DeepPartial, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, DeepPartial, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import PostEntity from './post.entity';
 import CommentEntity from './comment.entity';
+import UserEntity from './user.entity';
 
-@Entity({ name: 'blogs' })
+@Entity({ name: 'blogs', synchronize: false })
 class BlogEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -46,6 +47,10 @@ class BlogEntity {
     onDelete: 'CASCADE',
   })
   comments: CommentEntity[];
+
+  @ManyToOne(() => UserEntity, (user) => user.blogs, { eager: true })
+  @JoinColumn({ name: 'user_id' })
+  user: UserEntity;
 
   static fromPartial(data: DeepPartial<BlogEntity>): BlogEntity {
     return Object.assign(new BlogEntity(), data);

@@ -2,7 +2,7 @@ import { PaginationOptionsDto } from '../../../common/dto/pagination-options.dto
 import { Paginator } from '../../../common/interfaces';
 import { PostViewModel } from '../interfaces';
 import { PostsMapper } from '../mappers/posts.mapper';
-import { CommandBus, CommandHandler } from '@nestjs/cqrs';
+import { CommandHandler } from '@nestjs/cqrs';
 import PostEntity from '../../../db/entities/post.entity';
 import ReactionEntity from '../../../db/entities/reaction.entity';
 import { PostsQueryRepository } from '../repositories/posts.query.repository';
@@ -17,7 +17,6 @@ export class FindAllPostsByBlogIdCommand {
 @CommandHandler(FindAllPostsByBlogIdCommand)
 export class FindAllPostsByBlogIdHandler {
   constructor(
-    private readonly commandBus: CommandBus,
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly usersQueryRepository: UsersQueryRepository,
     private readonly reactionsQueryRepository: ReactionsQueryRepository,

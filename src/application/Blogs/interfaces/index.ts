@@ -10,4 +10,8 @@ export interface BlogViewModelSuperAdmin extends CreateBlogDto {
   id: string;
   createdAt: string | Date;
   isMembership: boolean;
+  blogOwnerInfo: {
+    userId: string | null;
+    userLogin: string | null;
+  };
 }

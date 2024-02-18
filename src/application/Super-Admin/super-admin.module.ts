@@ -4,7 +4,7 @@ import { SuperAdminBlogsController } from './controllers/super-admin-blogs.contr
 import { FindAllBlogsSuperAdminHandler } from './handlers/find-all-blogs.handler';
 import { BlogsQueryRepository } from '../Blogs/repositories/blogs.query.repository';
 import { BlogsWriteRepository } from '../Blogs/repositories/blogs.write.repository';
-import { CreateBlogSuperAdminHandler } from './handlers/create-blog-super-admin.handler';
+import { CreateBlogForBloggerHandler } from '../Blogs/handlers/blogger/create-blog-for-blogger.handler';
 
 import { PostsQueryRepository } from '../Posts/repositories/posts.query.repository';
 import { UsersQueryRepository } from '../Users/repositories/users.query.repository';
@@ -16,13 +16,22 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import UserEntity from '../../db/entities/user.entity';
 import BlogEntity from '../../db/entities/blog.entity';
 import PostEntity from '../../db/entities/post.entity';
+import { BindUserToBlogHandler } from '../Blogs/handlers/blogger/bind-user-to-blog.hander';
+import { FindOneBlogCommand } from '../Blogs/handlers/blogs/find-one-blog.handler';
+import { FindBlogParamValidator } from './dto/bind-user-to-blog-params.dto';
 
-export const CommandHandlers = [FindAllBlogsSuperAdminHandler, CreateBlogSuperAdminHandler];
+export const CommandHandlers = [
+  FindAllBlogsSuperAdminHandler,
+  CreateBlogForBloggerHandler,
+  BindUserToBlogHandler,
+  FindOneBlogCommand,
+];
 
 @Module({
   imports: [CqrsModule, UsersModule, TypeOrmModule.forFeature([UserEntity, BlogEntity, PostEntity])],
   controllers: [SuperAdminBlogsController, SuperAdminUsersController],
   providers: [
+    FindBlogParamValidator,
     BlogsWriteRepository,
     BlogsQueryRepository,
     PostsQueryRepository,

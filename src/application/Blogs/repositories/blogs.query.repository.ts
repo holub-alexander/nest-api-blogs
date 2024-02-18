@@ -11,12 +11,12 @@ import BlogEntity from '../../../db/entities/blog.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 const allowedFieldForSorting = {
-  id: 'id',
-  name: 'name',
-  description: 'description',
-  websiteUrl: 'website_url',
-  createdAt: 'created_at',
-  isMembership: 'is_membership',
+  id: 'blogs.id',
+  name: 'blogs.name',
+  description: 'blogs.description',
+  websiteUrl: 'blogs.website_url',
+  createdAt: 'blogs.created_at',
+  isMembership: 'blogs.is_membership',
 };
 
 @Injectable()
@@ -26,29 +26,38 @@ export class BlogsQueryRepository {
     private readonly blogRepository: Repository<BlogEntity>,
   ) {}
 
-  public async findAllWithPagination({
-    sortBy = 'createdAt',
-    sortDirection = SortDirections.DESC,
-    searchNameTerm = '',
-    pageSize = 10,
-    pageNumber = 1,
-  }: PaginationBlogDto): Promise<PaginationDto<BlogEntity>> {
+  public async findAllWithPagination(
+    {
+      sortBy = 'createdAt',
+      sortDirection = SortDirections.DESC,
+      searchNameTerm = '',
+      pageSize = 10,
+      pageNumber = 1,
+    }: PaginationBlogDto,
+    userId?: number,
+  ): Promise<PaginationDto<BlogEntity>> {
     const sorting = getObjectToSort({ sortBy, sortDirection, allowedFieldForSorting });
 
     const pageSizeValue = pageSize < 1 ? 1 : pageSize;
     const skippedItems = (+pageNumber - 1) * +pageSizeValue;
 
-    const totalCountQuery = await this.blogRepository.createQueryBuilder();
-    const query = await this.blogRepository.createQueryBuilder();
+    const totalCountQuery = await this.blogRepository.createQueryBuilder('blogs');
+    const query = await this.blogRepository.createQueryBuilder('blogs');
 
     if (searchNameTerm && searchNameTerm.trim() !== '') {
       totalCountQuery.where('name ILIKE :name', { name: `%${searchNameTerm}%` });
       query.where('name ILIKE :name', { name: `%${searchNameTerm}%` });
     }
 
+    if (userId) {
+      totalCountQuery.andWhere('user_id = :userId', { userId });
+      query.andWhere('user_id = :userId', { userId });
+    }
+
     const totalCount = await totalCountQuery.getCount();
 
     const blogs = await query
+      .leftJoinAndSelect('blogs.user', 'user')
       .orderBy(sorting.field, sorting.direction.toUpperCase() as 'ASC' | 'DESC')
       .offset(skippedItems)
       .limit(pageSizeValue)

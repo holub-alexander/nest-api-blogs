@@ -1,8 +1,8 @@
-import { BlogViewModel } from '../interfaces';
-import { BlogsMapper } from '../mappers/blogs.mapper';
+import { BlogViewModel } from '../../interfaces';
+import { BlogsMapper } from '../../mappers/blogs.mapper';
 
 import { CommandHandler } from '@nestjs/cqrs';
-import { BlogsQueryRepository } from '../repositories/blogs.query.repository';
+import { BlogsQueryRepository } from '../../repositories/blogs.query.repository';
 
 export class FindOneBlogCommand {
   constructor(public blogId: string) {}

@@ -1,25 +1,23 @@
-import { CreateBlogDto } from '../dto/create.dto';
-import { BlogViewModel } from '../interfaces';
-import { BlogsMapper } from '../mappers/blogs.mapper';
 import { CommandHandler } from '@nestjs/cqrs';
+import { BlogsWriteRepository } from '../../repositories/blogs.write.repository';
+import { CreateBlogDto } from '../../dto/create.dto';
+import { BlogViewModel } from '../../interfaces';
+import { BlogsMapper } from '../../mappers/blogs.mapper';
 import { UnauthorizedException } from '@nestjs/common';
-import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
-import { BlogsQueryRepository } from '../repositories/blogs.query.repository';
-import { BlogsWriteRepository } from '../repositories/blogs.write.repository';
+import { UsersQueryRepository } from '../../../Users/repositories/users.query.repository';
 
-export class CreateBlogCommand {
+export class CreateBlogForBloggerCommand {
   constructor(public body: CreateBlogDto, public userLogin: string) {}
 }
 
-@CommandHandler(CreateBlogCommand)
-export class CreateBlogHandler {
+@CommandHandler(CreateBlogForBloggerCommand)
+export class CreateBlogForBloggerHandler {
   constructor(
-    private readonly blogsQueryRepository: BlogsQueryRepository,
     private readonly blogsWriteRepository: BlogsWriteRepository,
     private readonly usersQueryRepository: UsersQueryRepository,
   ) {}
 
-  public async execute(command: CreateBlogCommand): Promise<BlogViewModel | null> {
+  public async execute(command: CreateBlogForBloggerCommand): Promise<BlogViewModel | null> {
     const user = await this.usersQueryRepository.findByLogin(command.userLogin);
 
     if (!user) {
@@ -33,6 +31,7 @@ export class CreateBlogHandler {
     blog.website_url = command.body.websiteUrl;
     blog.created_at = new Date();
     blog.is_membership = false;
+    blog.user = user;
 
     const createdBlog = await this.blogsWriteRepository.save(blog);
 

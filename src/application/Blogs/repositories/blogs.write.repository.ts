@@ -15,6 +15,12 @@ export class BlogsWriteRepository {
     return this.blogRepository.create();
   }
 
+  public async update(blogId: number, data: Partial<BlogEntity>) {
+    const res = await this.blogRepository.update({ id: blogId }, data);
+
+    return !res.affected ? false : res.affected > 0;
+  }
+
   public async save(createdBlog: BlogEntity): Promise<BlogEntity | null> {
     return this.blogRepository.save(createdBlog);
   }

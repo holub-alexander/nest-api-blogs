@@ -11,6 +11,10 @@ export class SuperAdminMapper {
         websiteUrl: blog.website_url,
         createdAt: blog.created_at,
         isMembership: blog.is_membership,
+        blogOwnerInfo: {
+          userId: blog.user ? blog.user.id.toString() : null,
+          userLogin: blog.user ? blog.user.login : null,
+        },
       }),
     );
   }
