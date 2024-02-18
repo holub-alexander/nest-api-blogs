@@ -33,13 +33,13 @@ class PairQuizPlayerProgressEntity {
     type: 'timestamptz',
     default: null,
   })
-  start_date: Date;
+  start_date: Date | null;
 
   @Column({
     type: 'timestamptz',
     default: null,
   })
-  finish_date: Date;
+  finish_date: Date | null;
 
   @Column({
     type: 'enum',

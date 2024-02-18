@@ -26,6 +26,7 @@ import { FindCurrentUserStatisticHandler } from './handlers/find-current-user-st
 import { PairQuizPlayerProgressQueryRepository } from './repositories/pair-quiz-player-progress/pair-quiz-player-progress.query.repository';
 import { FindAllQuizGamesHandler } from './handlers/find-all-quiz-games.handler';
 import { FindUsersTopHandler } from './handlers/find-users-top.handler';
+import { SchedulerRegistry } from '@nestjs/schedule';
 
 export const CommandHandlers = [
   CreatePairQuizGameHandler,
@@ -52,6 +53,7 @@ export const CommandHandlers = [
   ],
   controllers: [PairQuizGamesController],
   providers: [
+    SchedulerRegistry,
     DbTransactionFactory,
     PairQuizGamesWriteRepository,
     PairQuizGamesQueryRepository,

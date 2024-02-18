@@ -9,6 +9,9 @@ import { PairQuizGameMapper } from '../mappers/pair-quiz-game.mapper';
 import { PairQuizPlayerProgressWriteRepository } from '../repositories/pair-quiz-player-progress/pair-quiz-player-progress.write.repository';
 import { PairQuizGamesWriteRepository } from '../repositories/pair-quiz-games/pair-quiz-games.write.repository';
 import PairQuizGameEntity from '../../../db/entities/quiz-game/pair-quiz-game.entity';
+import { SchedulerRegistry } from '@nestjs/schedule';
+import UserEntity from '../../../db/entities/user.entity';
+import PairQuizPlayerProgressEntity from '../../../db/entities/quiz-game/pair-quiz-player-progress.entity';
 
 export class CreateAnswerForNextQuestionCommand {
   constructor(public userLogin: string, public body: CreateAnswerDto) {}
@@ -35,6 +38,20 @@ const getProgressStatuses = (game: PairQuizGameEntity) => {
   };
 };
 
+const addFieldsInPlayerProgress = (playerProgress: PairQuizPlayerProgressEntity) => {
+  const fields: Partial<Pick<PairQuizPlayerProgressEntity, 'start_date' | 'finish_date'>> = {};
+
+  if (!playerProgress.start_date) {
+    fields.start_date = new Date();
+  }
+
+  if (!playerProgress.finish_date) {
+    fields.finish_date = new Date();
+  }
+
+  return fields;
+};
+
 @CommandHandler(CreateAnswerForNextQuestionCommand)
 export class CreateAnswerForNextQuestionHandler {
   constructor(
@@ -43,7 +60,103 @@ export class CreateAnswerForNextQuestionHandler {
     private readonly pairQuizPlayerProgressWriteRepository: PairQuizPlayerProgressWriteRepository,
     private readonly pairQuizGamesWriteRepository: PairQuizGamesWriteRepository,
     private readonly usersQueryRepository: UsersQueryRepository,
+    private schedulerRegistry: SchedulerRegistry,
   ) {}
+
+  private async timeoutCallback(quizGame: PairQuizGameEntity, user: UserEntity, timeoutId: string) {
+    this.schedulerRegistry.deleteTimeout(timeoutId);
+    const currentQuizGame = await this.pairQuizGamesQueryRepository.findGameById(quizGame.id.toString());
+
+    if (!currentQuizGame || !currentQuizGame.second_player_progress) {
+      throw new ForbiddenException();
+    }
+
+    const isFinishedGame =
+      currentQuizGame.first_player_progress.finish_date && currentQuizGame.second_player_progress.finish_date;
+
+    if (isFinishedGame) {
+      throw new ForbiddenException();
+    }
+
+    await this.pairQuizGamesWriteRepository.update(
+      { id: quizGame.id },
+      {
+        status: PairQuizGameStatuses.Finished,
+        finish_date: new Date(),
+      },
+    );
+
+    const secondUserProgress =
+      currentQuizGame.second_player_progress?.user.id !== user.id
+        ? currentQuizGame.second_player_progress
+        : currentQuizGame.first_player_progress;
+
+    const activeSortedQuestions = currentQuizGame.quiz_questions
+      .sort((a, b) => a.id - b.id)
+      .slice(secondUserProgress.answers.length, currentQuizGame.quiz_questions.length);
+
+    const autoAnswers = activeSortedQuestions.map((question) => {
+      return this.pairQuizPlayerAnswersWriteRepository.create({
+        pair_quiz: {
+          id: quizGame.id,
+        },
+        pair_question: {
+          id: question.id,
+        },
+        player_progress: {
+          id: secondUserProgress.id,
+        },
+        answer_status: PairQuizGameAnswerStatuses.Incorrect,
+        answer_body: '',
+        added_at: new Date(),
+      });
+    });
+
+    await this.pairQuizPlayerAnswersWriteRepository.save(autoAnswers, {});
+
+    if (
+      currentQuizGame.first_player_progress.finish_date &&
+      !currentQuizGame.second_player_progress.finish_date &&
+      currentQuizGame.first_player_progress.answers.some(
+        (answer) => answer.answer_status === PairQuizGameAnswerStatuses.Correct,
+      )
+    ) {
+      await this.pairQuizPlayerProgressWriteRepository.incrementScore(currentQuizGame.first_player_progress.id);
+    }
+
+    if (
+      currentQuizGame.second_player_progress.finish_date &&
+      !currentQuizGame.first_player_progress.finish_date &&
+      currentQuizGame.second_player_progress.answers.some(
+        (answer) => answer.answer_status === PairQuizGameAnswerStatuses.Correct,
+      )
+    ) {
+      await this.pairQuizPlayerProgressWriteRepository.incrementScore(currentQuizGame.second_player_progress.id);
+    }
+
+    const updatedGame = await this.pairQuizGamesQueryRepository.findGameById(quizGame.id.toString());
+
+    if (!updatedGame || !updatedGame.second_player_progress) {
+      throw new ForbiddenException();
+    }
+
+    const newProgressStatus = getProgressStatuses(updatedGame);
+
+    await this.pairQuizPlayerProgressWriteRepository.update(
+      { id: updatedGame.first_player_progress.id },
+      {
+        progress_status: newProgressStatus.firstPlayer,
+        ...addFieldsInPlayerProgress(updatedGame.first_player_progress),
+      },
+    );
+    await this.pairQuizPlayerProgressWriteRepository.update(
+      { id: updatedGame.second_player_progress.id },
+      {
+        progress_status: newProgressStatus.secondPlayer,
+        ...addFieldsInPlayerProgress(updatedGame.second_player_progress),
+      },
+    );
+  }
 
   public async execute(command: CreateAnswerForNextQuestionCommand) {
     const user = await this.usersQueryRepository.findByLogin(command.userLogin);
@@ -54,7 +167,11 @@ export class CreateAnswerForNextQuestionHandler {
 
     const currentPairQuizGame = await this.pairQuizGamesQueryRepository.findActiveGameForCurrentUser(user.id);
 
-    if (!currentPairQuizGame || currentPairQuizGame.quiz_questions.length === 0) {
+    if (
+      !currentPairQuizGame ||
+      currentPairQuizGame.quiz_questions.length === 0 ||
+      !currentPairQuizGame.second_player_progress
+    ) {
       throw new ForbiddenException();
     }
 
@@ -115,8 +232,23 @@ export class CreateAnswerForNextQuestionHandler {
       }
 
       const isFinishedGame = progress.first_player_progress.finish_date && progress.second_player_progress.finish_date;
+      const timeoutId = `quiz_game_${currentPairQuizGame.id}`;
+
+      if (
+        !currentPairQuizGame.first_player_progress.finish_date &&
+        !currentPairQuizGame.second_player_progress.finish_date
+      ) {
+        const timeout = setTimeout(() => this.timeoutCallback(currentPairQuizGame, user, timeoutId), 10000);
+        this.schedulerRegistry.addTimeout(timeoutId, timeout);
+      }
 
       if (isFinishedGame) {
+        this.schedulerRegistry.deleteTimeout(timeoutId);
+
+        if (!progress.first_player_progress.finish_date || !progress.second_player_progress.finish_date) {
+          throw new ForbiddenException();
+        }
+
         if (
           new Date(progress.first_player_progress.finish_date).valueOf() <
             new Date(progress.second_player_progress.finish_date).valueOf() &&
