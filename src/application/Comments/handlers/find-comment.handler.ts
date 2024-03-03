@@ -28,8 +28,6 @@ export class FindCommentHandler {
 
       const comment = await this.commentsQueryRepository.findOne(command.commentId, user.id);
 
-      console.log(comment);
-
       if (!comment) {
         return null;
       }
@@ -39,8 +37,6 @@ export class FindCommentHandler {
         'comment',
         comment.id,
       );
-
-      console.log(likesCount, dislikesCount);
 
       return CommentMapper.mapCommentViewModel(comment, reaction, likesCount, dislikesCount);
     } else {

@@ -3,6 +3,7 @@ import { Transform, TransformFnParams } from 'class-transformer';
 
 export class BanUnbanUserDto {
   @IsNotEmpty()
+  @Transform(({ value }: TransformFnParams) => ({ true: true, false: false }[value as 'true' | 'false']))
   @IsBoolean()
   public isBanned: boolean;
 

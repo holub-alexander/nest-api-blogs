@@ -52,6 +52,19 @@ class UserEntity {
   refresh_tokens_meta: DeviceEntity[];
 
   /**
+   * Ban info
+   * */
+
+  @Column({ type: 'boolean', default: false, nullable: false })
+  is_banned: boolean;
+
+  @Column({ type: 'timestamptz', default: null, nullable: true })
+  ban_date: Date | null;
+
+  @Column({ type: 'varchar', default: null, length: 1000 })
+  ban_reason: string | null;
+
+  /**
    * Relation to reactions
    * */
   @OneToMany(() => ReactionEntity, (reaction) => reaction.user, {

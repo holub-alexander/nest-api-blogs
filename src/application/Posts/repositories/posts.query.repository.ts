@@ -42,7 +42,10 @@ export class PostsQueryRepository {
       query.where('blogs.id = :blogId', { blogId });
     }
 
-    totalCountQuery.leftJoin(BlogEntity, 'blogs', 'blogs.id = posts.blog_id');
+    totalCountQuery
+      .leftJoin(BlogEntity, 'blogs', 'blogs.id = posts.blog_id')
+      .leftJoin('blogs.user', 'user')
+      .andWhere('user.is_banned = :value', { value: false });
 
     const totalCount = await totalCountQuery.getCount();
 
@@ -52,19 +55,25 @@ export class PostsQueryRepository {
         return subQuery
           .addSelect('COUNT(*)')
           .from(ReactionEntity, 'reactions')
+          .leftJoin('reactions.user', 'user')
           .where('reactions.post_id = posts.id')
           .andWhere('reactions.type = :type', { type: 'post' })
-          .andWhere("reactions.like_status = 'Like'");
+          .andWhere("reactions.like_status = 'Like'")
+          .andWhere('user.is_banned = :value', { value: false });
       }, 'likes_count')
       .addSelect((subQuery) => {
         return subQuery
           .addSelect('COUNT(*)')
           .from(ReactionEntity, 'reactions')
+          .leftJoin('reactions.user', 'user')
           .where('reactions.post_id = posts.id')
           .andWhere('reactions.type = :type', { type: 'post' })
-          .andWhere("reactions.like_status = 'Dislike'");
+          .andWhere("reactions.like_status = 'Dislike'")
+          .andWhere('user.is_banned = :value', { value: false });
       }, 'dislikes_count')
       .leftJoin(BlogEntity, 'blogs', `blogs.id = posts.blog_id`)
+      .leftJoin('blogs.user', 'user')
+      .andWhere('user.is_banned = :value', { value: false })
       .orderBy(sorting.field, sorting.direction.toUpperCase() as 'ASC' | 'DESC')
       .offset(skippedItems)
       .limit(pageSizeValue)
@@ -97,20 +106,26 @@ export class PostsQueryRepository {
         return subQuery
           .addSelect('COUNT(*)')
           .from(ReactionEntity, 'reactions')
+          .leftJoin('reactions.user', 'user')
           .where('reactions.post_id = posts.id')
           .andWhere('reactions.type = :type', { type: 'post' })
-          .andWhere("reactions.like_status = 'Like'");
+          .andWhere("reactions.like_status = 'Like'")
+          .andWhere('user.is_banned = :value', { value: false });
       }, 'likes_count')
       .addSelect((subQuery) => {
         return subQuery
           .addSelect('COUNT(*)')
           .from(ReactionEntity, 'reactions')
+          .leftJoin('reactions.user', 'user')
           .where('reactions.post_id = posts.id')
           .andWhere('reactions.type = :type', { type: 'post' })
-          .andWhere("reactions.like_status = 'Dislike'");
+          .andWhere("reactions.like_status = 'Dislike'")
+          .andWhere('user.is_banned = :value', { value: false });
       }, 'dislikes_count')
       .leftJoin(BlogEntity, 'blogs', `blogs.id = posts.blog_id`)
+      .leftJoin('blogs.user', 'user')
       .where('posts.id = :postId', { postId })
+      .andWhere('user.is_banned = :value', { value: false })
       .getRawOne<PostEntity | null>();
   }
 }

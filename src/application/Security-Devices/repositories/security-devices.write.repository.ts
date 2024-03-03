@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, DeleteResult, EntityManager, Repository } from 'typeorm';
 import DeviceEntity from '../../../db/entities/device.entity';
 
 @Injectable()
@@ -55,12 +55,20 @@ export class SecurityDevicesWriteRepository {
     return !res.affected ? false : res.affected > 0;
   }
 
-  public async deleteAllDevicesByUserId(userId: string): Promise<boolean> {
-    if (!userId || !Number.isInteger(+userId)) {
-      return false;
-    }
+  public async deleteAllDevicesByUserId({
+    userId,
+    transactionManager,
+  }: {
+    userId: number;
+    transactionManager?: EntityManager;
+  }): Promise<boolean> {
+    let res: DeleteResult;
 
-    const res = await this.securityDevicesRepository.delete({ user_id: +userId });
+    if (transactionManager) {
+      res = await transactionManager.delete(DeviceEntity, { user_id: userId });
+    } else {
+      res = await this.securityDevicesRepository.delete({ user_id: userId });
+    }
 
     return !res.affected ? false : res.affected > 0;
   }

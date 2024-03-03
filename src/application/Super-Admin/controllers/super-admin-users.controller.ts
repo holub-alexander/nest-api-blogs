@@ -1,5 +1,16 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Query } from '@nestjs/common';
-import { UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { SkipThrottle } from '@nestjs/throttler';
 import { BasicAuthGuard } from '../../Auth/guards/basic-auth.guard';
 import { PaginationUsersDto } from '../../Users/dto/pagination-users.dto';
@@ -8,11 +19,35 @@ import { CommandBus } from '@nestjs/cqrs';
 import { FindAllUsersCommand } from '../../Users/handlers/find-all-users.handler';
 import { CreateUserCommand } from '../../Users/handlers/create-user.handler';
 import { DeleteUserCommand } from '../../Users/handlers/delete-user.handler';
+import { BanUnbanUserDto } from '../../Users/dto/ban-unban.dto';
+import { FindOneUserCommand } from '../../Users/handlers/find-one-user.handler';
+import { BanUnbanUserCommand } from '../../Users/handlers/ban-unban-user.handler';
 
 @SkipThrottle()
 @Controller('/sa/users')
 export class SuperAdminUsersController {
   constructor(private commandBus: CommandBus) {}
+
+  @Put('/:id/ban')
+  @UseGuards(BasicAuthGuard)
+  @HttpCode(204)
+  public async banUnbanUser(
+    @Param('id') id: string,
+    @Body()
+    queryParams: BanUnbanUserDto,
+  ) {
+    const user = await this.commandBus.execute(new FindOneUserCommand(id));
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    await this.commandBus.execute(
+      new BanUnbanUserCommand(user.id, queryParams.isBanned, queryParams.banReason, new Date()),
+    );
+
+    return true;
+  }
 
   @Get()
   @UseGuards(BasicAuthGuard)

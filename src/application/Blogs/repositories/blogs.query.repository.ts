@@ -54,10 +54,14 @@ export class BlogsQueryRepository {
       query.andWhere('user_id = :userId', { userId });
     }
 
-    const totalCount = await totalCountQuery.getCount();
+    const totalCount = await totalCountQuery
+      .leftJoinAndSelect('blogs.user', 'user')
+      .andWhere('user.is_banned = :value', { value: false })
+      .getCount();
 
     const blogs = await query
       .leftJoinAndSelect('blogs.user', 'user')
+      .andWhere('user.is_banned = :value', { value: false })
       .orderBy(sorting.field, sorting.direction.toUpperCase() as 'ASC' | 'DESC')
       .offset(skippedItems)
       .limit(pageSizeValue)
@@ -76,6 +80,6 @@ export class BlogsQueryRepository {
       return null;
     }
 
-    return this.blogRepository.findOneBy({ id: +blogId });
+    return this.blogRepository.findOneBy({ id: +blogId, user: { is_banned: false } });
   }
 }

@@ -12,6 +12,7 @@ import { UsersWriteRepository } from './repositories/users.write.repository';
 import { SecurityDevicesWriteRepository } from '../Security-Devices/repositories/security-devices.write.repository';
 import { CommentsWriteRepository } from '../Comments/repositories/comments.write.repository';
 import CommentEntity from '../../db/entities/comment.entity';
+import { DbTransactionFactory } from '../../common/factories/transaction-factory';
 
 export const CommandHandlers = [
   FindAllUsersHandler,
@@ -25,6 +26,7 @@ export const CommandHandlers = [
   imports: [TypeOrmModule.forFeature([UserEntity, DeviceEntity, CommentEntity])],
   controllers: [],
   providers: [
+    DbTransactionFactory,
     UsersQueryRepository,
     UsersWriteRepository,
     CommentsWriteRepository,

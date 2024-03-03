@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import UserEntity from '../../../db/entities/user.entity';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, EntityManager, Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class UsersWriteRepository {
@@ -81,27 +81,26 @@ export class UsersWriteRepository {
     return !res.affected ? false : res.affected > 0;
   }
 
-  public async banUnban(
-    userId: string,
-    isBanned: boolean,
-    banReason: string | null,
-    banDate: Date | null,
-  ): Promise<boolean> {
-    if (!userId || !Number.isInteger(+userId)) {
-      return false;
+  public async banUnban({
+    data,
+    transactionManager,
+  }: {
+    data: { userId: number; isBanned: boolean; banReason: string | null; banDate: Date | null };
+    transactionManager?: EntityManager;
+  }): Promise<boolean> {
+    const partialEntity = {
+      is_banned: data.isBanned,
+      ban_reason: data.banReason,
+      ban_date: data.banDate,
+    };
+    let res: UpdateResult;
+
+    if (transactionManager) {
+      res = await transactionManager.update(UserEntity, { id: data.userId }, partialEntity);
+    } else {
+      res = await this.usersRepository.update({ id: data.userId }, partialEntity);
     }
 
-    const result = await this.dataSource.query<[[], number]>(
-      `
-      UPDATE users
-      SET is_banned = $2,
-          ban_reason = $3,
-          ban_date = $4
-      WHERE id = $1;
-    `,
-      [userId, isBanned, banReason, banDate],
-    );
-
-    return result[1] > 0;
+    return !res.affected ? false : res.affected > 0;
   }
 }

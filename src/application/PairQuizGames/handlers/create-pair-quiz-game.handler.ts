@@ -1,5 +1,5 @@
 import { CommandBus, CommandHandler } from '@nestjs/cqrs';
-import { DataSource, EntityManager } from 'typeorm';
+import { EntityManager } from 'typeorm';
 import { PairQuizGamesWriteRepository } from '../repositories/pair-quiz-games/pair-quiz-games.write.repository';
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import PairQuizPlayerProgressEntity from '../../../db/entities/quiz-game/pair-quiz-player-progress.entity';
@@ -22,7 +22,6 @@ export class CreatePairQuizGameCommand {
 export class CreatePairQuizGameHandler {
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly dataSource: DataSource,
     private readonly usersQueryRepository: UsersQueryRepository,
     private readonly pairQuizGamesWriteRepository: PairQuizGamesWriteRepository,
     private readonly pairQuizPlayerProgressWriteRepository: PairQuizPlayerProgressWriteRepository,

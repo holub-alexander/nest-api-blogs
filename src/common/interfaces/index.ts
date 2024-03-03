@@ -48,6 +48,12 @@ export type Paginator<T> = {
   items: T;
 };
 
+export enum BanStatuses {
+  All = 'all',
+  Banned = 'banned',
+  NotBanned = 'notBanned',
+}
+
 export interface SortQueryParams {
   sortBy: string;
   sortDirection: SortDirections;

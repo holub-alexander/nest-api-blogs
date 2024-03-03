@@ -8,6 +8,11 @@ export class UsersMapper {
       login: user.login,
       email: user.email,
       createdAt: user.created_at.toISOString(),
+      banInfo: {
+        isBanned: user.is_banned,
+        banDate: user.ban_date ? user.ban_date.toISOString() : null,
+        banReason: user.ban_reason || null,
+      },
     }));
   }
 
@@ -17,6 +22,11 @@ export class UsersMapper {
       login: user.login,
       email: user.email,
       createdAt: user.created_at.toISOString(),
+      banInfo: {
+        isBanned: user.is_banned,
+        banDate: user.ban_date ? user.ban_date.toISOString() : null,
+        banReason: user.ban_reason || null,
+      },
     };
   }
 }

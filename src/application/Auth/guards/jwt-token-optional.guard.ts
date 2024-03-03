@@ -22,7 +22,7 @@ export class JwtTokenOptionalGuard implements CanActivate {
 
       const user = await this.usersQueryRepository.findByLogin(payload.login);
 
-      if (!user) {
+      if (!user || user.is_banned) {
         throw new UnauthorizedException();
       }
 

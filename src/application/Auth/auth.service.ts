@@ -38,7 +38,7 @@ export class AuthService {
   public async checkCredentials(body: LoginInputDto): Promise<boolean> {
     const user = await this.usersQueryRepository.findByLoginOrEmail(body.loginOrEmail);
 
-    if (!user) {
+    if (!user || user.is_banned) {
       return false;
     }
 
@@ -48,7 +48,7 @@ export class AuthService {
   public async me(loginOrEmail = '') {
     const user = await this.usersQueryRepository.findByLoginOrEmail(loginOrEmail);
 
-    if (!user) return false;
+    if (!user || user.is_banned) return false;
 
     return AuthMapper.mapMeViewModel(user);
   }
@@ -61,7 +61,7 @@ export class AuthService {
     const user = await this.usersQueryRepository.findByLoginOrEmail(body.loginOrEmail);
     const isCorrectCredentials = await this.checkCredentials(body);
 
-    if (!isCorrectCredentials || !user) {
+    if (!isCorrectCredentials || !user || user.is_banned) {
       return null;
     }
 
@@ -132,6 +132,7 @@ export class AuthService {
 
     if (!findUser) return false;
     if (findUser.is_confirmed) return false;
+    if (findUser.is_banned) return false;
     if (findUser.confirmation_code !== body.code) return false;
     if (findUser.expiration_date && findUser.expiration_date <= new Date()) return false;
 
@@ -141,7 +142,7 @@ export class AuthService {
   public async registrationEmailResending(body: RegistrationEmailResendingInputDto) {
     const user = await this.usersQueryRepository.findByLoginOrEmail(body.email);
 
-    if (!user || user.is_confirmed) {
+    if (!user || user.is_confirmed || user.is_banned) {
       return false;
     }
 
@@ -170,7 +171,7 @@ export class AuthService {
     const foundDevice = await this.securityDevicesQueryRepository.findDeviceById(refreshTokenPayload.deviceId);
     const foundUser = await this.usersQueryRepository.findUserById(foundDevice.user_id.toString());
 
-    if (!foundDevice || !foundUser) {
+    if (!foundDevice || !foundUser || foundUser.is_banned) {
       return null;
     }
 
@@ -217,7 +218,7 @@ export class AuthService {
     );
     const user = await this.usersQueryRepository.findByEmail(body.email);
 
-    if (!user) {
+    if (!user || user.is_banned) {
       return false;
     }
 

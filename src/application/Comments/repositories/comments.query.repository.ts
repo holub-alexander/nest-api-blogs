@@ -35,6 +35,7 @@ export class CommentsQueryRepository {
       .leftJoinAndSelect('comments.blog', 'blogs')
       .leftJoinAndSelect('comments.post', 'posts')
       .where('comments.id = :commentId', { commentId })
+      .andWhere('users.is_banned = :value', { value: false })
       .getOne();
   }
 
@@ -51,7 +52,10 @@ export class CommentsQueryRepository {
     const totalCountQuery = await this.commentRepository.createQueryBuilder('comments');
     const query = await this.commentRepository.createQueryBuilder('comments');
 
-    totalCountQuery.where('comments.post_id = :postId', { postId });
+    totalCountQuery
+      .leftJoin('comments.user', 'users')
+      .where('comments.post_id = :postId', { postId })
+      .andWhere('users.is_banned = :value', { value: false });
 
     const totalCount = await totalCountQuery.getCount();
 
@@ -61,17 +65,21 @@ export class CommentsQueryRepository {
         return subQuery
           .addSelect('COUNT(*)')
           .from(ReactionEntity, 'reactions')
+          .leftJoin('reactions.user', 'user')
           .where('reactions.comment_id = comments.id')
           .andWhere('reactions.type = :type', { type: 'comment' })
-          .andWhere("reactions.like_status = 'Like'");
+          .andWhere("reactions.like_status = 'Like'")
+          .andWhere('user.is_banned = :value', { value: false });
       }, 'likes_count')
       .addSelect((subQuery) => {
         return subQuery
           .addSelect('COUNT(*)')
           .from(ReactionEntity, 'reactions')
+          .leftJoin('reactions.user', 'user')
           .where('reactions.comment_Id = comments.id')
           .andWhere('reactions.type = :type', { type: 'comment' })
-          .andWhere("reactions.like_status = 'Dislike'");
+          .andWhere("reactions.like_status = 'Dislike'")
+          .andWhere('user.is_banned = :value', { value: false });
       }, 'dislikes_count')
       .leftJoin('comments.user', 'users')
       .leftJoin('comments.blog', 'blogs')
@@ -80,6 +88,7 @@ export class CommentsQueryRepository {
         userId,
       })
       .where('comments.post_id = :postId', { postId })
+      .andWhere('users.is_banned = :value', { value: false })
       .orderBy(sorting.field, sorting.direction.toUpperCase() as 'ASC' | 'DESC')
       .offset(skippedItems)
       .limit(pageSizeValue)
