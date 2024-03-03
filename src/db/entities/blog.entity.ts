@@ -2,6 +2,7 @@ import { Column, DeepPartial, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryG
 import PostEntity from './post.entity';
 import CommentEntity from './comment.entity';
 import UserEntity from './user.entity';
+import BannedUserInBlogEntity from './banned-user-in-blog.entity';
 
 @Entity({ name: 'blogs', synchronize: false })
 class BlogEntity {
@@ -35,6 +36,9 @@ class BlogEntity {
   })
   is_membership: boolean;
 
+  /**
+   * Relation to posts
+   * */
   @OneToMany(() => PostEntity, (post) => post.blog, {
     onDelete: 'CASCADE',
   })
@@ -48,9 +52,20 @@ class BlogEntity {
   })
   comments: CommentEntity[];
 
+  /**
+   * Relation to users
+   * */
   @ManyToOne(() => UserEntity, (user) => user.blogs, { eager: true })
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
+
+  /**
+   * Relation to banned users
+   * */
+  @OneToMany(() => BannedUserInBlogEntity, (bannerUser) => bannerUser.blog, {
+    onDelete: 'CASCADE',
+  })
+  bannedUsers: BannedUserInBlogEntity[];
 
   static fromPartial(data: DeepPartial<BlogEntity>): BlogEntity {
     return Object.assign(new BlogEntity(), data);

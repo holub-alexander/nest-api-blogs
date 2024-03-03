@@ -1,39 +1,25 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-// import UserEntity from './user.entity';
-import PostEntity from './post.entity';
-// import BlogEntity from './blog.entity';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import BlogEntity from './blog.entity';
+import UserEntity from './user.entity';
 
 @Entity({ name: 'banned_users_in_blogs' })
 class BannedUserInBlogEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToMany(() => PostEntity, (post) => post.blog, {
-    onDelete: 'CASCADE',
-  })
-  posts: PostEntity[];
-
   /**
    * Relation to blogs
    * */
-  // @ManyToOne(() => BlogEntity, (blog) => blog.bannedUsers)
-  // @JoinColumn({ name: 'blog_id' })
-  // blog: BlogEntity;
-
-  @Column()
-  blog_id: number;
+  @ManyToOne(() => BlogEntity, (blog) => blog.bannedUsers)
+  @JoinColumn({ name: 'blog_id', referencedColumnName: 'id' })
+  blog: BlogEntity;
 
   /**
    * Relation to users
    * */
-  // @ManyToOne(() => UserEntity, (user) => user.bannedUsers)
-  // @JoinColumn({ name: 'user_id' })
-  // user: UserEntity;
-
-  @Column()
-  user_id: number;
-
-  user_login: string;
+  @ManyToOne(() => UserEntity, (user) => user.bannedUsers)
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
+  user: UserEntity;
 
   @Column({ type: 'boolean', nullable: false })
   is_banned: boolean;

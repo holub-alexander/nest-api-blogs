@@ -4,6 +4,7 @@ import ReactionEntity from './reaction.entity';
 import CommentEntity from './comment.entity';
 import PairQuizPlayerProgressEntity from './quiz-game/pair-quiz-player-progress.entity';
 import BlogEntity from './blog.entity';
+import BannedUserInBlogEntity from './banned-user-in-blog.entity';
 
 @Entity({ name: 'users' })
 class UserEntity {
@@ -91,6 +92,12 @@ class UserEntity {
    * */
   @OneToMany(() => BlogEntity, (blog) => blog.user)
   blogs: BlogEntity[];
+
+  /**
+   * Relation to banned users in blogs
+   * */
+  @OneToMany(() => BannedUserInBlogEntity, (bannedUser) => bannedUser.user)
+  bannedUsers: BannedUserInBlogEntity[];
 
   static fromPartial(data: DeepPartial<UserEntity>): UserEntity {
     return Object.assign(new UserEntity(), data);

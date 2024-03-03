@@ -23,6 +23,8 @@ import BlogEntity from '../../db/entities/blog.entity';
 import PostEntity from '../../db/entities/post.entity';
 import CommentEntity from '../../db/entities/comment.entity';
 import ReactionEntity from '../../db/entities/reaction.entity';
+import { BannedUserInBlogQueryRepository } from '../BannedUserInBlog/repositories/banned-user-in-blog.query.repository';
+import BannedUserInBlogEntity from '../../db/entities/banned-user-in-blog.entity';
 
 export const CommandHandler = [
   FindAllPostsHandler,
@@ -37,7 +39,17 @@ export const CommandHandler = [
 ];
 
 @Module({
-  imports: [CqrsModule, TypeOrmModule.forFeature([UserEntity, BlogEntity, PostEntity, CommentEntity, ReactionEntity])],
+  imports: [
+    CqrsModule,
+    TypeOrmModule.forFeature([
+      UserEntity,
+      BlogEntity,
+      PostEntity,
+      CommentEntity,
+      ReactionEntity,
+      BannedUserInBlogEntity,
+    ]),
+  ],
   controllers: [],
   providers: [
     PostsQueryRepository,
@@ -49,6 +61,7 @@ export const CommandHandler = [
     CommentsWriteRepository,
     ReactionsQueryRepository,
     ReactionsWriteRepository,
+    BannedUserInBlogQueryRepository,
     ...CommandHandler,
   ],
 })
