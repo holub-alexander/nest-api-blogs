@@ -2,7 +2,7 @@ import { PaginationOptionsDto } from '../../../common/dto/pagination-options.dto
 import { Paginator } from '../../../common/interfaces';
 import { CommentViewModel } from '../../Comments/interfaces';
 import { CommentMapper } from '../../Comments/mappers/comment.mapper';
-import { CommandBus, CommandHandler } from '@nestjs/cqrs';
+import { CommandHandler } from '@nestjs/cqrs';
 import { PostsQueryRepository } from '../repositories/posts.query.repository';
 import { CommentsQueryRepository } from '../../Comments/repositories/comments.query.repository';
 import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
@@ -14,7 +14,6 @@ export class FindAllCommentsForPostCommand {
 @CommandHandler(FindAllCommentsForPostCommand)
 export class FindAllCommentsForPostHandler {
   constructor(
-    private readonly commandBus: CommandBus,
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly commentsQueryRepository: CommentsQueryRepository,
     private readonly usersQueryRepository: UsersQueryRepository,
@@ -38,7 +37,10 @@ export class FindAllCommentsForPostHandler {
         return null;
       }
 
-      const { meta, items } = await this.commentsQueryRepository.findAllWithPagination(pagination, post.id, user.id);
+      const { meta, items } = await this.commentsQueryRepository.findAllWithPagination(pagination, {
+        postId: post.id,
+        userId: user.id,
+      });
 
       return {
         ...meta,
@@ -46,7 +48,10 @@ export class FindAllCommentsForPostHandler {
       };
     }
 
-    const { meta, items } = await this.commentsQueryRepository.findAllWithPagination(pagination, post.id, null);
+    const { meta, items } = await this.commentsQueryRepository.findAllWithPagination(pagination, {
+      postId: post.id,
+      userId: null,
+    });
 
     return {
       ...meta,

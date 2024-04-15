@@ -19,12 +19,14 @@ import PostEntity from '../../db/entities/post.entity';
 import { BindUserToBlogHandler } from '../Blogs/handlers/blogger/bind-user-to-blog.hander';
 import { FindOneBlogCommand } from '../Blogs/handlers/blogs/find-one-blog.handler';
 import { FindBlogParamValidator } from './dto/bind-user-to-blog-params.dto';
+import { BanUnbanBlogHandler } from '../Blogs/handlers/blogger/ban-unban-blog-handler';
 
 export const CommandHandlers = [
   FindAllBlogsSuperAdminHandler,
   CreateBlogForBloggerHandler,
   BindUserToBlogHandler,
   FindOneBlogCommand,
+  BanUnbanBlogHandler,
 ];
 
 @Module({

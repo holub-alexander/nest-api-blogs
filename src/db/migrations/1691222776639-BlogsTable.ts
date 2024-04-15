@@ -12,7 +12,9 @@ export class BlogsTable1691222776639 implements MigrationInterface {
                 website_url VARCHAR(300),
                 created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
                 is_membership BOOLEAN DEFAULT FALSE NOT NULL,
-                user_id INTEGER DEFAULT NULL REFERENCES users(id) ON DELETE CASCADE
+                user_id INTEGER DEFAULT NULL REFERENCES users(id) ON DELETE CASCADE,
+                ban_date TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+                is_banned BOOLEAN DEFAULT FALSE NOT NULL
             );
         `);
   }

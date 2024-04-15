@@ -6,6 +6,13 @@ export interface LikesInfoViewModel {
   myStatus: LikeStatuses;
 }
 
+export interface BloggerPostInfo {
+  id: string;
+  title: string;
+  blogId: string;
+  blogName: string;
+}
+
 export interface CommentatorInfo {
   userId: string;
   userLogin: string;
@@ -17,4 +24,13 @@ export interface CommentViewModel {
   commentatorInfo: CommentatorInfo;
   createdAt: string;
   likesInfo: LikesInfoViewModel;
+}
+
+export interface BloggerCommentViewModel {
+  id: string;
+  content: string;
+  commentatorInfo: CommentatorInfo;
+  createdAt: string;
+  likesInfo: LikesInfoViewModel;
+  postInfo: BloggerPostInfo;
 }

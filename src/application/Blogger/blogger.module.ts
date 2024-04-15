@@ -24,6 +24,9 @@ import { BannedUserInBlogWriteRepository } from '../BannedUserInBlog/repositorie
 import { BannedUserInBlogQueryRepository } from '../BannedUserInBlog/repositories/banned-user-in-blog.query.repository';
 import BannedUserInBlogEntity from '../../db/entities/banned-user-in-blog.entity';
 import { FindAllBannedUsersForBlogHandler } from './handlers/find-all-banned-users-for-blog.handler';
+import { FindAllCommentsByBloggerIdHandler } from '../Comments/handlers/find-all-comments-by-blogger-id.handler';
+import CommentEntity from '../../db/entities/comment.entity';
+import { CommentsQueryRepository } from '../Comments/repositories/comments.query.repository';
 
 export const CommandHandlers = [
   FindAllBloggerBlogsHandler,
@@ -36,12 +39,20 @@ export const CommandHandlers = [
   CheckAccessToBlogAndPostHandler,
   BanUnbanUserForBlogHandler,
   FindAllBannedUsersForBlogHandler,
+  FindAllCommentsByBloggerIdHandler,
 ];
 
 @Module({
   imports: [
     CqrsModule,
-    TypeOrmModule.forFeature([UserEntity, BlogEntity, PostEntity, ReactionEntity, BannedUserInBlogEntity]),
+    TypeOrmModule.forFeature([
+      UserEntity,
+      BlogEntity,
+      PostEntity,
+      ReactionEntity,
+      BannedUserInBlogEntity,
+      CommentEntity,
+    ]),
   ],
   controllers: [BloggerBlogsController, BloggerUsersController],
   providers: [
@@ -52,6 +63,7 @@ export const CommandHandlers = [
     ReactionsQueryRepository,
     BannedUserInBlogWriteRepository,
     BannedUserInBlogQueryRepository,
+    CommentsQueryRepository,
     ...CommandHandlers,
   ],
 })

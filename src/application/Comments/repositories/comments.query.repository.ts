@@ -36,13 +36,13 @@ export class CommentsQueryRepository {
       .leftJoinAndSelect('comments.post', 'posts')
       .where('comments.id = :commentId', { commentId })
       .andWhere('users.is_banned = :value', { value: false })
+      .andWhere('blogs.is_banned = :isBanned', { isBanned: false })
       .getOne();
   }
 
   public async findAllWithPagination(
     { pageSize = 10, pageNumber = 1, sortDirection = SortDirections.DESC, sortBy = '' }: PaginationOptionsDto,
-    postId: number,
-    userId: number | null,
+    { postId, userId, bloggerId }: { postId?: number; bloggerId?: number | null; userId?: number | null },
   ): Promise<PaginationDto<CommentEntity>> {
     const sorting = getObjectToSort({ sortBy, sortDirection, allowedFieldForSorting });
 
@@ -54,12 +54,21 @@ export class CommentsQueryRepository {
 
     totalCountQuery
       .leftJoin('comments.user', 'users')
-      .where('comments.post_id = :postId', { postId })
+      .leftJoin('comments.blog', 'blogs')
+      .where('blogs.is_banned = :isBanned', { isBanned: false })
       .andWhere('users.is_banned = :value', { value: false });
+
+    if (postId) {
+      totalCountQuery.andWhere('comments.post_id = :postId', { postId });
+    }
+
+    if (bloggerId) {
+      totalCountQuery.andWhere('blogs.user_id = :userId', { userId: bloggerId });
+    }
 
     const totalCount = await totalCountQuery.getCount();
 
-    const comments = await query
+    query
       .select(['comments.*', 'users.login AS user_login', 'reactions.like_status AS like_status'])
       .addSelect((subQuery) => {
         return subQuery
@@ -82,12 +91,30 @@ export class CommentsQueryRepository {
           .andWhere('user.is_banned = :value', { value: false });
       }, 'dislikes_count')
       .leftJoin('comments.user', 'users')
-      .leftJoin('comments.blog', 'blogs')
-      .leftJoin('comments.post', 'posts')
-      .leftJoin(ReactionEntity, 'reactions', 'reactions.comment_id = comments.id AND reactions.user_id = :userId', {
-        userId,
-      })
-      .where('comments.post_id = :postId', { postId })
+      .leftJoinAndSelect('comments.blog', 'blogs')
+      .leftJoinAndSelect('comments.post', 'posts')
+      .where('blogs.is_banned = :isBanned', { isBanned: false });
+
+    if (postId) {
+      query.andWhere('comments.post_id = :postId', { postId });
+    }
+
+    if (bloggerId) {
+      query
+        .leftJoin(ReactionEntity, 'reactions', 'reactions.comment_id = comments.id')
+        .andWhere('blogs.user_id = :userId', { userId: bloggerId });
+    } else {
+      query.leftJoin(
+        ReactionEntity,
+        'reactions',
+        'reactions.comment_id = comments.id AND reactions.user_id = :userId',
+        {
+          userId,
+        },
+      );
+    }
+
+    const comments = await query
       .andWhere('users.is_banned = :value', { value: false })
       .orderBy(sorting.field, sorting.direction.toUpperCase() as 'ASC' | 'DESC')
       .offset(skippedItems)

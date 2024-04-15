@@ -45,6 +45,7 @@ export class PostsQueryRepository {
     totalCountQuery
       .leftJoin(BlogEntity, 'blogs', 'blogs.id = posts.blog_id')
       .leftJoin('blogs.user', 'user')
+      .andWhere('blogs.is_banned = :isBanned', { isBanned: false })
       .andWhere('user.is_banned = :value', { value: false });
 
     const totalCount = await totalCountQuery.getCount();
@@ -73,6 +74,7 @@ export class PostsQueryRepository {
       }, 'dislikes_count')
       .leftJoin(BlogEntity, 'blogs', `blogs.id = posts.blog_id`)
       .leftJoin('blogs.user', 'user')
+      .andWhere('blogs.is_banned = :isBanned', { isBanned: false })
       .andWhere('user.is_banned = :value', { value: false })
       .orderBy(sorting.field, sorting.direction.toUpperCase() as 'ASC' | 'DESC')
       .offset(skippedItems)
@@ -125,6 +127,7 @@ export class PostsQueryRepository {
       .leftJoin(BlogEntity, 'blogs', `blogs.id = posts.blog_id`)
       .leftJoin('blogs.user', 'user')
       .where('posts.id = :postId', { postId })
+      .andWhere('blogs.is_banned = :isBanned', { isBanned: false })
       .andWhere('user.is_banned = :value', { value: false })
       .getRawOne<PostEntity | null>();
   }

@@ -14,4 +14,8 @@ export interface BlogViewModelSuperAdmin extends CreateBlogDto {
     userId: string | null;
     userLogin: string | null;
   };
+  banInfo: {
+    isBanned: boolean;
+    banDate: string | null;
+  };
 }

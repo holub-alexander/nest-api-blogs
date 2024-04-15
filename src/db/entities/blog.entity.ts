@@ -67,6 +67,12 @@ class BlogEntity {
   })
   bannedUsers: BannedUserInBlogEntity[];
 
+  @Column({ type: 'timestamptz', default: null })
+  ban_date: Date | null;
+
+  @Column({ type: 'boolean', default: false })
+  is_banned: boolean;
+
   static fromPartial(data: DeepPartial<BlogEntity>): BlogEntity {
     return Object.assign(new BlogEntity(), data);
   }

@@ -35,6 +35,8 @@ import { CheckAccessToBlogCommand } from '../handlers/check-access-to-blog.handl
 import { PostViewModel } from '../../Posts/interfaces';
 import { UsersQueryRepository } from '../../Users/repositories/users.query.repository';
 import { CheckAccessToBlogAndPostCommand } from '../handlers/check-access-to-blog-and-post.hander';
+import { PaginationOptionsDto } from '../../../common/dto/pagination-options.dto';
+import { FindAllCommentsByBloggerIdCommand } from '../../Comments/handlers/find-all-comments-by-blogger-id.handler';
 
 @SkipThrottle()
 @Controller('blogger/blogs')
@@ -134,5 +136,11 @@ export class BloggerBlogsController {
     }
 
     return true;
+  }
+
+  @Get('/comments')
+  @UseGuards(JwtTokenGuard)
+  public async findAllBloggerComments(@Query() queryParams: PaginationOptionsDto, @Req() req: Request) {
+    return this.commandBus.execute(new FindAllCommentsByBloggerIdCommand(queryParams, req.user.login));
   }
 }

@@ -35,6 +35,7 @@ export class BlogsQueryRepository {
       pageNumber = 1,
     }: PaginationBlogDto,
     userId?: number,
+    isReturnAll = false,
   ): Promise<PaginationDto<BlogEntity>> {
     const sorting = getObjectToSort({ sortBy, sortDirection, allowedFieldForSorting });
 
@@ -52,6 +53,11 @@ export class BlogsQueryRepository {
     if (userId) {
       totalCountQuery.andWhere('user_id = :userId', { userId });
       query.andWhere('user_id = :userId', { userId });
+    }
+
+    if (!isReturnAll) {
+      totalCountQuery.andWhere('blogs.is_banned = :isBanned', { isBanned: false });
+      query.andWhere('blogs.is_banned = :isBanned', { isBanned: false });
     }
 
     const totalCount = await totalCountQuery
@@ -75,11 +81,15 @@ export class BlogsQueryRepository {
     return new PaginationDto(blogs, paginationMetaDto);
   }
 
-  public async findOne(blogId: string): Promise<BlogEntity | null> {
+  public async findOne(blogId: string, isShowAll = false): Promise<BlogEntity | null> {
     if (!blogId || !Number.isInteger(+blogId)) {
       return null;
     }
 
-    return this.blogRepository.findOneBy({ id: +blogId, user: { is_banned: false } });
+    return this.blogRepository.findOneBy({
+      id: +blogId,
+      user: { is_banned: false },
+      ...(isShowAll ? {} : { is_banned: false }),
+    });
   }
 }

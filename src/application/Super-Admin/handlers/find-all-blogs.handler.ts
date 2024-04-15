@@ -14,7 +14,7 @@ export class FindAllBlogsSuperAdminHandler {
   constructor(private readonly blogsQueryRepository: BlogsQueryRepository) {}
 
   public async execute(command: FindAllBlogsSuperAdminCommand): Promise<Paginator<BlogViewModelSuperAdmin[]>> {
-    const res = await this.blogsQueryRepository.findAllWithPagination(command.paginationSortBlogDto);
+    const res = await this.blogsQueryRepository.findAllWithPagination(command.paginationSortBlogDto, undefined, true);
 
     return {
       ...res.meta,
