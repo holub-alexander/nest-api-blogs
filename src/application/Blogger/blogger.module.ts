@@ -27,6 +27,16 @@ import { FindAllBannedUsersForBlogHandler } from './handlers/find-all-banned-use
 import { FindAllCommentsByBloggerIdHandler } from '../Comments/handlers/find-all-comments-by-blogger-id.handler';
 import CommentEntity from '../../db/entities/comment.entity';
 import { CommentsQueryRepository } from '../Comments/repositories/comments.query.repository';
+import { UploadBackgroundWallpaperHandler } from '../Blogs/handlers/blogger/upload-background-wallpaper.handler';
+import { UploadToS3Service } from '../UploadToS3/upload-to-s3.service';
+import { BlogWallpapersWriteRepository } from '../BlogWallpapers/repositories/blog-wallpapers.write.repository';
+import BlogWallpapersEntity from '../../db/entities/blog-wallpapers.entity';
+import { UploadMainImageForBlogHandler } from '../Blogs/handlers/blogger/upload-main-image-for-blog.handler';
+import BlogMainImagesEntity from '../../db/entities/blog-main-images.entity';
+import { BlogMainImagesWriteRepository } from '../BlogWallpapers/repositories/blog-main-images.write.repository';
+import { UploadMainImageForPostHandler } from '../Blogs/handlers/blogger/upload-main-image-for-post.handler';
+import PostMainImagesEntity from '../../db/entities/post-main-images.entity';
+import { PostMainImagesWriteRepository } from '../PostMainImages/repositories/post-main-images.write.repository';
 
 export const CommandHandlers = [
   FindAllBloggerBlogsHandler,
@@ -40,6 +50,9 @@ export const CommandHandlers = [
   BanUnbanUserForBlogHandler,
   FindAllBannedUsersForBlogHandler,
   FindAllCommentsByBloggerIdHandler,
+  UploadBackgroundWallpaperHandler,
+  UploadMainImageForBlogHandler,
+  UploadMainImageForPostHandler,
 ];
 
 @Module({
@@ -52,6 +65,9 @@ export const CommandHandlers = [
       ReactionEntity,
       BannedUserInBlogEntity,
       CommentEntity,
+      BlogMainImagesEntity,
+      BlogWallpapersEntity,
+      PostMainImagesEntity,
     ]),
   ],
   controllers: [BloggerBlogsController, BloggerUsersController],
@@ -64,6 +80,10 @@ export const CommandHandlers = [
     BannedUserInBlogWriteRepository,
     BannedUserInBlogQueryRepository,
     CommentsQueryRepository,
+    UploadToS3Service,
+    BlogWallpapersWriteRepository,
+    BlogMainImagesWriteRepository,
+    PostMainImagesWriteRepository,
     ...CommandHandlers,
   ],
 })

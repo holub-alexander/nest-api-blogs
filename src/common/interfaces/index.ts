@@ -22,6 +22,12 @@ export enum PairQuizGameAnswerStatuses {
   Incorrect = 'incorrect',
 }
 
+export enum ImageSizeVariants {
+  Original = 'original',
+  Middle = 'middle',
+  Small = 'small',
+}
+
 export enum PublishedStatuses {
   All = 'all',
   Published = 'published',
@@ -87,4 +93,11 @@ export interface TopUsersQuery {
   wins_count: number | null;
   losses_count: number | null;
   draws_count: number | null;
+}
+
+export interface PhotoSizeViewModel {
+  url: string;
+  width: number | null;
+  height: number | null;
+  fileSize: number | null;
 }

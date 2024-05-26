@@ -17,6 +17,8 @@ import { dataSource } from './config/data-source';
 import { QuizQuestionsModule } from './application/QuizQuestins/quiz-questions.module';
 import { PairQuizGamesModule } from './application/PairQuizGames/pair-quiz-games.module';
 import { BloggerModule } from './application/Blogger/blogger.module';
+import { AppService } from './app.service';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -78,13 +80,15 @@ import { BloggerModule } from './application/Blogger/blogger.module';
     QuizQuestionsModule,
     PairQuizGamesModule,
     BloggerModule,
+    UploadModule,
   ],
   controllers: [],
-  // providers: [
-  //   {
-  //     provide: APP_GUARD,
-  //     useClass: ThrottlerGuard,
-  //   },
-  // ],
+  providers: [
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ThrottlerGuard,
+    // },
+    AppService,
+  ],
 })
 export class AppModule {}

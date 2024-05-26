@@ -2,6 +2,7 @@ import { Column, DeepPartial, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryG
 import BlogEntity from './blog.entity';
 import ReactionEntity from './reaction.entity';
 import CommentEntity from './comment.entity';
+import PostMainImagesEntity from './post-main-images.entity';
 
 @Entity({ name: 'posts' })
 class PostEntity {
@@ -55,6 +56,14 @@ class PostEntity {
     onDelete: 'CASCADE',
   })
   comments: CommentEntity[];
+
+  /**
+   * Relation to post main images
+   * */
+  @OneToMany(() => PostMainImagesEntity, (postMainImages) => postMainImages.post, {
+    onDelete: 'CASCADE',
+  })
+  post_main_images: PostMainImagesEntity[];
 
   static fromPartial(data: DeepPartial<PostEntity>): PostEntity {
     return Object.assign(new PostEntity(), data);

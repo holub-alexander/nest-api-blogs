@@ -1,4 +1,4 @@
-import { LikeStatuses } from '../../../common/interfaces';
+import { LikeStatuses, PhotoSizeViewModel } from '../../../common/interfaces';
 
 export interface LikesInfoViewModel {
   likesCount: number;
@@ -25,4 +25,9 @@ export interface PostViewModel {
   blogName: string;
   createdAt: string | Date;
   extendedLikesInfo: ExtendedLikesInfoViewModel;
+  images: PostImagesViewModel;
+}
+
+export interface PostImagesViewModel {
+  main: PhotoSizeViewModel[] | [];
 }

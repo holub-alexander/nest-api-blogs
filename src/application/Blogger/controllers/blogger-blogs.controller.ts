@@ -2,15 +2,20 @@ import {
   Body,
   Controller,
   Delete,
+  FileTypeValidator,
   Get,
   HttpCode,
+  MaxFileSizeValidator,
   NotFoundException,
   Param,
+  ParseFilePipe,
   Post,
   Put,
   Query,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { SkipThrottle } from '@nestjs/throttler';
@@ -37,11 +42,81 @@ import { UsersQueryRepository } from '../../Users/repositories/users.query.repos
 import { CheckAccessToBlogAndPostCommand } from '../handlers/check-access-to-blog-and-post.hander';
 import { PaginationOptionsDto } from '../../../common/dto/pagination-options.dto';
 import { FindAllCommentsByBloggerIdCommand } from '../../Comments/handlers/find-all-comments-by-blogger-id.handler';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { MaxImageSizeValidator } from '../../UploadToS3/validators/max-image-size.validator';
+import { SizeTransformer } from '../../../common/utils/size-transformer';
+import { UploadBackgroundWallpaperCommand } from '../../Blogs/handlers/blogger/upload-background-wallpaper.handler';
+import { UploadMainImageForBlogCommand } from '../../Blogs/handlers/blogger/upload-main-image-for-blog.handler';
+import { UploadMainImageForPostCommand } from '../../Blogs/handlers/blogger/upload-main-image-for-post.handler';
 
 @SkipThrottle()
 @Controller('blogger/blogs')
 export class BloggerBlogsController {
   constructor(private readonly commandBus: CommandBus, private readonly usersQueryRepository: UsersQueryRepository) {}
+
+  @Post('/:id/images/wallpaper')
+  @UseGuards(JwtTokenGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  @HttpCode(201)
+  public async uploadWallpaper(
+    @Req() req: Request,
+    @Param('id') id: string,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new FileTypeValidator({ fileType: '.(png|jpeg|jpg)' }),
+          new MaxImageSizeValidator({ maxWidth: 1028, maxHeight: 312 }), // 1028 x 312
+          new MaxFileSizeValidator({ maxSize: SizeTransformer.kilobytesToBytes(100) }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    return this.commandBus.execute(new UploadBackgroundWallpaperCommand(id, file, req.user.login));
+  }
+
+  @Post('/:id/images/main')
+  @UseGuards(JwtTokenGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  @HttpCode(201)
+  public async uploadMainImage(
+    @Req() req: Request,
+    @Param('id') id: string,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new FileTypeValidator({ fileType: '.(png|jpeg|jpg)' }),
+          new MaxImageSizeValidator({ maxWidth: 156, maxHeight: 156 }), // 156 x 156
+          new MaxFileSizeValidator({ maxSize: SizeTransformer.kilobytesToBytes(100) }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    return this.commandBus.execute(new UploadMainImageForBlogCommand(id, file, req.user.login));
+  }
+
+  @Post('/:blogId/posts/:postId/images/main')
+  @UseGuards(JwtTokenGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  @HttpCode(201)
+  public async uploadMainImageForPost(
+    @Req() req: Request,
+    @Param('blogId') blogId: string,
+    @Param('postId') postId: string,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new FileTypeValidator({ fileType: '.(png|jpeg|jpg)' }),
+          new MaxImageSizeValidator({ maxWidth: 940, maxHeight: 432 }), // 940 x 432
+          new MaxFileSizeValidator({ maxSize: SizeTransformer.kilobytesToBytes(100) }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    return this.commandBus.execute(new UploadMainImageForPostCommand(blogId, postId, file, req.user.login));
+  }
 
   @Put('/:id')
   @UseGuards(JwtTokenGuard)

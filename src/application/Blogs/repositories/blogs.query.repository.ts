@@ -67,6 +67,8 @@ export class BlogsQueryRepository {
 
     const blogs = await query
       .leftJoinAndSelect('blogs.user', 'user')
+      .leftJoinAndSelect('blogs.blog_wallpaper', 'blog_wallpaper')
+      .leftJoinAndSelect('blogs.blog_main_images', 'blog_main_images')
       .andWhere('user.is_banned = :value', { value: false })
       .orderBy(sorting.field, sorting.direction.toUpperCase() as 'ASC' | 'DESC')
       .offset(skippedItems)

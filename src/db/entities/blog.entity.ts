@@ -1,8 +1,20 @@
-import { Column, DeepPartial, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  DeepPartial,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import PostEntity from './post.entity';
 import CommentEntity from './comment.entity';
 import UserEntity from './user.entity';
 import BannedUserInBlogEntity from './banned-user-in-blog.entity';
+import BlogWallpapersEntity from './blog-wallpapers.entity';
+import BlogMainImagesEntity from './blog-main-images.entity';
+import PostMainImagesEntity from './post-main-images.entity';
 
 @Entity({ name: 'blogs', synchronize: false })
 class BlogEntity {
@@ -66,6 +78,32 @@ class BlogEntity {
     onDelete: 'CASCADE',
   })
   bannedUsers: BannedUserInBlogEntity[];
+
+  /**
+   * Relation to wallpapers
+   * */
+  @OneToOne(() => BlogWallpapersEntity, (blogWallpaper) => blogWallpaper.blog, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
+  blog_wallpaper: BlogWallpapersEntity;
+
+  /**
+   * Relation to blog main images
+   * */
+  @OneToMany(() => BlogMainImagesEntity, (blogMainImages) => blogMainImages.blog, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
+  blog_main_images: BlogMainImagesEntity[];
+
+  /**
+   * Relation to post main images
+   * */
+  @OneToMany(() => PostMainImagesEntity, (postMainImages) => postMainImages.blog, {
+    onDelete: 'CASCADE',
+  })
+  post_main_images: PostMainImagesEntity[];
 
   @Column({ type: 'timestamptz', default: null })
   ban_date: Date | null;

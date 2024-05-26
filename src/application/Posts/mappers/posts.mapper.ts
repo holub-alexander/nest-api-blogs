@@ -1,7 +1,9 @@
-import { NewestLike, PostViewModel } from '../interfaces';
+import { NewestLike, PostImagesViewModel, PostViewModel } from '../interfaces';
 import { LikeStatuses } from '../../../common/interfaces';
 import PostEntity from '../../../db/entities/post.entity';
 import ReactionEntity from '../../../db/entities/reaction.entity';
+import PostMainImagesEntity from '../../../db/entities/post-main-images.entity';
+import { createPublicImageUrl } from '../../UploadToS3/utils/create-public-image-url';
 
 export class PostsMapper {
   public static mapNewestLikes(reactions: ReactionEntity[]): NewestLike[] {
@@ -30,6 +32,7 @@ export class PostsMapper {
           myStatus: LikeStatuses.NONE,
           newestLikes: this.mapNewestLikes(lastReactions),
         },
+        images: this.mapPostMainImages(post.post_main_images),
       }),
     );
   }
@@ -55,6 +58,21 @@ export class PostsMapper {
         myStatus: reaction ? reaction.like_status : LikeStatuses.NONE,
         newestLikes: this.mapNewestLikes(lastReactions),
       },
+      images: this.mapPostMainImages(post.post_main_images),
+    };
+  }
+
+  public static mapPostMainImages(postMainImages: PostMainImagesEntity[]): PostImagesViewModel {
+    return {
+      main:
+        postMainImages && postMainImages.length > 0
+          ? postMainImages.map((mainImage) => ({
+              url: createPublicImageUrl(mainImage.file_path, mainImage.file_name, mainImage.bucket_name),
+              width: mainImage.width || 0,
+              height: mainImage.height || 0,
+              fileSize: mainImage.file_size_in_bytes || 0,
+            }))
+          : [],
     };
   }
 }

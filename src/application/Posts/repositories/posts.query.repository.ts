@@ -18,7 +18,7 @@ const allowedFieldForSorting = {
   content: 'content',
   blogId: 'blog_id',
   blogName: 'blog_name',
-  createdAt: 'created_at',
+  createdAt: 'posts.created_at',
 };
 
 @Injectable()
@@ -36,10 +36,12 @@ export class PostsQueryRepository {
 
     const totalCountQuery = await this.postRepository.createQueryBuilder('posts');
     const query = await this.postRepository.createQueryBuilder('posts');
+    const reactionsQuery = await this.postRepository.createQueryBuilder('posts');
 
     if (blogId) {
       totalCountQuery.where('blogs.id = :blogId', { blogId });
       query.where('blogs.id = :blogId', { blogId });
+      reactionsQuery.where('blogs.id = :blogId', { blogId });
     }
 
     totalCountQuery
@@ -51,7 +53,18 @@ export class PostsQueryRepository {
     const totalCount = await totalCountQuery.getCount();
 
     const posts = await query
-      .select(['posts.*', 'blogs.name AS blog_name'])
+      .leftJoinAndSelect('posts.blog', 'blogs')
+      .leftJoinAndSelect('blogs.user', 'user')
+      .leftJoinAndSelect('posts.post_main_images', 'post_main_images')
+      .andWhere('blogs.is_banned = :isBanned', { isBanned: false })
+      .andWhere('user.is_banned = :value', { value: false })
+      .orderBy(sorting.field, sorting.direction.toUpperCase() as 'ASC' | 'DESC')
+      .offset(skippedItems)
+      .take(pageSizeValue)
+      .getMany();
+
+    const reactions = await reactionsQuery
+      .select('posts.id AS id')
       .addSelect((subQuery) => {
         return subQuery
           .addSelect('COUNT(*)')
@@ -78,8 +91,15 @@ export class PostsQueryRepository {
       .andWhere('user.is_banned = :value', { value: false })
       .orderBy(sorting.field, sorting.direction.toUpperCase() as 'ASC' | 'DESC')
       .offset(skippedItems)
-      .limit(pageSizeValue)
+      .take(pageSizeValue)
       .getRawMany();
+
+    posts.forEach((post) => {
+      const foundPost = reactions.find((p) => p.id === post.id);
+
+      post.likes_count = foundPost.likes_count;
+      post.dislikes_count = foundPost.dislikes_count;
+    });
 
     const paginationMetaDto = new PaginationMetaDto({
       paginationOptionsDto: { pageSize, pageNumber, sortBy, sortDirection },
@@ -101,9 +121,23 @@ export class PostsQueryRepository {
       return null;
     }
 
-    return this.postRepository
-      .createQueryBuilder('posts')
-      .select(['posts.*', 'blogs.name AS blog_name'])
+    const query = this.postRepository.createQueryBuilder('posts');
+
+    const post = await query
+      .leftJoinAndSelect('posts.post_main_images', 'post_main_images')
+      .leftJoinAndSelect('posts.blog', 'blogs')
+      .leftJoin('blogs.user', 'user')
+      .where('posts.id = :postId', { postId })
+      .andWhere('blogs.is_banned = :isBanned', { isBanned: false })
+      .andWhere('user.is_banned = :value', { value: false })
+      .getOne();
+
+    if (!post) {
+      return null;
+    }
+
+    const reaction = await query
+      .select(['posts.id AS id'])
       .addSelect((subQuery) => {
         return subQuery
           .addSelect('COUNT(*)')
@@ -124,11 +158,11 @@ export class PostsQueryRepository {
           .andWhere("reactions.like_status = 'Dislike'")
           .andWhere('user.is_banned = :value', { value: false });
       }, 'dislikes_count')
-      .leftJoin(BlogEntity, 'blogs', `blogs.id = posts.blog_id`)
-      .leftJoin('blogs.user', 'user')
-      .where('posts.id = :postId', { postId })
-      .andWhere('blogs.is_banned = :isBanned', { isBanned: false })
-      .andWhere('user.is_banned = :value', { value: false })
-      .getRawOne<PostEntity | null>();
+      .getRawOne();
+
+    post.likes_count = reaction.likes_count;
+    post.dislikes_count = reaction.dislikes_count;
+
+    return post;
   }
 }

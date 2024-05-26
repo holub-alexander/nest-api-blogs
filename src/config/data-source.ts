@@ -25,6 +25,9 @@ import PairQuizPlayerProgressEntity from '../db/entities/quiz-game/pair-quiz-pla
 import QuizQuestionEntity from '../db/entities/quiz-game/quiz-question.entity';
 import { QuizQuestionFactory } from '../db/seeding/factories/quiz-game/quiz-question.factory';
 import { PairQuizSeeder } from '../db/seeding/seeders/pair-quiz.seeder';
+import BlogWallpapersEntity from '../db/entities/blog-wallpapers.entity';
+import BlogMainImagesEntity from '../db/entities/blog-main-images.entity';
+import PostMainImagesEntity from '../db/entities/post-main-images.entity';
 
 dotenvConfig({ path: 'env/.env' });
 
@@ -43,6 +46,9 @@ const entities = [
   PairQuizGameQuestionEntity,
   PairQuizPlayerAnswerEntity,
   QuizQuestionEntity,
+  BlogWallpapersEntity,
+  BlogMainImagesEntity,
+  PostMainImagesEntity,
 ];
 
 const factories = [
